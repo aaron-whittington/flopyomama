@@ -1,0 +1,15 @@
+UPDATE the textures when
+
+1. the board changes (by any means) AND the board is valid for textures
+	- random
+	- delete / backspace
+	- keypress
+	- select by button
+	- web page is loaded and board is loaded
+	- VALID means, in this case, that a flop or more is on the board
+	
+2. update the end results when
+	- any of the above cases are met
+	- AND the preference is set to automatically search
+	- all existing workers must be KILLED
+		-myWorker.terminate();

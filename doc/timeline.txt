@@ -1,0 +1,74 @@
+Now
+
+-multicore
+
+
+Before Open Beta
+
+
+-implement saving/loading of ranges
+
+-generate and save data for single pair searches 
+-user preferences
+
+-routine for minimize js / css
+-register domain name and find host
+-choose framework (for registering users, writing to db)
+-adsense by google (or maybe just amazon to start)
+-some amazon links to make money
+-import export html5 localStorage data
+-glyphicons pro, purchase and implement
+-advanced piecharts with percentages for win/draw/loss (HARD, maybe)
+-TOUR.js
+
+
+-client-side saving of all input states
+	DONE 50%
+	
+-filter system: filter by, for example, minimum hand
+	DONE (90%) ... put method in a worker
+-selection of boards with both mouse clicks and keystrokes
+	DONE (90%) BUG: we don't move forward if we type the same card ... should we maybe just delete future cards if we type one of the same
+-validate boards (user must at least enter flop...unless we decide to do next one)
+	DONE
+-kill the webworkers when we start a new search
+	-GO button as preference ...
+	DONE 
+-delete statics when board / range changes...
+	DONE
+-implement random gen control
+	DONE
+-loading of range-scales
+	DONE
+-flop texture analysis with drawing hands
+	DONE -- in the future might want to graphically represent hands which are both made and drawing hands 
+
+
+Open Beta Go Live 1/11/13
+
+-ability to register users
+-approximate cpu core count
+-develop software website 
+	-faq
+	-support form
+	-registration workflow
+	-payment possibilities
+-make scrumptious graphs
+-no more global scope functions
+-weighted ranges
+-implementation of monte carlo algorithms (for starting pair vs. range)
+-preferences client-side
+	-number of cores to use
+	-immediately perform search or wait for pressing go
+	-selection of fonts, themes, layout
+	-prefer monte carlo for slow-ass computers
+	-sizes of components	
+-improve css styling of board
+
+Release 1 1/3/13
+
+	-develop import/playback of hands
+	-test and improve on mobile platforms (especially iphone, ipad)
+Future
+	-decision trees, equity graphs
+	-import of user data from poker tracker and range estimation based on imported user data

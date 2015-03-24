@@ -1,0 +1,7 @@
+node_modules
+npm-debug.log
+Release/**.*
+Dev/Mongoose.app
+Dev/Style/*.css
+
+

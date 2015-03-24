@@ -1,0 +1,580 @@
+@import "variables.less"; /*bootstrap variables*/
+@import "Lib.less"; 
+
+@font-face {
+  font-family: 'Michroma';
+  font-style: normal;
+  font-weight: 400;
+  src: url(Michroma.woff) format('woff');
+}
+
+body h1{
+font-family: 'Michroma' sans-serif;
+font-size: 240%;
+}
+.txt_btn.btn span.glyphicon{
+	margin-left: 8px; //we might distinguish here between buttons with text and without
+}
+
+#content.preload div {
+	opacity: 0;
+}
+
+.pair_wrapper {
+	position: relative;
+}
+
+#content.preload #program_name{
+    @width: 1000px;
+	@height: 300px;
+	width:@width;
+    height:@height;
+    position:absolute;
+    left:50%;
+    top:50%;
+    margin:-(@height/2) 0 0 -(@width/2);
+	font-size: 5em;
+	opacity:1.0;
+	text-align: center;
+}
+
+#content { 
+//breaks piechart legend
+	/*.animated_transition(1s ease,translate(0,0));
+	&.preload {
+		.transition(none);
+		//.transform(translate(0,-5000px) scale(0.0));
+		.transform(translateX(1000px) translateY(1000px) scaleX(0.0) scaleY(0.0)); //if we had a server we could choose random effects
+	}*/
+}
+
+body .card, .known span, .pair_string {
+	/*font-size: 120%;*/
+	.card_font;
+	margin: 1px;/*to prevent size changes due to border*/
+	cursor: pointer;
+} 
+
+#random_menu, #filter_config_menu {
+	left: auto;
+	right: 0px;
+}
+
+#dev_menu {
+	display: none;
+}
+
+/*.DEV_VERSION #dev_menu {
+    display : block;
+}*/
+
+.static_bg {
+	position: absolute;
+	top:0px;
+	bottom:0px;
+	right:0px;
+	left:0px;
+	z-index: 0;
+}
+
+.inner_pair {
+	position:relative;
+	z-index: 1;
+    background: transparent;
+}
+
+#op_range td {
+	position: relative; /*for the bgs*/
+	.card_font;
+}
+
+body .card.disabled, .pair_string.disabled{
+	opacity: 0.3;	
+}
+
+body .card.selected, .pair_string.selected{
+	border-bottom: #f77 1px solid;
+	margin: 0px; /*to prevent size changes due to border*/
+}
+
+.pair_string{
+	.card_font;
+	font-size: 110%;
+}
+
+.known.btn {
+	background: lighten(@btn-default-bg,50%);
+	border-color: @btn-default-border;
+	width: 3.5em;	
+	/* same as selected in bootstrap*/
+	&:focus, &:hover {
+		box-shadow: inset 0 3px 5px rgba(0,0,0,0.125);
+		background-color: white;
+	}
+	.empty{ /*hide the empty string used as a placeholder*/
+		color: lighten(@btn-default-bg,50%);
+	}		
+}
+
+#known_cards { 
+	div[class^='col'], div[class*='col']{
+    padding: 2px 2px;	
+	}
+	
+	#board .btn, #my_cards .btn {
+		font-size: 120%;
+	}
+	
+	.btn.disabled {
+		.card_font;
+		border: 1px solid @btn-default-border;
+	}
+}
+
+#content {
+	.suit_H {
+		color: red;
+	} 
+
+	.suit_D {
+		color: red;
+	} 
+
+	.suit_S {
+		color: black;
+	} 
+
+	.suit_C {
+		color: black;
+	} 
+	
+	&.four_color .suit_D {
+		color: blue;
+	}
+
+	&.four_color .suit_C {
+		color: green;
+	}
+}
+
+
+
+a .glyphicon {
+	float: right;
+}
+
+.ctrls.dropdown-menu li.active, .ctrls.dropdown-menu li.active a{
+	color: green;
+	background: white;
+}
+
+#inner-stats .tab-pane {
+	position: relative;
+}
+
+
+
+#content td.highlight {	
+	.animated_transition(0.5s,translate(5px,-5px)); 	
+	background-color: black;		
+	position: relative;
+	z-index: 5;	
+}
+
+/********************************************************************************************************Range Area*********************************************************************************************/
+
+#range_buttons {
+	float: right;
+}
+
+#op_range table {
+	background-color: black;
+}
+
+#op_range {
+  .user_select_none;
+  color: black;
+}
+
+#op_range .glyphicon-filter { /*filters only displayed in selected hands*/
+	display:none;
+}
+
+#op_range .selected .glyphicon-cog , #op_range  .selected .glyphicon-filter{
+	display: block;
+	position: absolute;
+	top:2px;
+	right:2px;
+}
+
+#op_range_table {
+	.card_font;
+	cursor: pointer;
+	border-collapse:separate; /*this is ugly but fixes display issues*/
+	.glyphicon-pencil {
+		float: right;	
+	}
+	
+	
+	.suit {
+		@suit-color: @brand-success;
+		.generate_board_colors(@suit-color); //#77ff77 was good
+	}
+	
+	.pPair {
+		@suit-color: @brand-danger;
+		.generate_board_colors(@suit-color); 
+	}
+	
+	.offsuit {
+		@suit-color:@brand-info;
+		.generate_board_colors(@suit-color);
+	}		
+	
+	/*td.custom.nbr {
+		border-right-color: rgba(255,255,255,0);
+	}
+	
+	td.custom.nbl  {
+		border-left-color: rgba(255,255,255,0);
+	}
+	
+	td.custom.nbt {
+		border-top-color: rgba(255,255,255,0);
+	}
+	
+	td.custom.nbb {
+		border-bottom-color: rgba(255,255,255,0);
+	}*/
+	
+	td.filtered_out span {
+		font-size: 160%;
+	}
+	
+	/*td {
+		border: 1px rgba(255,255,255,0) solid;
+	}*/
+}
+
+/*slider*/
+.stat_percent {
+	font-size: 0.9em;
+}
+
+/*************************************************************************** BOARD SELECTION TABLE****************************************************************/
+
+#board_selection_table {
+	cursor:pointer;
+}
+
+#board_selection_table div {
+	margin:8px 0;
+}
+
+
+#board_selection_table .card{
+	padding: 3px;
+}
+#board_selection_table .card:hover{
+	background: #ccffcc;
+}
+
+#board_selection_table .glyphicon-remove {
+	position: absolute;
+	color: #cccccc;
+	right:0px;
+	top:0px;
+}
+
+#board_selection_table .glyphicon-remove:hover {
+	color: #ccccff;
+}
+
+/**************************************************************************************** BOARD *************************************************************************************************/
+
+#known_6, #known_7 {
+	margin-left: 5px;
+}
+
+#known_cards .label {
+	font-size:120%;
+	/*height: 100%;*/
+}
+
+#known_cards {
+	margin-bottom : 15px;
+}
+
+
+
+body table.table tbody>tr>td {
+	padding: 6px;
+}
+
+
+.btn.selected {
+	color: red;
+}
+			/*results */
+#results {
+	margin-top:20px;
+}
+
+#results h4 { /*heading of results clear*/
+clear: both;
+}
+
+
+#win_percent_bar {
+	height: 1.0em;	
+}
+
+#results .sub_result_pb {
+	height:0.6em;
+	/*margin-top: 0.4em;
+	margin-bottom: 10px;*/
+}
+
+#hero_stat, #villain_stat, #textures {
+	font-size: 0.9em;
+	line-height: 1.0em;
+	padding-top: 1.0em;
+}
+
+#hero_stat .text-info, #villain_stat .text-info {
+	.card_font;
+}
+
+.panel-heading .badge {
+	float: right;
+}
+
+body .popover {
+	max-width: 1000px;
+}
+
+
+/******************************************************************************** FILTER UI **************************************************************************/
+
+.filter_group_subgroup   {
+	margin-top: 8px;
+	margin-left: 45px; /*indent because the col offsets in bootstrap are not working*/
+}
+.filter_ctrl_row {
+	margin-top: 8px;
+}
+
+.filter_ctrl_btn_group .btn {  
+    font-size: 0.8em;
+    padding: 6px;
+    width: 138px;
+    text-align: left;
+}
+
+.filter_ctrl_btn_group .btn.dropdown-toggle, .btn.new_subfilter, .btn.delete_subfilter {   
+    width: 28px;
+}
+
+.filter_group_subgroup .filter_ctrl_row {
+   /* background-image: url('tree-marker.png');*/
+    background-position: -15px -2px;
+    background-repeat:no-repeat;  
+}
+
+.filter_ctrl_row { /*padding to make room for the background image*/
+    margin-left: 0px;
+    padding-left: 15px;
+    padding-top: 8px;
+    margin-top: 0px;
+    margin-bottom:0px;
+    
+}
+
+.filter_group_subgroup  {
+	position: relative; /*for absolute positioning of brace image*/
+}
+
+.filter_group_subgroup .brace {
+    position: absolute;
+    top: 2%;
+    height:96%;   
+    left: -35px;   
+    max-width: 35px; 
+}
+
+
+#filter_editor .modal-dialog {
+	width: 800px;
+}
+
+.btn.test_button  {
+	/*display: none;*/
+}
+
+
+#results_go {
+	display: none; /*not shown because automatic by default*/
+}
+
+#range_slider_val {
+	background-color: @btn-primary-bg;
+	color: @btn-primary-color;
+}
+
+#test #content div[class^='col'] {
+	border: 1px dotted red;
+}
+
+#rand_buttons {
+	float: right;
+}
+
+
+
+#range-panel {
+	margin-bottom: 8px;
+}
+
+#content .panel-title  {
+	font-size: 16px;
+}
+ 
+ #op_range td { //FOR FIREFOX
+    padding: 0;
+}
+
+#op_range td div {
+    padding: 4px;
+}
+ 
+ /******************************************************* COLLAPSE *****************************************************************/
+@media only screen and (max-width: @screen-lg) { /*bootstrap first collapse*/
+                #content  {
+				 /*font-size:0.9em;*/				
+				}
+				
+				#content .btn {
+					padding:7px;
+				}
+				#content .panel-body, #content .panel-heading{ /*15 default*/
+					padding: 10px;
+				}
+				
+				#op_range td div  { padding: 4px 2px; font-size:0.9em;}
+ }
+ 
+ @media only screen and (max-width: @screen-md) { /*second collapse*/
+                #content { font-size:0.9em;}
+				#content .row, #content .well {
+					padding: 8px;
+				}
+				#content .btn{
+					padding: 6px;
+				}
+				#content .panel-body, #content .panel-heading{ /*15 default*/
+					padding: 6px;
+				}
+				
+				#op_range td div  { font-size:1.0em;}
+				
+ }
+ 
+  @media only screen and (max-width: @screen-sm) { /*second collapse*/
+                #content { font-size:0.9em;}
+				#content .row, #content .well {
+					padding: 8px;
+				}
+				#content .btn{
+					padding: 6px;
+				}
+				
+ }
+ 
+   @media only screen and (max-width: @screen-xs) { //was 500
+                #op_range { font-size:0.8em;}
+				
+				#op_range td div .inner_pair {
+					visibility: hidden;
+				}				
+ }
+ 
+ @media only screen and (max-width: 349px) { /*special collapse*/
+                #op_range { font-size:0.6em;}
+				#op_range td { padding: 2px;}
+				#op_range td .inner_pair {
+					visibility: hidden;
+				}				
+				#content #range_row, #content #op_range_col {
+					padding:0;
+				}
+				#results_col svg {
+					.transform(scale(0.9) translateX(-20px));
+				}
+ }
+
+.ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {
+border-bottom-right-radius: 4px;
+}
+
+.ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl {
+border-bottom-left-radius: 4px;
+}
+
+.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+border-top-right-radius: 4px;
+}
+
+.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+border-top-left-radius: 4px;
+}
+
+.ui-widget-content {
+border: 1px solid darken(@input-bg-disabled,15%);
+background: @input-bg-disabled  50% top repeat-x; //url(images/ui-bg_highlight-soft_100_eeeeee_1x100.png)
+color: #333333;
+}
+
+.ui-widget {
+font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
+font-size: 1.1em;
+}
+
+.ui-slider-horizontal {
+height: .8em;
+}
+
+.ui-slider {
+position: relative;
+text-align: left;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+border: 1px solid #cccccc;
+background: @brand-info  50% 50% repeat-x; //url(images/ui-bg_glass_100_f6f6f6_1x400.png)
+font-weight: bold;
+color: #1c94c4;
+}
+
+#range_slider {
+	position: relative;
+}
+.range_slider_bg {
+	position: absolute;
+	top:0px;
+	bottom:0px;
+	left:0px;
+	background: lighten(@brand-info,20%);
+}
+
+.ui-slider-horizontal .ui-slider-handle {
+top: -.3em;
+margin-left: -.6em;
+}
+
+.ui-slider .ui-slider-handle {
+position: absolute;
+z-index: 2;
+width: 1.2em;
+height: 1.2em;
+cursor: default;
+}

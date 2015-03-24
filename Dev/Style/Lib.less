@@ -1,0 +1,197 @@
+.transition(@transition) {
+	-webkit-transition: @transition;  
+	-moz-transition:    @transition;
+	transition:     @transition; 
+}
+
+.transform(@trans : translate(0px,0px)) {
+	transform: @trans;
+	-moz-transform: @trans;
+	-webkit-transform: @trans;
+}
+
+.animated_transition(@time:1s, @trans:translate(0px,0px)) {
+	.transform(@trans);
+	-moz-transition: -moz-transform @time;
+	-webkit-transition: -webkit-transform @time;
+	transition: transform @time;
+}
+
+.card_font() {	
+	font-family: "georgia" ;	
+	font-family: "helvetica arial";
+	font-family: "lucida console";
+} 
+
+.user_select_none() {
+	 user-select: none;
+	-webkit-user-select: none;  
+  -moz-user-select: none;    
+  -ms-user-select: none;      
+ 
+}
+
+.lighten_dark(@base,@bg,@percent) when (lightness(@bg) < 50%) {
+	background-color:darken(@base,@percent);
+}
+
+.lighten_dark(@base,@bg,@percent) when (lightness(@bg) >= 50%) {
+	background-color:lighten(@base,@percent);
+}
+
+.lighten_dark_c(@base,@bg,@percent) when (lightness(@bg) < 50%) {
+	color:darken(@base,@percent);
+}
+
+.lighten_dark_c(@base,@bg,@percent) when (lightness(@bg) >= 50%) {
+	color:lighten(@base,@percent);
+}
+
+.lighten_dark_bd(@base,@bg,@percent,@sel:background-color) when (lightness(@bg) < 50%) {
+	border-color:darken(@base,@percent);
+}
+
+.lighten_dark_bd(@base,@bg,@percent,@sel:background-color) when (lightness(@bg) >= 50%) {
+	border-color:lighten(@base,@percent);
+}
+
+.lighten_dark_bd_l(@base,@bg,@percent,@sel:background-color) when (lightness(@bg) < 50%) {
+	border-left-color:darken(@base,@percent);
+}
+
+.lighten_dark_bd_l(@base,@bg,@percent,@sel:background-color) when (lightness(@bg) >= 50%) {
+	border-left-color:lighten(@base,@percent);
+}
+
+.lighten_dark_bd_r(@base,@bg,@percent,@sel:background-color) when (lightness(@bg) < 50%) {
+	border-right-color:darken(@base,@percent);
+}
+
+.lighten_dark_bd_r(@base,@bg,@percent,@sel:background-color) when (lightness(@bg) >= 50%) {
+	border-right-color:lighten(@base,@percent);
+}
+
+.lighten_dark_bd_t(@base,@bg,@percent,@sel:background-color) when (lightness(@bg) < 50%) {
+	border-top-color:darken(@base,@percent);
+}
+
+.lighten_dark_bd_t(@base,@bg,@percent,@sel:background-color) when (lightness(@bg) >= 50%) {
+	border-top-color:lighten(@base,@percent);
+}
+
+.lighten_dark_bd_b(@base,@bg,@percent,@sel:background-color) when (lightness(@bg) < 50%) {
+	border-bottom-color:darken(@base,@percent);
+}
+
+.lighten_dark_bd_b(@base,@bg,@percent,@sel:background-color) when (lightness(@bg) >= 50%) {
+	border-bottom-color:lighten(@base,@percent);
+}
+
+.lighten_light(@base,@bg,@percent) when (lightness(@bg) < 50%) {
+	background-color:lighten(@base,@percent);
+}
+
+.lighten_light(@base,@bg,@percent) when (lightness(@bg) >= 50%) {
+	background-color:darken(@base,@percent);
+}
+
+.generate_board_colors(@base_color:#ccc) {	
+	border: 1px solid;	
+	&, &.selected.filtered_out {
+	
+		.lighten_dark_bd(@base_color,@body-bg,29%);
+		
+		.static_bg {
+			.lighten_dark(@base_color,@body-bg,29%);
+			
+			.glyphicon {
+				.lighten_dark_c(@base_color,@body-bg,15%);
+			}
+		}
+	}
+	
+	&.selected  { 
+		.lighten_dark_bd(@base_color,@body-bg,15%);		
+		.static_bg{
+			.lighten_dark(@base_color,@body-bg,15%);			
+			.glyphicon {
+				.lighten_dark_c(@base_color,@text-color,10%);
+			}
+		}
+	}
+	
+	&.highlight {
+		border-color: @base_color;
+		.static_bg{
+			background-color: @base_color;
+			
+			.glyphicon {
+				.lighten_dark_c(@base_color,@text-color,30%);			
+			}
+		}	
+	}
+	
+	&.custom , &.selected.custom.filtered_out{		
+		.lighten_dark_bd(@base_color,@text-color,10%);
+		/*border-color: white;*/
+		
+		&.nbr   {
+			.lighten_dark_bd_r(@base_color,@body-bg,29%);
+		
+		
+		}
+	
+		&.nbl  {
+			.lighten_dark_bd_l(@base_color,@body-bg,29%);
+		}
+	
+		&.nbt {
+			.lighten_dark_bd_t(@base_color,@body-bg,29%);
+		}
+		
+		&.nbb {
+			.lighten_dark_bd_b(@base_color,@body-bg,29%);
+		}
+	}
+	
+	&.custom.selected {		
+
+		&.nbr   {
+			.lighten_dark_bd_r(@base_color,@body-bg,15%);
+		}
+	
+		&.nbl  {
+			.lighten_dark_bd_l(@base_color,@body-bg,15%);
+		}
+	
+		&.nbt {
+			.lighten_dark_bd_t(@base_color,@body-bg,15%);
+		}
+		
+		&.nbb {
+			.lighten_dark_bd_b(@base_color,@body-bg,15%);
+		}
+	}
+	
+	&.custom.highlight  {		
+
+		&.nbr   {
+			border-right-color:@base_color;
+		}
+	
+		&.nbl  {
+			border-left-color:@base_color;
+		}
+	
+		&.nbt {
+			border-top-color:@base_color;
+		}
+		
+		&.nbb {
+			border-bottom-color:@base_color;
+		}
+	}
+	
+	
+	
+}

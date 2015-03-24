@@ -1,0 +1,252 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>
+    Flop Yo Mama
+</title>
+<meta charset="utf-8">
+<meta name="author" content="">
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="holdem, hold'em, poker, no-limit, calculator, range, statics, flop, turn, river, tool, equity, pot-odds, fish, donkey, nit, tag, lag">
+<meta name="description" content="Flop Yo Mama analyzes odds of winning hold'em hands against opponent ranges, at the flop, turn, and river.">
+<link href="style/flopyomama.css" rel="stylesheet" type="text/css" class='main'>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+<!--<link href="lib/jquery-ui/css/ui-lightness/jquery-ui-1.10.3.custom.css" rel="stylesheet" media="screen">-->
+<link href="lib/bootstrap-glyphicons-gh-pages/css/bootstrap-glyphicons.css" rel="stylesheet" media="screen">
+<link rel="icon" type="image/gif" href="style/favicon.gif" />
+
+<script type="text/javascript" src="lib/jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="lib/jquery-ui/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script type="text/javascript" src="lib/raphael/raphael-min.js"></script>
+<script type="text/javascript" src="lib/raphael/g.raphael-min.js"></script>
+<script type="text/javascript" src="lib/raphael/g.pie-min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+
+
+<script type="text/javascript" src="lib/chromath/dist/browserify/chromath.min.js"></script>
+<script type="text/javascript" src="lib/underscore/underscore-min.js"></script>
+<script type="text/javascript" src="lib/backbone/backbone.js"></script>
+<script type="text/javascript" src="lib/mustache/mustache.js"></script>
+<%SCRIPTS%>
+</head>
+<body class="<%DEVTYPE%>">
+
+<div id="content" class="four_color container preload">
+<h1 id="program_name">Flop Yo Mama</h1>
+
+<div id="known_cards" class="row well">
+	<div id="my_cards" class="col-lg-3 col-md-3 col-sm-3">
+		<div id="my_card_buttons" class="btn-group">
+		   <button type="button" class="btn disabled">Hero:</button>
+		   <input id="known_1" type="text" class="known btn btn-primary" tabindex="1"/>
+		   <input id="known_2" type="text" class="known btn btn-primary" tabindex="2"/>
+		</div>
+	</div>
+	<div id="board" class="col-lg-9 col-md-9 col-sm-9">
+		 <div id="flop" class="btn-group">
+		  <button type="button" class="btn disabled">Board:</button>
+		  <input id="known_3" type="text" class="known btn btn-primary" tabindex="3"/>
+		  <input id="known_4" type="text" class="known btn btn-primary" tabindex="4"/>
+		  <input id="known_5" type="text" class="known btn btn-primary" tabindex="5"/>
+		  <input id="known_6" type="text" class="known btn btn-primary" tabindex="6"/>
+		  <input id="known_7" type="text" class="known btn btn-primary" tabindex="7"/>
+		</div>
+		<div id="rand_buttons" class="btn-group">
+			  <button id="rand" type="button" title='Random' class="btn btn-default">					
+						<span class="glyphicon glyphicon-random"></span>
+			</button>
+			<button id="rand_ctrl"  type = "button" title="Random settings" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				<span class="caret"></span>
+			</button>
+			
+		</div>
+	</div>
+	
+	
+</div>
+
+<div id='range_row' class="row">
+		<div id="range_col" class="col-lg-2 col-md-2 col-sm-2">
+		<div class="panel-group " id="range-panel">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<h5 class="panel-title">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#range-panel" href="#collapseOne">
+					Range
+				</a>
+				</h5>
+			</div>
+			<div id="collapseOne" class="panel-body collapse in">
+				<div class="panel-inner">				
+					<ul id="fixed_ranges" class="nav nav-pills nav-stacked"  >
+						<li ><a title ="Loves to call.">Passive Fish</a></li>
+						<li ><a title ="Bets/raises too much. Not as extreme as a maniac.">Agressive Fish</a></li>
+						<li ><a title ="Bets/raises too much with trashy hands.">Maniac</a></li>
+						<li ><a title ="Only plays premium hands.">Nit</a></li>
+						<li ><a><abbr title="Tight agressive player (strong opponent)">Tag</abbr></a></li>
+						<li ><a><abbr title="Loose agressive player (strong opponent)">Lag</abbr></a></li>
+					</ul>
+					
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<h5 class="panel-title">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#range-panel" href="#collapseThree">
+					Edit Ranges<span class="glyphicon glyphicon-pencil"></span>
+				</a>
+				</h5>
+			</div>
+			<div id="collapseThree" class="panel-body collapse">
+				<div class="panel-inner">
+					<ul class="nav nav-pills nav-stacked"  >
+						<li><a>New from current<span class="glyphicon glyphicon-plus"></span></a></li>	
+						<li><a>Save range<span class="glyphicon glyphicon-floppy-save"></span></a></li>	
+					</ul>
+				</div>
+			</div>
+		</div>	
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<h5 class="panel-title">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#range-panel" href="#range_scales">
+						Scale
+				</a>
+				</h5>
+			</div>
+			<div id="range_scales" class="panel-body collapse">
+				<div class="panel-inner">
+					<ul class="nav nav-pills nav-stacked"  >
+						<li id='sklansky' ><a href='#'>Sklansky</a></li>
+						<li id='statistical'><a href='#'>Statistical</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+			
+	</div>
+	</div>
+	<div id="op_range_col" class="col-lg-6 col-md-6 col-sm-10">
+		<div id="op_range">
+			
+
+		</div>	
+	</div>
+	<div id="results_col" class="col-lg-4 col-md-4 col-sm-10"> <!-- bug with col-sm-10-->
+		<h4>Results</h4>
+		<div id='win_percent_bar' class="progress">
+			<div class="progress-bar progress-bar-success" style="width: 0%"></div>
+			<div class="progress-bar" style="width: 0%"></div>
+			<div class="progress-bar progress-bar-danger" style="width: 0%"></div>
+		</div>
+			<div id="inner-stats">
+				<ul class="nav nav-tabs">
+					<li class='active'><a href="#textures" title="Villain's current status." data-toggle="tab"><strong>Textures</strong></a></li>
+					<li><a href="#hero_stat" title="Hero's results after all cards are played." data-toggle="tab"><strong>Hero</strong></a></li>
+					<li><a href="#villain_stat" title="Villain's results after all cards are played." data-toggle="tab"><strong>Villain</strong></a></li>
+				</ul>
+				<div class="tab-content">
+				  <div class="tab-pane active" id="textures"></div>
+				  <div class="tab-pane" id="hero_stat"></div>
+				  <div class="tab-pane" id="villain_stat"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="bottom_row" class = "row">
+			<div class ="col-lg-2 col-md-2 col-sm-2">
+				
+			</div>
+			<div class ="col-lg-6 col-md-6 col-sm-6">
+				<span id="range_slider_val" class="label"></span>
+				<div id="range_slider" title="Range slider"></div>
+			</div>	
+			<div class ="col-lg-4 col-md-4 col-sm-4">
+					<div id='range_buttons' class="btn-group" data-toggle="buttons">
+						<button id="clear_selection" title='Clear custom board selection' type = "button" class="btn btn-default">
+							<span class="glyphicon glyphicon-remove"></span>
+						</button>		
+						<div class="btn-group">
+								 <button id="filter_config"  type = "button" title="Filter" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+									<span class="glyphicon glyphicon-filter"></span>
+									<span class="caret"></span>
+								</button>	
+								<ul id='filter_config_menu' class="ctrls dropdown-menu">
+																
+									<li class="divider"></li>								
+									<li id="new_edit_filter"> 
+										<a data-toggle="modal" href="#filter_editor">New/Edit Filters</a>
+									</li>
+								</ul>
+						  </div>
+						  <button id="settings" title='Settings & Tools' type = "button" class="btn btn-default">
+							<span class="glyphicon glyphicon-wrench"></span>
+						</button>
+				</div> 
+				<button class="btn btn-primary text-right" id="results_go">Go!</button>		
+			</div>
+	</div>	
+	<div id="dev_menu" class="row">			
+		<button id="test_short" class = "test_button btn">Short Test</button>
+		<button id="test_long" class = "test_button btn">Long Test</button>
+		<button id="test_ultra" class = "test_button btn">Ultra Test</button>
+		<button id="start_calcs_now" class = "test_button btn">Start Calcs Now</button>
+		<div class="theme_select btn-group">
+					 <button type = "button" title="Theme Select" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						<span class="glyphicon glyphicon-picture"></span>
+						<span class="caret"></span>
+					</button>	
+					<ul class="ctrls dropdown-menu">
+						<li class='default_theme'><a href="#default_theme">Default</a></li>
+						<li class='amelia'><a href="#amelia">Amelia</a></li>
+						<li class='slate'><a href="#slate">Slate</a></li>
+						<li class='united'><a href="#united">United</a></li>													
+					</ul>
+			</div>
+		<div id='palette' class='btn-group'>	
+			<button type="button" class="btn btn-default" title="btn-default" >&#9679;</button>
+			<button type="button" class="btn btn-primary" title="btn-primary">&#9679;</button>
+			<button type="button" class="btn btn-success" title="btn-success">&#9679;</button>
+			<button type="button" class="btn btn-info" title="btn-info">&#9679;</button>
+			<button type="button" class="btn btn-warning" title="btn-warning">&#9679;</button>
+			<button type="button" class="btn btn-danger" title="btn-danger">&#9679;</button>
+			<button type="button" class="btn btn-link" title="btn-link">&#9679;</button>
+		</div>
+		
+	</div>
+	<div id='filter_editor' class="modal fade">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h4 class="modal-title">Edit / Create Filters</h4>
+		  </div>
+		  <div class="modal-body">
+			<p>One fine body&hellip;</p>
+		  </div>
+		  <div class="modal-footer">
+			<div class ='row'>
+				<div class= 'col-lg-2 col-md-2 btn-left'>
+					
+				</div>
+				<div class= 'col-lg-10 col-md-10 btn-right'>	
+					<button type="button" id="delete_filter" class="txt_btn btn btn-danger">Delete<span class="glyphicon glyphicon-trash"></span></button>
+					<button type="button" id="discard_filter" class="txt_btn btn btn-warning">Discard<span class="glyphicon glyphicon-floppy-remove"></span></button>
+					<button type="button" id="close_filter"  class="txt_btn btn btn-warning" data-dismiss="modal">Close</button>				
+					<button type="button" id="save_filter" class="txt_btn btn btn-primary">Save<span class="glyphicon glyphicon-floppy-disk"></span></button>
+				</div>
+			</div>
+		  </div>
+		</div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+</div>
+</div>
+
+<script>
+		window['DEV_VERSION'] = true;		
+		if(!$('body').hasClass('DEV_VERSION'))	
+			window['DEV_VERSION'] = false;				
+</script>

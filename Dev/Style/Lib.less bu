@@ -1,0 +1,71 @@
+.transition(@transition) {
+	-webkit-transition: @transition;  
+	-moz-transition:    @transition;
+	transition:     @transition; 
+}
+
+.transform(@trans : translate(0px,0px)) {
+	transform: @trans;
+	-moz-transform: @trans;
+	-webkit-transform: @trans;
+}
+
+.animated_transition(@time:1s, @trans:translate(0px,0px)) {
+	.transform(@trans);
+	-moz-transition: -moz-transform @time;
+	-webkit-transition: -webkit-transform @time;
+	transition: transform @time;
+}
+
+.card_font() {	
+	font-family: "georgia" ;
+	font-family: "lucida console";
+} 
+
+.user_select_none() {
+	 user-select: none;
+	-webkit-user-select: none;  
+  -moz-user-select: none;    
+  -ms-user-select: none;      
+ 
+}
+
+.lighten_dark(@base,@bg,@percent) when (lightness(@bg) < 50%) {
+	background-color:darken(@base,@percent);
+}
+
+.lighten_dark(@base,@bg,@percent) when (lightness(@bg) >= 50%) {
+	background-color:lighten(@base,@percent);
+}
+
+.generate_board_colors(@base_color:#ccc) {	
+	@selected : lighten(@base_color,10%);
+	@lightest : lighten(@base_color,22%); 
+	@highlight : @base_color; 
+	@dark : darken(@base_color,30%);
+	@dark-des: desaturate(@dark,20%);
+	@darker: darken(@base_color,40%);	
+	@standard : lighten(@selected,10%);*/
+		
+	.static_bg {
+		background-color: @lightest;
+		.glyphicon {
+			color: @standard;
+		}
+	}
+	
+	&.selected .static_bg{
+		background-color: @selected;
+		.glyphicon {
+			color: @dark-des;
+		}
+	}
+	
+	&.highlight .static_bg{
+		background-color: @highlight;
+		
+		.glyphicon {
+			color: @darker;
+		}
+	}	
+}
