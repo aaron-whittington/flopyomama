@@ -175,9 +175,10 @@ nsBuild.fEditHtml = function(callback) {
 			];
 		
 		
-		var	aReleaseScripts = ["flopyomama.min.js",
+		var	aReleaseScripts = [
 			"lib.min.js",
-			"advanced-pie.min.js"];
+			"advanced-pie.min.js",
+			"flopyomama.min.js"];
 		
 		var devClassString = 'DEV_VERSION';
 		var relClassString = 'RELEASE_VERSION';
@@ -269,11 +270,17 @@ var closureJar = __dirname + "/DevTools/compiler.jar";
 
 
 nsBuild.nsClosure.fReadDirCallback = function(err,aFiles, callback) {
+		//filter out files
+		aFiles = aFiles.filter(function(name) {
+			return (/\.js$/i).test(name);
+		});
+	
 		var aMain=[];
 		var aToFilterOut=["flopyomama.js","altloading.js","workertextures.js","worker.js","workerfilter.js","advanced-pie.js","test.js"];
 		var aFilterOutNames =[];
 		var aFilterOuts=[];
 		//var sAltLoading = "altloading.js";
+		
 		
 		for(var i=0; i< aFiles.length; i++) {
 				var toLower = aFiles[i].toLowerCase();
@@ -297,7 +304,7 @@ nsBuild.nsClosure.fReadDirCallback = function(err,aFiles, callback) {
 			
 		var sMainFiles = aMain.join(' ');
 			
-			//console.log('Closure compiler now processing main files');
+		//console.log('Closure compiler now processing main files');
 		var aJarCommands =[];
 		aJarCommands.push('java -jar "'+ closureJar+'" '+sMainFiles+' --js_output_file "'+ outputFile+'"');
 			

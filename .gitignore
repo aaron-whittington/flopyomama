@@ -1,7 +1,5 @@
-node_modules
+node_modules/
 npm-debug.log
-Release/**.*
+Release/**
 Dev/Mongoose.app
 Dev/Style/*.css
-
-

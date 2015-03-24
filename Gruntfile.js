@@ -44,10 +44,10 @@ module.exports = function(grunt) {
 
   grunt.registerTask('jshint-all', ['jshint']);
  
-  grunt.registerTask('build-dev', 'Build with the dev script.', function() {
+  grunt.registerTask('build', 'Build all with the dev script.', function() {
   
   	var done = this.async();
-    buildScript.nsBuild.fMain('dev', done);
+    buildScript.nsBuild.fMain('all', done);
    // grunt.log.write('Logging some stuff...').ok();
   });
 

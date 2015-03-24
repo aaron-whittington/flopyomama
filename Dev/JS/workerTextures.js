@@ -6,7 +6,7 @@ self.addEventListener('message', function(e) {
     case 'start':
 	  
 	  if(data.bMin) 
-		importScripts('lib.min.js');
+		importScripts("../lib/underscore/underscore-min.js", 'lib.min.js');
 	  else
 		importScripts("../lib/underscore/underscore-min.js",'Maths.js', 'Hand.js','DrawingHand.js','Convert.js','Filter.js','Util.js');
 	
