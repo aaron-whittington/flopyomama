@@ -436,31 +436,7 @@ nsBuild.fCreateLess = function ( error, data, options, callback ) {
 
 		});
 
-
-
   return;
-
-  //BELOW CODE FOR LESS before version 2.0
-  // Create a parser with options, filename is passed even though its loaded
-  // to allow less to give us better errors
-  var parser = new less.Parser(options);
-  parser.parse( dataString, function ( error, cssTree ) {
-      if ( error ) {
-        less.writeError( error, options );
-        throw error;
-      }
- 
-    // Create the CSS from the cssTree
-    var cssString = cssTree.toCSS( {
-      compress   : options.compress,
-      yuicompress: options.yuicompress
-    } );
- 
-    // Write output
-    fs.writeFile( options.outputDir + options.outputfile, cssString, 'utf8',
-		callback );
-    //console.log("Converted Less: '" + filename + "', to CSS: " + options.outputDir + options.outputfile);
-  });
 }
  
 //
