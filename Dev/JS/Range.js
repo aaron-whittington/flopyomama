@@ -270,7 +270,7 @@ nsRange.fGetAllUnknownCombinationsThreaded = function() {
 	var oVillainStat = {};
 	var fStartWorker = function(aSplitStartingHands) {
 		
-		var sWorkerName = DEV_VERSION ? 'worker.js' : 'worker.min.js';
+		var sWorkerName = 'worker.js';
 		var state = window.history.state;
 		if (state!==null) {
 			var test = state.valueOf();
@@ -392,7 +392,7 @@ nsRange.fGetAllUnknownCombinationsThreaded = function() {
 					numberOfOpenBoardHandPlaces: numberOfOpenBoardHandPlaces,
 					aFixedBoardCards: aFixedBoardCards,
 					oFilter: nsFilter.oFilterRecord,
-					bMin: !DEV_VERSION
+					bMin: false
 			});		
 	};//end fStartWorker
 		
@@ -425,7 +425,7 @@ nsRange.fGetTextures = function() {
 	var oFilter = nsFilter.fActiveFilter(null, true);
 	
 	var fStartWorker = function() {
-		var sWorkerName = DEV_VERSION ? 'workerTextures.js' : 'workerTextures.min.js';
+		var sWorkerName = 'workerTextures.js';
 		var worker = new Worker('js/'+ sWorkerName); //don't know why I specify path like this from html root	
 		worker.addEventListener('message', function(e) {												
 				if (e.data.type === 'console')
@@ -452,7 +452,7 @@ nsRange.fGetTextures = function() {
 					aKnownCards: aKnownCards,
 					aFixedBoardCards: aFixedBoardCards,
 					oFilter: oFilter,
-					bMin: !DEV_VERSION
+					bMin: false
 			});		
 	};//end fStartWorker
 		

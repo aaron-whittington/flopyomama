@@ -5,10 +5,7 @@ self.addEventListener('message', function(e) {
   switch (data.cmd) {
     case 'start':
 	  
-	  if(data.bMin) 
-		importScripts("../lib/underscore/underscore-min.js", 'lib.min.js');
-	  else
-		importScripts("../lib/underscore/underscore-min.js",'Maths.js', 'Hand.js','DrawingHand.js','Convert.js','Filter.js','Util.js');
+	importScripts("../lib/underscore/underscore-min.js",'Maths.js', 'Hand.js','DrawingHand.js','Convert.js','Filter.js','Util.js');
 	
 	  //self.postMessage({'command recieved start');
 	  try {

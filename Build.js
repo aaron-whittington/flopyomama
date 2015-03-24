@@ -196,8 +196,8 @@ nsBuild.fEditHtml = function(callback) {
 			sRelease += fTagFromName(aReleaseScripts[i]);
 		}
 			
-		var releaseHtml = data.replace(scriptPH,sRelease).replace(classPH,relClassString); // this is
-		var devHtml = data.replace(scriptPH,sDev).replace(classPH,devClassString); // this is
+		var releaseHtml = data.replace(scriptPH,sDev).replace(classPH,relClassString); 
+		var devHtml = data.replace(scriptPH,sDev).replace(classPH,devClassString); 
 		
 		var counter =0;
 		
@@ -207,7 +207,7 @@ nsBuild.fEditHtml = function(callback) {
 					throw 'Trouble writing file FlopYoMama.html';
 				}
 				else {
-					console.log('FlopYoMama.html refactored');
+					console.log('FlopYoMama.html release refactored');
 					if(counter==2)
 							callback(err,'');
 				}
@@ -220,7 +220,7 @@ nsBuild.fEditHtml = function(callback) {
 							throw 'Trouble writing file FlopYoMama.html';
 						}
 						else { 
-							console.log('FlopYoMama.html refactored');
+							console.log('FlopYoMama.html dev refactored');
 						
 							if(counter==2)
 									callback(err,'');
@@ -274,75 +274,33 @@ nsBuild.nsClosure.fReadDirCallback = function(err,aFiles, callback) {
 		aFiles = aFiles.filter(function(name) {
 			return (/\.js$/i).test(name);
 		});
-	
-		var aMain=[];
-		var aToFilterOut=["flopyomama.js","altloading.js","workertextures.js","worker.js","workerfilter.js","advanced-pie.js","test.js"];
-		var aFilterOutNames =[];
-		var aFilterOuts=[];
-		//var sAltLoading = "altloading.js";
-		
-		
-		for(var i=0; i< aFiles.length; i++) {
-				var toLower = aFiles[i].toLowerCase();
-				var toAdd = '--js "' + __dirname +'/Dev/Js/' + toLower + '"' ;
-				//not a FilterOut
-				//console.log('toLower: ' + toLower);
-				if (toLower.indexOf('--') === 0 || toLower.length < 4)
-					continue;
-					
-				if (aToFilterOut.indexOf(toLower) == -1) { //FilterOut names should be created individually
-					aMain.push(toAdd);
-					nsBuild.aMinJs.push(toLower);
-				}
-				else {
-					var sName = toLower.split('.')[0] + '.min.' + 'js';
-					aFilterOutNames.push(sName);
-					aFilterOuts.push(toAdd);
-					
-				}
-		}
-			
-		var sMainFiles = aMain.join(' ');
-			
-		//console.log('Closure compiler now processing main files');
-		var aJarCommands =[];
-		aJarCommands.push('java -jar "'+ closureJar+'" '+sMainFiles+' --js_output_file "'+ outputFile+'"');
-			
-		//now the FilterOuts
-		for(var i=0; i<aFilterOuts.length;i++) {
-			var sName = aFilterOutNames[i];
+
+		var aJarCommands = [];
+
+		//main files
+		for(var i=0; i<aFiles.length;i++) {
+			var sName = aFiles[i];
+			var inputFileName = __dirname + "/Dev/JS/" + sName;
 			var outputFileFilterOut = __dirname + "/Release/JS/" + sName; 
-			aJarCommands.push('java -jar "'+ closureJar+'" '+aFilterOuts[i]+' --js_output_file "'+ outputFileFilterOut+'"');
+			aJarCommands.push('java -jar "'+ closureJar+'" "'+ inputFileName +'" --js_output_file "'+ outputFileFilterOut+'"');
 		}
-		
-		
-		var singleJarCallback = function() {
-		
-		};
 		
 		var aJarFunctions =[];
-		var j=0;
-		for(var i=0;i<aJarCommands.length;i++) {
-				nsBuild.fRunCommandLine(aJarCommands[i], 'SUCCESS!', function() {				
-					j++; 	
-					//console.log('creating min file ' + j);
-					if (j==aJarCommands.length) {
-						callback();
-					};
-				});			
-		};
-		
-		
-		/*async.parallel(aJarFunctions,
-			// optional callback
-			function(err, results){
-				callback(err,results);
-			}
-		);*/
-		
-		
 
-	}
+		for(var i=0;i<aJarCommands.length;i++) {
+			(function(k) {
+
+				aJarFunctions.push( function(callbackInner) {
+					console.log("now trying to call " + aJarCommands[k]);
+					nsBuild.fRunCommandLine(aJarCommands[k], 'SUCCESS', callbackInner);
+
+				});
+				
+			})(i);
+		}	
+		async.parallelLimit(aJarFunctions,4, callback);
+		return;	
+}
 
 nsBuild.nsCopy = {};	
 
