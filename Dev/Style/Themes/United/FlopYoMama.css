@@ -117,6 +117,8 @@ body .card.selected,
 #known_cards #board .btn,
 #known_cards #my_cards .btn {
   font-size: 120%;
+  /*fixes a problem with the height in ie 10-11*/
+  height: 42px;
 }
 #known_cards .btn.disabled {
   font-family: "georgia";
