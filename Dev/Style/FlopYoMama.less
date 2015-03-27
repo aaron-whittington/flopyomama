@@ -135,7 +135,7 @@ body .card.selected, .pair_string.selected{
 	}
 	
 	#board .btn, #my_cards .btn {
-		font-size: 120%;
+		font-size: 110%;
 		/*fixes a problem with the height in ie 10-11*/
 		height: 42px;
 	}
@@ -444,8 +444,6 @@ body .popover {
 	float: right;
 }
 
-
-
 #range-panel {
 	margin-bottom: 8px;
 }
@@ -494,7 +492,7 @@ body .popover {
 				
  }
  
-  @media only screen and (max-width: @screen-sm) { /*second collapse*/
+@media only screen and (max-width: @screen-sm) { /*second collapse*/
                 #content { font-size:0.9em;}
 				#content .row, #content .well {
 					padding: 8px;
@@ -505,12 +503,15 @@ body .popover {
 				
  }
  
-   @media only screen and (max-width: @screen-xs) { //was 500
+@media only screen and (max-width: @screen-xs) { //was 500
                 #op_range { font-size:0.8em;}
 				
 				#op_range td div .inner_pair {
 					visibility: hidden;
 				}				
+				#content .btn {
+					 padding: 4px;
+				}
  }
  
  @media only screen and (max-width: 349px) { /*special collapse*/
@@ -527,46 +528,46 @@ body .popover {
  }
 
 .ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {
-border-bottom-right-radius: 4px;
+	border-bottom-right-radius: 4px;
 }
 
 .ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl {
-border-bottom-left-radius: 4px;
+	border-bottom-left-radius: 4px;
 }
 
 .ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
-border-top-right-radius: 4px;
+	border-top-right-radius: 4px;
 }
 
 .ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
-border-top-left-radius: 4px;
+	border-top-left-radius: 4px;
 }
 
 .ui-widget-content {
-border: 1px solid darken(@input-bg-disabled,15%);
-background: @input-bg-disabled  50% top repeat-x; //url(images/ui-bg_highlight-soft_100_eeeeee_1x100.png)
-color: #333333;
+	border: 1px solid darken(@input-bg-disabled,15%);
+	background: @input-bg-disabled  50% top repeat-x; //url(images/ui-bg_highlight-soft_100_eeeeee_1x100.png)
+	color: #333333;
 }
 
 .ui-widget {
-font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
-font-size: 1.1em;
+	font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
+	font-size: 1.1em;
 }
 
 .ui-slider-horizontal {
-height: .8em;
+	height: .8em;
 }
 
 .ui-slider {
-position: relative;
-text-align: left;
+	position: relative;
+	text-align: left;
 }
 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-border: 1px solid #cccccc;
-background: @brand-info  50% 50% repeat-x; //url(images/ui-bg_glass_100_f6f6f6_1x400.png)
-font-weight: bold;
-color: #1c94c4;
+	border: 1px solid #cccccc;
+	background: @brand-info  50% 50% repeat-x; //url(images/ui-bg_glass_100_f6f6f6_1x400.png)
+	font-weight: bold;
+	color: #1c94c4;
 }
 
 #range_slider {
@@ -581,14 +582,14 @@ color: #1c94c4;
 }
 
 .ui-slider-horizontal .ui-slider-handle {
-top: -.3em;
-margin-left: -.6em;
+	top: -.3em;
+	margin-left: -.6em;
 }
 
 .ui-slider .ui-slider-handle {
-position: absolute;
-z-index: 2;
-width: 1.2em;
-height: 1.2em;
-cursor: default;
+	position: absolute;
+	z-index: 2;
+	width: 1.2em;
+	height: 1.2em;
+	cursor: default;
 }

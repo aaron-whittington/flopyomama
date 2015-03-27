@@ -123,7 +123,7 @@ $(document).ready(function() {
 
 	$(window).resize(function(e){
 		var width = window.innerWidth, ranges, rand, results;
-		if (innerWidth <= 1008) { //result pop down
+		if (innerWidth <= 992) { //result pop down
 			if(!bResultsToggled) {
 				results = $('#results_col').detach();
 				results.removeClass().addClass('row').appendTo('#content');
@@ -138,7 +138,7 @@ $(document).ready(function() {
 		else
 			return;
 		
-		if (innerWidth <= 784) {
+		if (innerWidth <= 768) {
 			if(!bRandToggled) {
 				rand = $('#rand_buttons').detach();
 				rand.appendTo('#my_cards');
