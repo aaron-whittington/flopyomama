@@ -32,7 +32,8 @@ $(document).ready(function() {
 	
 	nsUI.fRestoreBoard();
 		
-	/**********************************************************PROGRESS BARS*************************************************************************/
+	/**********************************************PROGRESS BARS***************************************************************/
+
 	$('#results_progress').bind('done',function(){
 		$(this).removeClass('active');		
 		$(this).children('div').addClass('progress-bar-success').css('width','100%');
@@ -69,7 +70,8 @@ $(document).ready(function() {
 		nsUI.fDeleteLongStatistics();
 	});
 
-	/**********************************************************RANGE MENU*****************************************************************************/
+	/**********************************RANGE MENU*****************************************************/
+
 	$('#fixed_ranges li').popover ({
 		content: function(){
 						
@@ -83,7 +85,7 @@ $(document).ready(function() {
 		html: true		
 	});
 	
-	/**********************************************************RANGE GRID & SLIDER******************************************************************/
+	/**********************************RANGE GRID & SLIDER******************************************/
 	
 		
 	//Clear custom selection
@@ -148,7 +150,6 @@ $(document).ready(function() {
 	$('body').on('click','.expanded_pair .pair_string',function(){
 		$(this).toggleClass('selected');
 	
-		
 		var panel = $(this).parent();
 		var pairString = panel.attr('id').split('_')[2];
 		var iPairsTotal = panel.children().length;
@@ -206,7 +207,7 @@ $(document).ready(function() {
 	$('#range_slider').append('<div class="range_slider_bg">&nbsp;</div>');
 		$('[title]').tooltip({container: 'body'});
 		
-	/**********************************************************HAND FLOP BOARD************************************************************************/
+	/**************************HAND FLOP BOARD************************/
 
 	$("#known_cards").popover({
 		content: function(){
@@ -241,7 +242,6 @@ $(document).ready(function() {
 	$('body').on('mousedown','#board_selection_table .card',function(e){ //only toggle cards when we didn't hit a button		
 	
 		//if it's selected remove it from the board and mark it as not selected not disabled
-		//i
 		if($(this).is('.selected')) {
 			nsUI.fSelectKnown($(this).html());
 			nsUI.fDeleteBoard($(this).html()); 
@@ -296,8 +296,7 @@ $(document).ready(function() {
 		}
 		nsUI.fEvaluateKnownCards();
 	
-			//{oPair: oPair, aPair: actualPairs, sPair: pairString}
-		
+		//{oPair: oPair, aPair: actualPairs, sPair: pairString}
 		//nsUtil.fSetLocalStorage("random_settings", aRandomSetting);
 	});	
 });
@@ -484,8 +483,6 @@ var FlopYoMama = AWModel.extend({
 $(function() { 
 		
 	window.flopYoMama = new FlopYoMama();
-	//flopYoMama.router.navigate("slider=", {trigger: true});
-	//flopYoMama.router.navigate("slider=", {trigger: true});
 
 });
 
