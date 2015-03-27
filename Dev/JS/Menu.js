@@ -209,9 +209,11 @@ $(function() {
 	var standardGroup = new MenuItemGroup();
 	var rangeMenuActionGroup = new MenuItemGroup('clearboard',false);	
 	var randomMenu = new MenuListModel([
-			{id:"hand", value:"random_hand", displayValue:"Hand", group: standardGroup},
+			{id:"hand", value:"random_hand", displayValue:"Hand",
+				group: standardGroup, active: true},
 			{divider: true},
-			{id:"flop", value:"random_flop", displayValue:"Flop", group: standardGroup, active: true},
+			{id:"flop", value:"random_flop", displayValue:"Flop",
+				group: standardGroup, active: true},
 			{id:"turn", value:"random_turn", displayValue:"Turn", group: standardGroup},
 			{id:"river", value:"random_river", displayValue:"River", group: standardGroup},
 			{divider: true},
