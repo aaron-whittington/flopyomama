@@ -1,7 +1,32 @@
 ﻿var TOTAL_STARTING_COMBINATIONS = 1326.0;
 
+var modern = Modernizr.csstransforms &&
+	Modernizr.csstransforms3d &&
+	Modernizr.csstransitions &&
+	Modernizr.svg &&
+	Modernizr.webworkers;
+
+if(!modern) {
+	
+	if( confirm("FlopYoMama uses some advanced browser features. " +
+		"We reccomend the latest Chrome/Safari/Chromium " +
+		"on a relatively fast computer.\n\n" +
+		"Redirect to the Google Chrome site?")) {
+
+		window.location.href = "http://www.google.com/chrome/";
+
+	}
+
+
+	throw new Error("Browser not supported");
+}
 
 $(document).ready(function() {
+	//were we ever modern?
+
+	if(!modern)
+		return;
+
 	nsFilter.nsHtml.fReBuildFilterMenu();
 	//filter settings before slider, because slider triggers eval
 	var localFilterSettings = nsUtil.fGetLocalStorage("filter_settings");
