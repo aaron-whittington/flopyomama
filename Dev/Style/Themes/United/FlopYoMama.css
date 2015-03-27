@@ -678,9 +678,6 @@ body .popover {
   #op_range {
     font-size: 0.6em;
   }
-  #op_range td {
-    padding: 2px;
-  }
   #op_range td .inner_pair {
     visibility: hidden;
   }
