@@ -238,10 +238,8 @@ $(function() {
 	//loggingModelView.render();
 
 	/***********************************    RANDOM     ******************************************************/				
-	$('#rand').click(function(){
+	$('body').on('click touchstart','#rand', function(){
 		var aCards = fGetRandomCards(7);
-		//nsUI.fDeleteBoard();		
-		//nsUI.fSetBoardCard(aCards);
 				
 		if (randomMenu._collection.get("hand").get("active")) {
 			nsUI.fSetBoardCard(aCards.slice(0,2),0);

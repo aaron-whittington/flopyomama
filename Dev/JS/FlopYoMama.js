@@ -20,9 +20,6 @@ if(!modern) {
 $(document).ready(function() {
 	//were we ever modern?
 
-	if(!modern)
-		return;
-
 	nsFilter.nsHtml.fReBuildFilterMenu();
 	//filter settings before slider, because slider triggers eval
 	var localFilterSettings = nsUtil.fGetLocalStorage("filter_settings");
@@ -241,12 +238,9 @@ $(document).ready(function() {
 	});
 	
 	//toggle board selection table when we didn't hit a button
-	$('#known_cards').click(function(e){ 		
-		if( !$(e.target).parents().addBack().is($("#rand, #rand_ctrl, #randomMenu"))) {
-			
-			if(!$('#board_selection_table').is(':visible'))
+	$('#known_cards [id^=known]').click(function(e){ 		
+		if(!$('#board_selection_table').is(':visible'))
 			$("#known_cards").popover('show');
-		}
 	});
 	
 	$('body').on('click','#board_selection_table .glyphicon-remove',function(e){ //only toggle cards when we didn't hit a button		
