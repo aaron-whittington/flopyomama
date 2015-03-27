@@ -291,14 +291,14 @@ nsBuild.nsClosure.fReadDirCallback = function(err,aFiles, callback) {
 			(function(k) {
 
 				aJarFunctions.push( function(callbackInner) {
-					console.log("now trying to call " + aJarCommands[k]);
-					nsBuild.fRunCommandLine(aJarCommands[k], 'SUCCESS', callbackInner);
 
+					nsBuild.fRunCommandLine(aJarCommands[k], 'SUCCESS', callbackInner);
+					
 				});
 				
 			})(i);
 		}	
-		async.parallelLimit(aJarFunctions,4, callback);
+		async.series(aJarFunctions, callback);
 		return;	
 }
 
@@ -347,6 +347,7 @@ nsBuild.nsCopy.fCopyNeededFiles = function(callback) {
 
 nsBuild.fRunCommandLine = function(sCommand, sSuccess, callback) {
 	var fCommand = require('child_process').exec;
+	console.log("fRunCommandLine: " + sCommand);
 	fCommand(sCommand, function( error, stdout, stderr) {
 		
 		   if ( error != null ) {
@@ -361,8 +362,10 @@ nsBuild.fRunCommandLine = function(sCommand, sSuccess, callback) {
 		   if(stdout!=null &&stdout.length > 0)
 				console.log('stdout: ' + stdout);
 				
-			if(callback)
-				callback();
+			if(callback) {
+				console.log("fRunCommandLine: now calling callback");
+				callback(error);
+			}
 	   });
 }
 
