@@ -51,8 +51,9 @@ nsWorkerTextures.fCalculateBoards = function (aoStartingHands,aKnownCards,aFixed
 						var aVillainHand = [];
 						aVillainHand = oPairArray[i].concat(aFixedBoardCards);
 						var oVillainHand;
-						if (!oFilter) {
-							var bHit = nsFilter.nsEvaluate.fEvaluateFilter(oFilter,aVillainHand); //this should actually return the drawing hand, so i don't have to evaluate it again
+						if (oFilter) {
+							//this should actually return the drawing hand, so i don't have to evaluate it again
+							var bHit = nsFilter.nsEvaluate.fEvaluateFilter(oFilter,aVillainHand);
 							if(!bHit) { //did not pass filter
 								oFilterRecord[sPair].push(oPairArray[i]); 
 								continue;
