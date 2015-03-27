@@ -12,12 +12,8 @@ if(!modern) {
 		"We reccomend the latest Chrome/Safari/Chromium " +
 		"on a relatively fast computer.\n\n" +
 		"Redirect to the Google Chrome site?")) {
-
 		window.location.href = "http://www.google.com/chrome/";
-
 	}
-
-
 	throw new Error("Browser not supported");
 }
 
