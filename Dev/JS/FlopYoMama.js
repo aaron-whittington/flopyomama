@@ -437,7 +437,7 @@ $(function(){
 				var filterId;
 				var sId = $('#sel_filter li.active').attr('id'); 
 				
-				if (!isNot(sId))
+				if (sId)
 					filterId = sId.substring('sel_'.length);
 				else
 					filterId='';
