@@ -188,17 +188,6 @@ $(document).ready(function() {
 		}
 	});
 
-	var rangeFunctionStored = nsUtil.fGetLocalStorage("range_type");
-	if (rangeFunctionStored === null) {
-			rangeFunctionStored = 'statistical';
-	}
-	 
-	if (typeof fRangeFunction === 'undefined')
-		fRangeFunction = fGetSlanskyFromPercent;
-	 
-	$('#'+rangeFunctionStored).triggerHandler('click');
-	
-		
 	$('#range_slider').append('<div class="range_slider_bg">&nbsp;</div>');
 		$('[title]').tooltip({container: 'body'});
 		
