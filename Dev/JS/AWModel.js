@@ -30,6 +30,8 @@ var AWModel = Backbone.Model.extend({
 		this.set(attr,val);
 		return val;
 	},
+	/*The _*ToPrm functions are used so that subclasses can use constructors
+	 * with types other than object (which is the backbone default)*/
 	_numToPrm : function() {
 	
 	},
