@@ -118,7 +118,6 @@ var MenuItemView = AWView.extend({
 		}
 		
 		var sClasses = classes.join(' ');
-		console.log('class calculated, set to '+sClasses);
 		return sClasses;
 	},
 	events: {
@@ -153,8 +152,6 @@ var MenuItemView = AWView.extend({
 			output = this.compiledTemplate(oData);//Mustache.render(this.template, oData);
 			this.$el.html(output);			
 			this.$el.attr('class',oData.class);
-			console.log("menu item rendered");
-			console.log(output);
 			
 			return this; 
 	},
@@ -227,8 +224,8 @@ $(function() {
 			}
 		]
 	);
+	randomMenu.set("id","random_menu"); 
 
-		
 	var randomModelView = new MenuView({model:randomMenu,id: "random_menu" });
 	/*for (var i=0;i<randomModelView.views.length;i++)  {
 		randomModelView.views[i].el = "body";

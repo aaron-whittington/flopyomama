@@ -16,6 +16,7 @@ var AWModel = Backbone.Model.extend({
 				oPrms = this._arrToPrm(prm);
 			}
 		}
+
 		//send it down the chain
 		if(!_.isUndefined(oPrms)) {
 			Backbone.Model.apply(this,[oPrms]);
@@ -156,6 +157,8 @@ var AWCollectionModel = AWModel.extend({
 		this._collection = new this.collection(
 			prm
 		);
+		
+		Backbone.Model.apply(this,prm);
 	},
 	collection: AWCollection,
 	_numToPrm : function() {
