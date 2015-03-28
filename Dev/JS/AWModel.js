@@ -21,6 +21,7 @@ var AWModel = Backbone.Model.extend({
 		if(!_.isUndefined(oPrms)) {
 			Backbone.Model.apply(this,[oPrms]);
 		}
+		//argument[0] was an object so we do the default initialization
 		else {
 			Backbone.Model.apply(this,prm);
 		}
