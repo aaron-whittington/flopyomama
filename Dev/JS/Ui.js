@@ -443,10 +443,18 @@ nsUI.fGetKnownCards = function() {
 	return aCards;
 };
 
-nsUI.fToggleCheckableMenu = function(node, bTurnOffOthers) {
-		$(node).toggleClass('active');
+nsUI.fToggleCheckableMenu = function(node, bTurnOffOthers, bForceTrue) {
+
+		if(!bForceTrue) {
+			$(node).toggleClass('active');
+		} else {
+			$(node).addClass('active');
+		}
+
 		if($(node).hasClass('active')){
-			$(node).find('a').append('<span class = "glyphicon glyphicon-ok"></span>');
+			
+			if($(node).find('.glyphicon-ok').length == 0 )
+				$(node).find('a').append('<span class = "glyphicon glyphicon-ok"></span>');
 			
 			if (bTurnOffOthers) {
 				$(node).siblings().removeClass('active').find('.glyphicon-ok').remove();

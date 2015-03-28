@@ -74,9 +74,15 @@ nsUtil.fExportLocalStorage = function(fTest) {
 
 nsUtil.fGetLocalStorage = function(v) {
 	var sJson =localStorage.getItem(v);
-	var o = JSON.parse(sJson);
-	
-	if (o!== null && o.json_array_data_conversion !== null) {
+
+	try {
+		var o = JSON.parse(sJson);
+	} 
+	catch(e) {
+		console.log("unexpected localStorage key, val: " + v + ", " + sJson); 
+		return null;
+	}
+	if (typeof(o) === "object" && o!== null && o.json_array_data_conversion !== null) {
 		return o.json_array_data_conversion;
 	}
 	else

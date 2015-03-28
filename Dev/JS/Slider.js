@@ -5,12 +5,37 @@ nsModel = {};
 var Slider = Backbone.Model.extend({
 		defaults: {value: 18, fRangeFunction:fGetSlanskyFromPercent, max: 50, min:0},
 		initialize: function() {					
+
+			var rangeFunctionStored = nsUtil.fGetLocalStorage("range_type");
+		
+			if (rangeFunctionStored  === "sklansky") {
+				fRangeFunction = fGetSlanskyFromPercent;
+			}			
+
+			else if (rangeFunctionStored   === "statistical") {
+				fRangeFunction = fGetStatisticalFromPercent;
+			}
+		
+			if(fRangeFunction) {
+				this.set("fRangeFunction", fRangeFunction);
+			}
+				
 			this.on('change:value', function() {
 				var value = this.get('value');
 				if (value > this.max)
 					this.set({'value':this.max});
 				else if(value < this.min)
 					this.set({'value':this.min});
+			});
+
+			this.on('change:fRangeFunction', function() {
+				this.trigger('finalize');
+				var id,
+					f = this.get('fRangeFunction');
+
+				id = f === fGetStatisticalFromPercent ? "statistical" : "sklansky"; 
+
+				nsUtil.fSetLocalStorage("range_type", id);
 			});
 								
 			this.on('finalize', function (value) {
@@ -33,7 +58,7 @@ var Slider = Backbone.Model.extend({
 	}
 );
 
-SliderView = Backbone.View.extend({	  
+var SliderView = Backbone.View.extend({	  
 	  initialize: function() {
 			var that = this;
 			this.$el.slider({
@@ -43,7 +68,7 @@ SliderView = Backbone.View.extend({
 						slide: function(event,ui) {								
 							that.model.set({value:ui.value});
 						},
-						max: that.model.get("max"),
+					max: that.model.get("max"),
 						min: that.model.get("min"),
 						value: that.model.get("value")					
 					}		
@@ -74,8 +99,41 @@ SliderView = Backbone.View.extend({
 		}
 });
 
+var RangeTypeSelectView = Backbone.View.extend({
+	initialize : function() {
+		this.listenTo(this.model, "change:value", this.render);
+		this.render();
+	},
+	render: function() {
+		var f = this.model.get("fRangeFunction");
+		if( f === fGetSlanskyFromPercent) {
+			nsUI.fToggleCheckableMenu($('#sklansky'), true, true);
+		} else if (f === fGetStatisticalFromPercent) {
+			nsUI.fToggleCheckableMenu($('#statistical'), true, true);
+		}
+	},
+	events: {
+		"click": "handleClick"
+	},
+	handleClick: function(e) {
+		var fRangeFunction,	
+			item = $(e.target).parent(),
+			bActivated = nsUI.fToggleCheckableMenu(item, true);	
 
-
+		if (bActivated) {
+			var id = $(item).attr('id');
+			
+			if (id === "sklansky") {
+				fRangeFunction = fGetSlanskyFromPercent;
+			}			
+			else if (id === "statistical") {
+				fRangeFunction = fGetStatisticalFromPercent;
+			}
+			
+			this.model.set("fRangeFunction", fRangeFunction);
+		}
+	}
+});
 
 
 

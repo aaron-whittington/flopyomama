@@ -43,6 +43,22 @@ var AWModel = Backbone.Model.extend({
 	_stringToPrm : function() {
 	
 	},
+	//some attributes do not need to be serialized 
+	//for example, I don't want the 
+	attributesToSave: function() {
+		return this.attributes;
+	},
+	_loadFromURL: function() {
+
+
+	},
+	_loadFromLocalStorage: function() {
+
+	},
+	load: function() {
+			
+	
+	},
 	toString: function() {
 
 	},

@@ -217,7 +217,7 @@ var fGetStatisticalFromPercent = function(fPercent) {
 	var lastEquity = 0;
 	for (var i = 0; i < range.aStatData.length; i++) {
 			var hand = range.aStatData[i].sPair;
-			var oPair = new Pair(nextHand);
+			var oPair = new Pair(hand);
 			iHandsAdded += oPair.get("comb");
 			if (oPair.get("suited") === false && oPair.get("rank1") !== oPair.get("rank2"))
 					hand = hand[0]+hand[1]+'o'; //add offsuit symbol

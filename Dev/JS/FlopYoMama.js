@@ -188,31 +188,6 @@ $(document).ready(function() {
 		}
 	});
 
-	var bSliderInitialized = false;
-
-	var fRangeFunction = fGetSlanskyFromPercent;
-	//Range Scale Selection
-	$('#range_scales li').click(function() {
-		bActivated = nsUI.fToggleCheckableMenu(this, true);	
-		if (bActivated) {
-			var id = $(this).attr('id');
-			//var storedSliderVal = nsUtil.fGetLocalStorage("range_slider_val");
-			//$("#range_slider").slider('value',storedRangeSliderVal);
-			nsUtil.fSetLocalStorage("range_type", id);
-			
-			if (id === "sklansky") {
-				fRangeFunction = fGetSlanskyFromPercent;
-			}			
-			else if (id === "statistical") {
-				fRangeFunction = fGetStatisticalFromPercent;
-			}
-			if(bSliderInitialized) {
-				$("#range_slider").slider('value',$("#range_slider").slider('value')); //make rangeslider redraw
-			}
-		}
-	});
-	
-	
 	var rangeFunctionStored = nsUtil.fGetLocalStorage("range_type");
 	if (rangeFunctionStored === null) {
 			rangeFunctionStored = 'statistical';
@@ -412,7 +387,6 @@ $(function(){
 				else {
 					labelButton.html(displayVal);
 				}
-											
 				nsFilter.fSetEditedJson();
 				nsFilter.nsHtml.fUpdateUI();
 			}
@@ -467,14 +441,16 @@ var FlopYoMama = AWModel.extend({
 		/*slider*/		
 		routerValueSlider = routerValues.slider;
 		
-		if(typeof routerValueSlider !== "undefined")
-			this.slider = new Slider({value:routerValueSlider});
-		else
-			this.slider = new Slider();
+		this.slider = new Slider({value:routerValueSlider});
 		
 		this.sliderView = new SliderView({
 			model:this.slider, 
 			el:$("#range_slider")[0]
+		});
+
+		this.rangeTypeSelectView = new RangeTypeSelectView( {
+			model:this.slider,
+			el:$("#sklansky").parent()[0]
 		});
 						
 		/*range table*/
@@ -490,7 +466,12 @@ var FlopYoMama = AWModel.extend({
 	finalizeHandler: function(args) {
 		nsUtil.fLog('Main Ap Finalize');
 		nsUI.fEvaluateKnownCards();
-		this.router.navigate("slider=" + this.slider.get('value'),
+		var routerValue = "slider=" + this.slider.get('value') + 
+						  "&hand=" +
+						  "&flop=" +
+						  "&turn=" +
+						  "&river=";
+		this.router.navigate(routerValue,
 			{trigger: false});
 		
 	}
