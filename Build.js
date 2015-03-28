@@ -158,7 +158,7 @@ nsBuild.fEditHtml = function(callback) {
 			"maths.js", 
 			"ui.js",
 			"html.js",
-			"range.js",
+			"rangelib.js",
 			"util.js",
 			"test.js",
 			"drawinghand.js",

@@ -190,6 +190,7 @@ $(document).ready(function() {
 
 	var bSliderInitialized = false;
 
+	var fRangeFunction = fGetSlanskyFromPercent;
 	//Range Scale Selection
 	$('#range_scales li').click(function() {
 		bActivated = nsUI.fToggleCheckableMenu(this, true);	
@@ -205,8 +206,9 @@ $(document).ready(function() {
 			else if (id === "statistical") {
 				fRangeFunction = fGetStatisticalFromPercent;
 			}
-			if(bSliderInitialized)
+			if(bSliderInitialized) {
 				$("#range_slider").slider('value',$("#range_slider").slider('value')); //make rangeslider redraw
+			}
 		}
 	});
 	
