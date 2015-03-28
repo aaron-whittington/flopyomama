@@ -255,25 +255,6 @@ var RangeTableView = AWView.extend({
 			var output = Mustache.render(this.template, oData);
 			this.el.innerHTML = output; //html(output);
 			$(Mustache.render('#{{.}}',this.parent)).append(this.el);
-
-			/*popover for cards.... dragging to add fields tends to break this*/
-			$(this.el).find('td').popover({
-				content: function(){	
-					return nsHtml.fGetPairFromString($(this).attr('id').split('_')[2], $(this).is('.selected'));
-				}, 
-				container: '#op_range',
-				placement: 'auto right',
-				html: true,
-				trigger: 'hover', 
-				delay: { show: 2000, hide: 1000 }
-			});
-	
-			/*$('body').click(function(e){ //only toggle cards when we didn't hit a button		
-				if( !$(e.target).parents().addBack().is("#op_range")) {			
-					$(this.el).find('td').popover('hide');
-				}
-			});*/
-
 	},
 	renderData: { 		
 			'class': _.isFunction(this.className) ? this.className() : this.className,
