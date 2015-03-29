@@ -684,7 +684,7 @@ body .popover {
     font-size: 0.8em;
   }
   #op_range td div .inner_pair {
-    visibility: hidden;
+    padding: 2px;
   }
   #content .btn {
     padding: 4px;
@@ -696,7 +696,7 @@ body .popover {
     font-size: 0.6em;
   }
   #op_range td .inner_pair {
-    visibility: hidden;
+    padding: 2px;
   }
   #content #range_row,
   #content #op_range_col {

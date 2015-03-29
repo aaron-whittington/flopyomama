@@ -282,23 +282,21 @@ nsBuild.nsClosure.fReadDirCallback = function(err,aFiles, callback) {
 			var sName = aFiles[i];
 			var inputFileName = __dirname + "/Dev/JS/" + sName;
 			var outputFileFilterOut = __dirname + "/Release/JS/" + sName; 
-			aJarCommands.push('java -jar "'+ closureJar+'" "'+ inputFileName +'" --js_output_file "'+ outputFileFilterOut+'"');
+			aJarCommands.push('java -jar "'+ closureJar+'" "'+ inputFileName +'" --js_output_file "'+ outputFileFilterOut+'"' + ' --language_in ECMASCRIPT5');
 		}
 		
 		var aJarFunctions =[];
 
-		for(var i=0;i<aJarCommands.length;i++) {
-			(function(k) {
-
-				aJarFunctions.push( function(callbackInner) {
-
-					nsBuild.fRunCommandLine(aJarCommands[k], 'SUCCESS', callbackInner);
-					
-				});
-				
-			})(i);
-		}	
-		async.series(aJarFunctions, callback);
+		nsBuild.fRunCommandLine(aJarCommands.join('\n'), 'success', function() {
+		});
+		//for(var i=0;i<aJarCommands.length;i++) {
+			
+		/*	nsBuild.fRunCommandLine(aJarCommands[i], 'SUCCESS',function() {
+				console.log("did one");	
+			});
+		}*/	
+		
+	//	async.series(aJarFunctions, callback);
 		return;	
 }
 
@@ -350,8 +348,9 @@ nsBuild.fRunCommandLine = function(sCommand, sSuccess, callback) {
 	console.log("fRunCommandLine: " + sCommand);
 	fCommand(sCommand, function( error, stdout, stderr) {
 		
-		   if ( error != null ) {
-				console.log(stderr);
+		console.log("fCommand is finally done. YEAH!");
+		if ( error != null ) {
+			console.log(stderr);
 				console.log(sCommand);
 				throw error;  // error handling & exit
 		   }	  
@@ -362,10 +361,9 @@ nsBuild.fRunCommandLine = function(sCommand, sSuccess, callback) {
 		   if(stdout!=null &&stdout.length > 0)
 				console.log('stdout: ' + stdout);
 				
-			if(callback) {
-				console.log("fRunCommandLine: now calling callback");
-				callback(error);
-			}
+
+			console.log("fRunCommandLine: now calling callback");
+			callback(error, "success");
 	   });
 }
 
