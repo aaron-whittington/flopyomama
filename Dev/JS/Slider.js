@@ -5,7 +5,7 @@ nsModel = {};
 var Slider = Backbone.Model.extend({
 		defaults: {value: 18, fRangeFunction:fGetSlanskyFromPercent, max: 50, min:0},
 		initialize: function() {					
-
+			var fRangeFunction = null;
 			var rangeFunctionStored = nsUtil.fGetLocalStorage("range_type");
 		
 			if (rangeFunctionStored  === "sklansky") {
