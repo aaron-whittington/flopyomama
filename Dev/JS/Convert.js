@@ -3,7 +3,7 @@ var nsConvert = {};
 
 var fGetRandomCards = function(i) {
 
-	var aAll = fGetAllUnknownCards();
+	var aAll =flopYoMama.knownCards.allUnknown(true);
 	
 	aReturnCards = [];
 	aReturnCardIndex = [];
@@ -96,19 +96,19 @@ _.extend(nsConvert,
 		suitCharToNumber: function(c) {				
 			if (c === '\u2663') //c
 				return 1;
-			if (c === '\u2666')  //h
+			if (c === '\u2666')  //d
 				return 2;
-			if (c === '\u2665') //s
+			if (c === '\u2665') //h
 				return 3;
-			if (c === '\u2660') //d
+			if (c === '\u2660') //s
 				return 4;			
 			if (c === 'C')
 				return 1;
-			if (c === 'H')
-				return 2;
-			if (c === 'S')
-				return 3;
 			if (c === 'D')
+				return 2;
+			if (c === 'H')
+				return 3;
+			if (c === 'S')
 				return 4;
 			
 			return null;

@@ -38,25 +38,6 @@ nsUI.fGetCurrentBoardString = function() {
 		return current.val();		
 }; 
 
-nsUI.fSetBoardString = function(current, s) {	
-	var oCard;
-	/*nothing selected*/
-	if(current.length < 1) {
-		return false;
-	}
-	else {
-		current.val(s);
-
-		current.removeClass("suit_C suit_D suit_H suit_S");
-
-		if(s.length === 2){
-			oCard = nsConvert.fConvertStringToCardObject(s); 
-			current.addClass("suit_" + nsConvert.suitToChar(oCard.suit));
-		}	
-
-		return true;	
-	}	
-};
 
 nsUI.fSetCurrentBoardString = function(s) {
 	var current = $('.known.btn:focus');
@@ -131,21 +112,12 @@ nsUI.fHandleKeyPressKnown = function(keyCode,e){
 	}		
 };
 
-nsUI.fHandleKeyPressAnywhereElse = function(keyCode,e){
-	if (keyCode === BACKSPACE_CODE) {
-		
-		//here we have to check if we're in a form field or not
-		// when not in a form field, the default is to navigate away; don't navigate away	
-		//	e.preventDefault();	
-	} 
-};
-
 nsUI.fHandleKeyPress = function(keyCode,e){
 	var d = e.srcElement || e.target;
 	var bBoardChanged = false;
    
     if (!$(d).hasClass('known')) {
-            nsUI.fHandleKeyPressAnywhereElse(keyCode,e);
+            //nsUI.fHandleKeyPressAnywhereElse(keyCode,e);
 			return; 
 	} else {	
 		nsUI.fHandleKeyPressKnown(keyCode,e);
@@ -156,6 +128,7 @@ nsUI.fAfterBoardChange = function() {
 	nsHtml.fRedrawBoardSelectionTable();
 	nsUI.fEvaluateKnownCards();
 	nsUI.fSaveBoardState();
+	flopYoMama.updateRoute();
 };
 
 
@@ -231,61 +204,6 @@ nsUI.fSaveBoardState = function() {
 	nsUtil.fSetLocalStorage("board_array",boardArray);
 };
 
-nsUI.fRestoreBoard = function() {
-	var boardArray = nsUtil.fGetLocalStorage("board_array");
-	if (boardArray === null)
-		return;
-	for(var i=0; i<7;i++) {
-		var id = '#known_' + (i+1);
-		var val = boardArray[i];
-		nsUI.fSetBoardString($(id), val);
-	}
-};
-
-/*Sets a board place(s) to the card at the given position.
-  If no position is given, it sets the board card to the current focus.
-  Otherwise throws an exception. */
-nsUI.fSetBoardCard = function(oCard, position) {
-
-	/*if position not sent try to set it on the focused one */
-	if(typeof position === "undefined") {
-		var current = $('.known.btn:focus');
-			
-		if(current.length !== 1)
-			throw "fSetBoardCard, no position given, and no current focus.";
-
-		var sNum = current.attr("id").split("_")[1];
-		var iNum = parseInt(sNum,10);
-		position = (iNum -1)%7;
-	}
-
-	var insertNode = $('#known_' + (position+1)), i;
-
-	if (nsUtil.fType(oCard) !== 'array'){
-		
-		if (nsUtil.fType(oCard) === 'object') 
-			oCard = nsConvert.fConvertCardObjectToString(oCard);
-
-
-		if ((nsUtil.fType(oCard) === 'string' && oCard.length === 2)) { //single card
-			nsUI.fSetBoardString(insertNode, oCard);				
-			nsUI.fSaveBoardState();	
-		}
-		else {
-			var numberOfCards = oCard.length/2;
-			for(i=0; i<numberOfCards; i++) {
-				var singleCard = oCard[i*2] + oCard[i*2+1];
-				nsUI.fSetBoardCard(singleCard,(position+i)%7);	
-			}
-			nsUI.fSaveBoardState();
-		}	
-	}
-	else {
-		for (i=0; i< oCard.length; i++) {
-			nsUI.fSetBoardCard(oCard[i], (position+i)%7);		
-		}
-	}	
-};
 
 /*selects the board with the card defined by search*/
 nsUI.fSelectKnown = function(search) {
@@ -454,7 +372,7 @@ nsUI.fToggleCheckableMenu = function(node, bTurnOffOthers, bForceTrue) {
 		if($(node).hasClass('active')){
 			
 			if($(node).find('.glyphicon-ok').length == 0 )
-				$(node).find('a').append('<span class = "glyphicon glyphicon-ok"></span>');
+			$(node).find('a').append('<span class = "glyphicon glyphicon-ok"></span>');
 			
 			if (bTurnOffOthers) {
 				$(node).siblings().removeClass('active').find('.glyphicon-ok').remove();

@@ -168,6 +168,7 @@ nsBuild.fEditHtml = function(callback) {
 			/*"advanced-pie.js",*/
 			"slider.js",
 			"card.js",
+			"deck.js",
 			"pair.js",
 			"board.js",
 			"rangetable.js",

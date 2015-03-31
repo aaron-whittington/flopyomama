@@ -1,7 +1,6 @@
 ﻿var Card = AWModel.extend({	
 	className: 'Card',
 	_stringToPrm: function(aArgs) {
-		//var prm = arguments;
 		var cardString = aArgs[0];
 		if(cardString.length !== 2)
 			throw "card constructor called with invalid prop: " + prm[0];		
@@ -12,7 +11,7 @@
 		return {rank:rank,suit:suit};
 	},
 	_numToPrm: function(aArgs) {
-		return {rank:aArgs[0],suit:aArgs[1]};
+		return {rank:aArgs[0], suit:aArgs[1]};
 	},
 	initialize: function() {
 		var test = arguments;
@@ -45,7 +44,7 @@ var CardList = AWCollection.extend({
 		var sCards = aArgs[0];		
 			if(sCards.indexOf(',') === -1) {
 				var length = sCards.length;
-				for (var i=0; i<length-2; i+=2) {
+				for (var i=0; i<length; i+=2) {
 					aoCards.push(new Card( sCards.substring(i,i+2)));
 				}
 			}

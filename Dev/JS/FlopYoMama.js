@@ -9,8 +9,8 @@ var modern = Modernizr.csstransforms &&
 if(!modern) {
 	
 	if( confirm("FlopYoMama uses some advanced browser features. " +
-		"We reccomend the latest Chrome/Safari/Chromium " +
-		"on a relatively fast computer.\n\n" +
+		"We recommend the latest Chrome/Safari/Chromium " +
+		"on a decent machine.\n\n" +
 		"Redirect to the Google Chrome site?")) {
 		window.location.href = "http://www.google.com/chrome/";
 	}
@@ -48,7 +48,6 @@ $(document).ready(function() {
 		});*/
 	});
 	
-	nsUI.fRestoreBoard();
 		
 	/**********************************************PROGRESS BARS***************************************************************/
 
@@ -231,8 +230,8 @@ $(document).ready(function() {
 			$(this).removeClass('disabled selected');
 		}
 		else {//if it's not selected, select it and added to the board, mark it as selected and disabled
-			var sReplaced = nsUI.fSetBoardCard($(this).html());
-			if (sReplaced !==EMPTY_CARD_STRING) { //we replaced a card so disable it in the board
+			var sReplaced = flopYoMama.knownCardsView.setBoardCard($(this).html());
+			if (sReplaced !== EMPTY_CARD_STRING) { //we replaced a card so disable it in the board
 				$('#board_selection_table .card').each(function() {
 					if($(this).html()===sReplaced) {	
 						$(this).removeClass('disabled selected');
@@ -419,49 +418,62 @@ $(function(){
 	
 
 });
-
+var flopYoMama = {};
 var FlopYoMama = AWModel.extend({	
 	initialize : function() {
 		
+	
 		/*router*/
-		this.router = new TableRouter();
+		flopYoMama.router = new TableRouter();
 		Backbone.history.start({pushState: false}); //, root: "/dev/flopyomama.html"
 		
+		/*known cards*/
+		flopYoMama.allCards = new ImmutableDeck();
+		flopYoMama.knownCards = new KnownCards();	
+		flopYoMama.knownCardsView = new KnownCardsView({model:flopYoMama.knownCards});
+		flopYoMama.knownCardsView.render();
+
+
 		/*slider*/		
 		routerValueSlider = routerValues.slider;
-		
-		this.slider = new Slider({value:routerValueSlider});
-		
-		this.sliderView = new SliderView({
-			model:this.slider, 
+		flopYoMama.slider = new Slider({value:routerValueSlider});
+		flopYoMama.sliderView = new SliderView({
+			model:flopYoMama.slider, 
 			el:$("#range_slider")[0]
 		});
 
-		this.rangeTypeSelectView = new RangeTypeSelectView( {
-			model:this.slider,
+		flopYoMama.rangeTypeSelectView = new RangeTypeSelectView( {
+			model:flopYoMama.slider,
 			el:$("#sklansky").parent()[0]
 		});
 						
 		/*range table*/
-		this.rangeTable = new RangeTable();
-		this.rangeTable.listenToSlider(this.slider);
-		this.rangeTableView = new RangeTableView({model:this.rangeTable});
+		flopYoMama.rangeTable = new RangeTable();
+		flopYoMama.rangeTable.listenToSlider(flopYoMama.slider);
+		flopYoMama.rangeTableView = new RangeTableView({model:flopYoMama.rangeTable});
 	
-		this.listenTo(this.rangeTable, 'finalize', this.finalizeHandler);
+		this.listenTo(flopYoMama.rangeTable, 'finalize', this.finalizeHandler);
 			
-		this.slider.trigger('finalize');					
-		
+		flopYoMama.updateRoute = function() {
+
+			var cards = nsUI.fGetBoardCards(),
+				hand = flopYoMama.knownCards.get('hand') || "",
+				board = flopYoMama.knownCards.get('board') || "";
+
+			var routerValue = "slider=" + flopYoMama.slider.get('value') + 
+							  "&hand=" + hand +
+							  "&board=" + board;
+			flopYoMama.router.navigate(routerValue,
+				{trigger: false});
+
+		}
+
+		flopYoMama.slider.trigger('finalize');					
 	},
 	finalizeHandler: function(args) {
-		nsUtil.fLog('Main Ap Finalize');
+		nsUtil.fLog('FlopYoMama.js: Main Ap Finalize');
 		nsUI.fEvaluateKnownCards();
-		var routerValue = "slider=" + this.slider.get('value') + 
-						  "&hand=" +
-						  "&flop=" +
-						  "&turn=" +
-						  "&river=";
-		this.router.navigate(routerValue,
-			{trigger: false});
+		flopYoMama.updateRoute();
 		
 	}
 });
@@ -469,7 +481,7 @@ var FlopYoMama = AWModel.extend({
 
 $(function() { 
 		
-	window.flopYoMama = new FlopYoMama();
+	new FlopYoMama();
 
 });
 

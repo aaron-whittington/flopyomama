@@ -260,8 +260,8 @@ nsRange.fGetAllUnknownCombinationsThreaded = function() {
 	
 	var aoStartingHands = nsRange.fGetStartingHandsFromRangeGrid();
 	
-	var aKnownCards = nsUI.fGetKnownCards();		
-	var aUnknownCards = fGetAllUnknownCards();
+	var aKnownCards = flopYoMama.knownCards.allKnown(true);		
+	var aUnknownCards = flopYoMama.knownCards.allUnknown(true);
 	var aFixedBoardCards = nsUI.fGetBoardCards();
 	var numberOfOpenBoardHandPlaces = 7 - aKnownCards.length;
 	
@@ -420,7 +420,7 @@ nsRange.fGetTextures = function() {
 	$('.no_results').remove();
 	//aoStartingHands,aKnownCards,aFixedBoardCards
 	var aoStartingHands = nsRange.fGetStartingHandsFromRangeGrid();	
-	var aKnownCards = nsUI.fGetKnownCards();		
+	var aKnownCards = flopYoMama.knownCards.allKnown(true);		
 	var aFixedBoardCards = nsUI.fGetBoardCards();	
 	var oFilter = nsFilter.fActiveFilter(null, true);
 	
@@ -479,24 +479,6 @@ nsRange.fGetStartingHandsFromRangeGrid = function(bAll){
 		 allStartingPairs.push({oPair: oPair, aPair: actualPairs, sPair: pairString});		 
 	 });
 	return allStartingPairs;
-};
-
-var fGetAllUnknownCards = function() {
-	var aAllCards = fGetAllCards();
-	var aKnownCards = nsUI.fGetKnownCards();
-	
-	var aDifference = [];
-	for (var i=0; i<aAllCards.length; i++) {
-		var knownCard = false;
-		for(var j=0;j<aKnownCards.length;j++) {
-			if(fIdenticalCards(aAllCards[i],aKnownCards[j]))
-				knownCard = true;
-		}	
-		if (!knownCard)
-			aDifference.push(aAllCards[i]);
-	}
-	
-	return aDifference;
 };
 
 var fIdenticalCards = function(a,b) {

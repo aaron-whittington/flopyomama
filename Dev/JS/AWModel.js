@@ -82,7 +82,7 @@ var AWCollection = Backbone.Collection.extend({
 	//call constructor methods with args from special classes 
 	constructor: function() {
 		var prm = arguments, aPrms;
-		if (prm.length >0) {
+		if (prm.length >0 && prm[0] != null) {
 		//special case, constructor called from AWCollectionModel
 			if (prm[0].bAWUnpack) {
 				prm = prm[0];

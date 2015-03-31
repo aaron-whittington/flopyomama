@@ -6,7 +6,7 @@ var TableRouter = Backbone.Router.extend({
 
   routes: {
     "help":                 "help",    // #help
-    "slider=(:value)&hand=(:value1)&flop=(:value2)&turn=(:value3)&river=(:value4)":        "main", 
+    "slider=(:value)&hand=(:value1)&board=(:value2)":        "main", 
 	"beer/:query/p:page": 		"search"   // #search/kiwis/p7
   },
 
@@ -14,11 +14,17 @@ var TableRouter = Backbone.Router.extend({
     
   },
 
-	main: function(slider, hand, flop, turn, river) {					
+	main: function(slider, hand, board) {					
 		routerValues.slider =slider;
+		routerValues.hand = hand;
+		routerValues.board = board;
 		
+		if(typeof flopYoMama !== "undefined" && flopYoMama.knownCards) {
+			window.flopYoMama.knownCards.trigger('update', hand, board);	
+		} 	
+
 		if(typeof flopYoMama !== "undefined" && flopYoMama.slider) {
-			window.flopYoMama.sliderView.trigger('update',slider);	
+			window.flopYoMama.sliderView.trigger('update', slider);	
 		} 	
   }
 });

@@ -98,12 +98,6 @@ var MenuItemView = AWView.extend({
 	initialize: function(oData) {				
 		this.compiledTemplate = Mustache.compile(this.template); //this could be in awview base
 		this.parentView = oData.parentView;
-		/*var elTest = $(Mustache.render('#{{.}}',this.idPrefix() + this.id()));
-		if (_.isElement(elTest[0])) {
-			this.el = elTest[0];
-			this.$el = elTest;
-		} */// could also be in base
-		//this.el = "#" + this.id;
 		
 	},
 	tagName: 'li',
@@ -190,19 +184,6 @@ var MenuItemView = AWView.extend({
 
 $(function() {
 	
-/*	var loggingMenu = new MenuListModel([
-			{value:"A", displayValue:"FlopYoMama.js", group: standardGroup},
-			{value:"B", displayValue:"RangeTable.js", group: standardGroup},
-			{value:"C", displayValue:"Slider.js", group: standardGroup},
-			{value:"D", displayValue:"Range.js", group: standardGroup}		
-		]
-	);
-
-	var loggingModelView = new MenuView({model:loggingMenu});
-*/
-	//loggingModelView.after = "rand_ctrl";
-
-
 	var standardGroup = new MenuItemGroup();
 	var rangeMenuActionGroup = new MenuItemGroup('clearboard',false);	
 	var randomMenu = new MenuListModel([
@@ -239,19 +220,19 @@ $(function() {
 		var aCards = fGetRandomCards(7);
 				
 		if (randomMenu._collection.get("hand").get("active")) {
-			nsUI.fSetBoardCard(aCards.slice(0,2),0);
+			flopYoMama.knownCardsView.setBoardCard(aCards.slice(0,2),0);
 		}
 		
 		if (randomMenu._collection.get("flop").get("active")) {
-			nsUI.fSetBoardCard(aCards.slice(2,5),2);
+			flopYoMama.knownCardsView.setBoardCard(aCards.slice(2,5),2);
 		}
 		
 		if (randomMenu._collection.get("turn").get("active")) {
-			nsUI.fSetBoardCard(aCards.slice(5,6),5);
+			flopYoMama.knownCardsView.setBoardCard(aCards.slice(5,6),5);
 		}
 		
 		if (randomMenu._collection.get("river").get("active")) {			
-			nsUI.fSetBoardCard(aCards.slice(6,7),6);
+			flopYoMama.knownCardsView.setBoardCard(aCards.slice(6,7),6);
 		}
 		
 		nsUI.fAfterBoardChange();

@@ -1,42 +1,30 @@
 ﻿var nsHtml = {};
 
 nsHtml.fGetBoardSelectionTable = function() { 
-     var sReturn = "<div id='board_selection_table'>";
-	 var aCards = fGetAllCards();
-	 aKnownCards = nsUI.fGetKnownCards();
-	 for (var i=0;  i<52; i++){          
-             if (i%13 ===0){
-				if (i>0)
-					sReturn +="</div>";
-				sReturn += "<div style='white-space: nowrap;'>";
-			 }
-			 var inKnownCards = false;
-			 
-			 for(var j=0;j<aKnownCards.length;j++) {
-				if (aKnownCards[j].suit === aCards[i].suit && 
-					aKnownCards[j].rank === aCards[i].rank)
-					inKnownCards = true;
-			 }
-			 sReturn += nsHtml.fWrapCard(aCards[i], inKnownCards, inKnownCards);
-     }
-	 sReturn += "<div>";
-     return sReturn + "<span class='glyphicon glyphicon-remove'></span></div>";
+	var sReturn = "<div id='board_selection_table'>";
+	var aCards = flopYoMama.allCards; 
+
+	for (var suit=4; suit>0; suit--){          
+		sReturn += "<div style='white-space: nowrap;'>";
+		aCards.each(function(c) {
+			if (c.get('suit') != suit) {
+				return;
+			}
+
+			var found = flopYoMama.knownCards.allKnown().where({
+				'suit': c.get('suit'), 'rank': c.get('rank')}
+			).length > 0;
+			sReturn += nsHtml.fWrapCard(c.attributes, found, found);
+		});
+		sReturn +="</div>";
+	}
+	sReturn += "<div>";
+	return sReturn + "<span class='glyphicon glyphicon-remove'></span></div>";
 };
 
 //this is inefficient if we've just got a little change
 nsHtml.fRedrawBoardSelectionTable = function() {
 	$('#board_selection_table').parent().html(nsHtml.fGetBoardSelectionTable);
-};
-
-var fGetAllCards = function() {
-	 
-	 var aCards =[];
-	 for (var i=51;  i>=0; i--){
-           aCards[i] = {};
-           aCards[i].rank = 14-(i%13);		   	  
-           aCards[i].suit = 5 - Math.floor((i+13.0)/13.0);            
-     }
-     return aCards;
 };
 
 nsHtml.fWrapCard = function(id, bDisabled, bSelected) {
