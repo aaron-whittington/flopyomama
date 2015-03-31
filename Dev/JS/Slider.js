@@ -7,15 +7,9 @@ var Slider = Backbone.Model.extend({
 		initialize: function() {					
 			var fRangeFunction = null;
 			var rangeFunctionStored = nsUtil.fGetLocalStorage("range_type");
-		
-			if (rangeFunctionStored  === "sklansky") {
-				fRangeFunction = fGetSlanskyFromPercent;
-			}			
+			
+			fRangeFunction = this.getFnFromScaleId(rangeFunctionStored);
 
-			else if (rangeFunctionStored   === "statistical") {
-				fRangeFunction = fGetStatisticalFromPercent;
-			}
-		
 			if(fRangeFunction) {
 				this.set("fRangeFunction", fRangeFunction);
 			}
@@ -33,7 +27,7 @@ var Slider = Backbone.Model.extend({
 				var id,
 					f = this.get('fRangeFunction');
 
-				id = f === fGetStatisticalFromPercent ? "statistical" : "sklansky"; 
+				id = this.getScaleIdFromFn(f); 
 
 				nsUtil.fSetLocalStorage("range_type", id);
 			});
@@ -54,9 +48,16 @@ var Slider = Backbone.Model.extend({
 													
 				}	
 			);		
+		},
+		getScaleIdFromFn: function(fn) {
+			return fn === fGetStatisticalFromPercent ? "statistical" : "sklansky"; 
+		},
+		getFnFromScaleId: function(id) {
+			return id === "statistical" ? fGetStatisticalFromPercent : fGetSlanskyFromPercent;
 		}
 	}
 );
+
 
 var SliderView = Backbone.View.extend({	  
 	  initialize: function() {
@@ -106,11 +107,8 @@ var RangeTypeSelectView = Backbone.View.extend({
 	},
 	render: function() {
 		var f = this.model.get("fRangeFunction");
-		if( f === fGetSlanskyFromPercent) {
-			nsUI.fToggleCheckableMenu($('#sklansky'), true, true);
-		} else if (f === fGetStatisticalFromPercent) {
-			nsUI.fToggleCheckableMenu($('#statistical'), true, true);
-		}
+		var id = this.model.getScaleIdFromFn(f);
+		nsUI.fToggleCheckableMenu($('#'+id), true, true);
 	},
 	events: {
 		"click": "handleClick"
@@ -123,12 +121,7 @@ var RangeTypeSelectView = Backbone.View.extend({
 		if (bActivated) {
 			var id = $(item).attr('id');
 			
-			if (id === "sklansky") {
-				fRangeFunction = fGetSlanskyFromPercent;
-			}			
-			else if (id === "statistical") {
-				fRangeFunction = fGetStatisticalFromPercent;
-			}
+			fRangeFunction = this.model.getFnFromScaleId(id);
 			
 			this.model.set("fRangeFunction", fRangeFunction);
 		}
