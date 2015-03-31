@@ -234,8 +234,8 @@ $(function() {
 		if (randomMenu._collection.get("river").get("active")) {			
 			flopYoMama.knownCardsView.setBoardCard(aCards.slice(6,7),6);
 		}
-		
-		nsUI.fAfterBoardChange();
+
+		flopYoMama.knownCards.trigger('finalize');
+
 	});
-	
 });

@@ -240,12 +240,11 @@ $(document).ready(function() {
 			}
 			
 			$(this).addClass('disabled selected');
-			nsUI.fSelectNext(true);
+			flopYoMama.knownCardsView.selectNext(true);
 		}
 		
-		//handle board changes
-		nsUI.fAfterBoardChange();
-		
+		flopYoMama.knownCardsView.updateModel();
+		flopYoMama.knownCards.trigger('finalize');
 		return false; //prevent focusout events
 		
 	});
@@ -422,7 +421,18 @@ var flopYoMama = {};
 var FlopYoMama = AWModel.extend({	
 	initialize : function() {
 		
-	
+		flopYoMama.updateRoute = function() {
+
+			var hand = flopYoMama.knownCards.get('hand'),
+				board = flopYoMama.knownCards.get('board');
+
+			var routerValue = "slider=" + flopYoMama.slider.get('value') + 
+							  "&hand=" + hand +
+							  "&board=" + board;
+			flopYoMama.router.navigate(routerValue,
+				{trigger: false});
+
+		}
 		/*router*/
 		flopYoMama.router = new TableRouter();
 		Backbone.history.start({pushState: false}); //, root: "/dev/flopyomama.html"
@@ -454,19 +464,6 @@ var FlopYoMama = AWModel.extend({
 	
 		this.listenTo(flopYoMama.rangeTable, 'finalize', this.finalizeHandler);
 			
-		flopYoMama.updateRoute = function() {
-
-			var cards = nsUI.fGetBoardCards(),
-				hand = flopYoMama.knownCards.get('hand') || "",
-				board = flopYoMama.knownCards.get('board') || "";
-
-			var routerValue = "slider=" + flopYoMama.slider.get('value') + 
-							  "&hand=" + hand +
-							  "&board=" + board;
-			flopYoMama.router.navigate(routerValue,
-				{trigger: false});
-
-		}
 
 		flopYoMama.slider.trigger('finalize');					
 	},

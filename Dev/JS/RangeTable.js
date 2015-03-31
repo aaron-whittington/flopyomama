@@ -20,7 +20,6 @@ var RangeItem = AWModel.extend({
 	}
 });
 
-
 var RangeItemList = AWCollection.extend({
 	className: 'RangeRecordList',
 	model: RangeItem
@@ -53,9 +52,6 @@ var RangeTable = RangeItemList.extend({
 			this.amChanged =[];
 		});
 
-		/*this.listenTo(window.flopYoMama.slider,'change:value',function() {
-			this.fSetFromRangeFunction(this);
-		});*/
 	},
 	listenToSlider: function(slider) {
 		this.listenTo(slider,'change:value',function() {

@@ -262,7 +262,9 @@ nsRange.fGetAllUnknownCombinationsThreaded = function() {
 	
 	var aKnownCards = flopYoMama.knownCards.allKnown(true);		
 	var aUnknownCards = flopYoMama.knownCards.allUnknown(true);
-	var aFixedBoardCards = nsUI.fGetBoardCards();
+	var aFixedBoardCards = flopYoMama.knownCards.get('board').map(function(m) {
+		return m.attributes;
+	});	
 	var numberOfOpenBoardHandPlaces = 7 - aKnownCards.length;
 	
 	var oDoneRecord = {iCountWon: 0, iCountLost:0, iCountDraw:0,total:0};
@@ -421,7 +423,9 @@ nsRange.fGetTextures = function() {
 	//aoStartingHands,aKnownCards,aFixedBoardCards
 	var aoStartingHands = nsRange.fGetStartingHandsFromRangeGrid();	
 	var aKnownCards = flopYoMama.knownCards.allKnown(true);		
-	var aFixedBoardCards = nsUI.fGetBoardCards();	
+	var aFixedBoardCards = flopYoMama.knownCards.get('board').map(function(m) {
+		return m.attributes;
+	});	
 	var oFilter = nsFilter.fActiveFilter(null, true);
 	
 	var fStartWorker = function() {
