@@ -170,7 +170,7 @@ nsBuild.fEditHtml = function(callback) {
 			"card.js",
 			"deck.js",
 			"pair.js",
-			"board.js",
+			"knowncards.js",
 			"rangetable.js",
 			"menu.js"
 			];
