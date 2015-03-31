@@ -271,14 +271,23 @@ nsHtml.fGetPieChartColors = function(i) {
 
 nsHtml.fDrawTexturePie = function(oResult) {
 
-	$('#inner-stats .tab-pane').removeClass('active'); //rendering not done correctly in hidden divs
-	$('#textures').addClass('active');
+	//rendering not done correctly in hidden divs
+	var jqOldActive;	
+	var texturesActive = $('#textures').hasClass('active');
 	
+	if(!texturesActive) {		
+		jqOldActive = $('#inner-stats .tab-pane.active');
+	
+		jqOldActive.removeClass('active'); 
+	
+		$('#textures').addClass('active');
+	}
+
 	var oStat = oResult.oVillainStat, iCount = oResult.count, returnHtml = '',
-		aPropArray=[], prop, jqOldActive = $('#inner-stats .tab-pane.active');
+		aPropArray=[], prop;
 	
 	for (prop in oStat) {
-			aPropArray.push(prop);
+		aPropArray.push(prop);
 	}		
 	
 	aPropArray.sort(function(a,b){return oStat[b].count - oStat[a].count;});
@@ -308,8 +317,6 @@ nsHtml.fDrawTexturePie = function(oResult) {
 		asPercent.push(sTotalPercent);
 		
 	}
-	//pie = r.piechart(320, 240, 100, [55, 20, 13, 32, 5, 1, 2, 10], { legend: ["%%.%% - Enterprise Users", "IE Users"], legendpos: "west", href: ["http://raphaeljs.com", "http://g.raphaeljs.com"]});
-
 	
 	$('#textures').prepend('<strong id="pie_hover_title" style="position:absolute;left:5px;top:5px"></strong>'); //to do: styling in css
 	
@@ -356,9 +363,11 @@ nsHtml.fDrawTexturePie = function(oResult) {
             this.label[1].attr({ "font-weight": 400 });
         }
     });				
-	//tooltips
-	$('#inner-stats .tab-pane').removeClass('active'); //rendering not done correctly in hidden divs
-	jqOldActive.addClass('active');
+	if(!texturesActive) {
+		//rendering not done correctly in hidden divs
+		$('#textures').removeClass('active'); 
+		jqOldActive.addClass('active');
+	}
 	
 };
 
