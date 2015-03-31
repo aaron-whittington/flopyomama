@@ -70,6 +70,10 @@ var KnownCards = AWModel.extend({
 
 			this.trigger('change');
 		});
+
+		this.on('change', function() {
+			this.saveBoardState();
+		});
 	},
 	saveBoardState: function() {
 		var boardArray = [],
@@ -79,7 +83,7 @@ var KnownCards = AWModel.extend({
 			boardArray.push(mod ? mod.attributes : null );
 		}
 		for(i=2; i<7;i++) {
-			mod = this.get('board').at(i); 
+			mod = this.get('board').at(i-2); 
 			boardArray.push(mod ? mod.attributes : null );
 		}
 		nsUtil.fSetLocalStorage("board_array",boardArray);
