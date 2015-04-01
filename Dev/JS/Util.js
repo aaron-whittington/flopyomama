@@ -82,7 +82,7 @@ nsUtil.fGetLocalStorage = function(v) {
 		console.log("unexpected localStorage key, val: " + v + ", " + sJson); 
 		return null;
 	}
-	if (typeof(o) === "object" && o!== null && o.json_array_data_conversion !== null) {
+	if (typeof(o) === "object" && o !== null && o.json_array_data_conversion) {
 		return o.json_array_data_conversion;
 	}
 	else
