@@ -317,7 +317,7 @@ nsHtml.fDrawTexturePie = function(oResult) {
 		asPercent.push(sTotalPercent);
 		
 	}
-	
+	$('#textures #pie_hover_title').remove();		
 	$('#textures').prepend('<strong id="pie_hover_title" style="position:absolute;left:5px;top:5px"></strong>'); //to do: styling in css
 	
 	var r = Raphael("textures",320,260);
