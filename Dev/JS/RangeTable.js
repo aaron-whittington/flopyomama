@@ -345,4 +345,3 @@ var RangeItemView = AWView.extend({
 				<div class='static_bg'>&nbsp;</div>\
 				<div class='inner_pair'>{{string}}</div>"
 });
-

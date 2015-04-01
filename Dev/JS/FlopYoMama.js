@@ -90,11 +90,6 @@ $(document).ready(function() {
 	/**********************************RANGE GRID & SLIDER******************************************/
 	
 		
-	//Clear custom selection
-	$('#clear_selection').click(function() {
-		$('#op_range td').removeClass('custom');
-		$("#range_slider").slider('value',$("#range_slider").slider('value')); //make rangeslider redraw
-	});
 		 
 	/*window resizing*/
 	var bResultsToggled = false, bRandToggled = false, bRangesToggled = false;
@@ -449,6 +444,12 @@ var FlopYoMama = AWModel.extend({
 		flopYoMama.rangeTable.listenToSlider(flopYoMama.slider);
 		flopYoMama.rangeTableView = new RangeTableView({model:flopYoMama.rangeTable});
 	
+		//Clear custom selection
+		$('#clear_selection').click(function() {
+			flopYoMama.rangeTable.clearCustom();
+			flopYoMama.sliderView.update();
+		});
+
 		this.listenTo(flopYoMama.rangeTable, 'finalize', this.finalizeHandler);
 			
 

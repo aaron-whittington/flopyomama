@@ -98,7 +98,8 @@ var SliderView = Backbone.View.extend({
 			$('.range_slider_bg').css('width', 100.0*value/this.model.get('max') + '%');			
 		},
 		update : function(value) { //changing the slider programatically
-			
+			if (typeof value == "undefined")
+					value = this.model.get("value");
 			//nsUtil.fLog('manual SET trigger with value ' +this.model.get('value'));
 			this.$el.slider({"value":value});
 		}
