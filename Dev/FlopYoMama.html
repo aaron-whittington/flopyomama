@@ -27,7 +27,7 @@
 <script type="text/javascript" src="lib/underscore/underscore-min.js"></script>
 <script type="text/javascript" src="lib/backbone/backbone.js"></script>
 <script type="text/javascript" src="lib/mustache/mustache.js"></script>
-<script type="text/javascript" src="js/AWModel.js"></script><script type="text/javascript" src="js/AWView.js"></script><script type="text/javascript" src="js/route.js"></script><script type="text/javascript" src="js/flopyomama.js"></script><script type="text/javascript" src="js/hand.js"></script><script type="text/javascript" src="js/convert.js"></script><script type="text/javascript" src="js/maths.js"></script><script type="text/javascript" src="js/ui.js"></script><script type="text/javascript" src="js/html.js"></script><script type="text/javascript" src="js/rangelib.js"></script><script type="text/javascript" src="js/util.js"></script><script type="text/javascript" src="js/test.js"></script><script type="text/javascript" src="js/drawinghand.js"></script><script type="text/javascript" src="js/filter.js"></script><script type="text/javascript" src="js/filterHtml.js"></script><script type="text/javascript" src="js/preferences.js"></script><script type="text/javascript" src="js/slider.js"></script><script type="text/javascript" src="js/card.js"></script><script type="text/javascript" src="js/deck.js"></script><script type="text/javascript" src="js/pair.js"></script><script type="text/javascript" src="js/knowncards.js"></script><script type="text/javascript" src="js/rangetable.js"></script><script type="text/javascript" src="js/menu.js"></script>
+<script type="text/javascript" src="js/AWModel.js"></script><script type="text/javascript" src="js/AWView.js"></script><script type="text/javascript" src="js/route.js"></script><script type="text/javascript" src="js/flopyomama.js"></script><script type="text/javascript" src="js/hand.js"></script><script type="text/javascript" src="js/convert.js"></script><script type="text/javascript" src="js/maths.js"></script><script type="text/javascript" src="js/ui.js"></script><script type="text/javascript" src="js/html.js"></script><script type="text/javascript" src="js/rangelib.js"></script><script type="text/javascript" src="js/util.js"></script><script type="text/javascript" src="js/test.js"></script><script type="text/javascript" src="js/drawinghand.js"></script><script type="text/javascript" src="js/filter.js"></script><script type="text/javascript" src="js/filterHtml.js"></script><script type="text/javascript" src="js/preferences.js"></script><script type="text/javascript" src="js/slider.js"></script><script type="text/javascript" src="js/fixedRange.js"></script><script type="text/javascript" src="js/card.js"></script><script type="text/javascript" src="js/deck.js"></script><script type="text/javascript" src="js/pair.js"></script><script type="text/javascript" src="js/knowncards.js"></script><script type="text/javascript" src="js/rangetable.js"></script><script type="text/javascript" src="js/menu.js"></script>
 </head>
 <body class="DEV_VERSION">
 
@@ -90,34 +90,12 @@
 			<div id="collapseOne" class="panel-body collapse in">
 				<div class="panel-inner">				
 					<ul id="fixed_ranges" class="nav nav-pills nav-stacked"  >
-						<li ><a title ="Loves to call.">Passive Fish</a></li>
-						<li ><a title ="Bets/raises too much. Not as extreme as a maniac.">Agressive Fish</a></li>
-						<li ><a title ="Bets/raises too much with trashy hands.">Maniac</a></li>
-						<li ><a title ="Only plays premium hands.">Nit</a></li>
-						<li ><a><abbr title="Tight agressive player (strong opponent)">Tag</abbr></a></li>
-						<li ><a><abbr title="Loose agressive player (strong opponent)">Lag</abbr></a></li>
+						<li id="new_fixed"><a>New/Edit<span class="glyphicon glyphicon-pencil"></span></a></li>	
 					</ul>
 					
 				</div>
 			</div>
 		</div>
-		<div class="panel panel-info">
-			<div class="panel-heading">
-				<h5 class="panel-title">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#range-panel" href="#collapseThree">
-					Edit Ranges<span class="glyphicon glyphicon-pencil"></span>
-				</a>
-				</h5>
-			</div>
-			<div id="collapseThree" class="panel-body collapse">
-				<div class="panel-inner">
-					<ul class="nav nav-pills nav-stacked"  >
-						<li><a>New from current<span class="glyphicon glyphicon-plus"></span></a></li>	
-						<li><a>Save range<span class="glyphicon glyphicon-floppy-save"></span></a></li>	
-					</ul>
-				</div>
-			</div>
-		</div>	
 		<div class="panel panel-info">
 			<div class="panel-heading">
 				<h5 class="panel-title">

@@ -105,6 +105,18 @@ var RangeTable = RangeItemList.extend({
 			}
 		});
 		return returnMod;
+	},
+	getCustom: function(core) {
+		var mods = this.where({custom: true});
+		return core ? mods.map(function(m) {
+			return {key: m.get('key'), selected : m.get('selected')};
+		}) :mods;  
+	},
+	//todo, the clear custom button doesn't currently call this
+	clearCustom: function(){
+		_.each(this.getCustom(), function(m) {
+			m.set('custom', false);
+		});
 	}
 	
 });

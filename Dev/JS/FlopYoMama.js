@@ -87,21 +87,6 @@ $(document).ready(function() {
 		nsUI.fDeleteLongStatistics();
 	});
 
-	/**********************************RANGE MENU*****************************************************/
-
-	$('#fixed_ranges li').popover ({
-		content: function(){
-						
-							return '<span class="btn"> <abbr title="Under the Gun">UTG</abbr></span> <span class="btn">EP</span>' + 
-							'<span class="btn">MP</span>' + 
-						'<span class="btn">LP</span> <span class="btn">CO</span>'+
-						'<span class="btn">SB</span> <span class="btn">BB</span>';
-				}, 
-		container: 'body',
-		placement: 'auto right',
-		html: true		
-	});
-	
 	/**********************************RANGE GRID & SLIDER******************************************/
 	
 		
@@ -111,12 +96,10 @@ $(document).ready(function() {
 		$("#range_slider").slider('value',$("#range_slider").slider('value')); //make rangeslider redraw
 	});
 		 
-	
 	/*window resizing*/
 	var bResultsToggled = false, bRandToggled = false, bRangesToggled = false;
 	var sResultsClass = $('#results_col').attr('class');
 	
-
 	$(window).resize(function(e){
 		var width = window.innerWidth, ranges, rand, results;
 		if (innerWidth <= 992) { //result pop down
@@ -188,8 +171,6 @@ $(document).ready(function() {
 	});
 
 	$('#range_slider').append('<div class="range_slider_bg">&nbsp;</div>');
-		$('[title]').tooltip({container: 'body'});
-		
 	/**************************HAND FLOP BOARD************************/
 
 	$("#known_cards").popover({
@@ -213,15 +194,17 @@ $(document).ready(function() {
 	});
 	
 	/*
-	TODO: if we want the event to fire only once the click is complete, we can save the focused object on the mousedown event
+	TODO: if we want the event to fire only once the click is complete,
+	we can save the focused object on the mousedown event
 	var focusedBoardAtMousedown = null;
 	$('body').on('mousedown','#board_selection_table .card',function(e){ 
 		
 	});	*/		
+	 //only toggle cards when we didn't hit a button		
+	$('body').on('mousedown','#board_selection_table .card',function(e){
 	
-	$('body').on('mousedown','#board_selection_table .card',function(e){ //only toggle cards when we didn't hit a button		
-	
-		//if it's selected remove it from the board and mark it as not selected not disabled
+		//if it's selected remove it from the board and mark
+		//it as not selected not disabled
 		if($(this).is('.selected')) {
 			nsUI.fSelectKnown($(this).html());
 			nsUI.fDeleteBoard($(this).html()); 
@@ -278,6 +261,10 @@ $(document).ready(function() {
 		//{oPair: oPair, aPair: actualPairs, sPair: pairString}
 		//nsUtil.fSetLocalStorage("random_settings", aRandomSetting);
 	});	
+	//do this after all document.ready functions are called	
+	setTimeout(function() {
+		$('[title]').tooltip({container: 'body'});
+	}, 1);	
 });
 
 $(function(){

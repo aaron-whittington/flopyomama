@@ -49,6 +49,10 @@ var Slider = Backbone.Model.extend({
 				}	
 			);		
 		},
+		getScaleId: function() {
+			var fn = this.get('fRangeFunction');
+			return this.getScaleIdFromFn(fn);
+		},
 		getScaleIdFromFn: function(fn) {
 			return fn === fGetStatisticalFromPercent ? "statistical" : "sklansky"; 
 		},
