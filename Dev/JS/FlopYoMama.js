@@ -19,7 +19,7 @@ if(!modern) {
 
 $(document).ready(function() {
 	//were we ever modern?
-
+	nsFilter.fInit();
 	nsFilter.nsHtml.fReBuildFilterMenu();
 	//filter settings before slider, because slider triggers eval
 	var localFilterSettings = nsUtil.fGetLocalStorage("filter_settings");
@@ -283,7 +283,13 @@ $(function(){
 	});
 	
 	$('#delete_filter').click(function() {
-		//nsFilter.fCurrentToJSON();	
+		//todo add name
+		if(confirm('Really delete this filter?')) { 
+			nsFilter.fDeleteFilter();
+			nsFilter.nsHtml.fReBuildFilterMenu();
+			nsFilter.fClearFilter();
+			$('#filter_editor').trigger('show.bs.modal');
+		}
 	});
 	
 	$('#save_filter').click(function() {

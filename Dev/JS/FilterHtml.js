@@ -17,16 +17,11 @@ nsFilter.nsHtml.fReBuildFilterMenu = function () {
 	var sHtml ='';
 	
 	var aSavedKeys = nsUtil.fGetLocalStorage(nsFilter.sFilterNamesKey);
+
 	//if (isNot(aSavedKeys))
 	if(!aSavedKeys)
 		aSavedKeys=[];
 	
-	for (var key in nsFilter.nsStandardFilters) {
-			if (aSavedKeys.indexOf(key) === -1) {// standard not saved
-				aSavedKeys.push(key);
-			}
-	}
-
 	for (var i=0; i< aSavedKeys.length; i++) {
 		var sName = aSavedKeys[i];
 		var oFilter = nsFilter.fActiveFilter(sName);

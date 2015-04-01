@@ -37,9 +37,19 @@ nsFilter.nsStandardFilters['filter_bluffy'] =	{
 nsFilter.nsStandardFilters['filter_monster'] =	{"oValues":{"sub_filter_type":"class_made_hand","comparator_op":"at_least","made_hand_op":"made_hand_3"},
 										'name':'Monster'} 
 
-nsFilter.sFilterNamesKey = 'aFilters_saved';
+nsFilter.sFilterNamesKey = 'filters_saved';
 
-//save_filter
+//Check if the local storage looks like it's empty. If it's not empty, 
+//it initializes it based on the values of the standard filters. 
+nsFilter.fInit = function() {
+	var loc = nsUtil.fGetLocalStorage(nsFilter.sFilterNamesKey);
+	if (loc == null || typeof(loc) == "undefined") {
+		loc = _.keys(nsFilter.nsStandardFilters);
+		nsUtil.fSetLocalStorage(nsFilter.sFilterNamesKey, loc);
+	} 
+};
+
+//save filter
 nsFilter.fSaveFilter = function() {
 	var oJson = nsFilter.fCurrentToJSON(); 
 	var sName = 'filter_' + nsFilter.nsHtml.fGetCurrentFilterNameIntern();
@@ -52,7 +62,28 @@ nsFilter.fSaveFilter = function() {
 	nsUtil.fSetLocalStorage(nsFilter.sFilterNamesKey, aExisting);	
 };
 
+//delete filter. only removes the filter from the saved filters
+//list (does not delete the json.) if name is undefined it uses
+//the name of the current filter
+nsFilter.fDeleteFilter = function(name) {
+	if(typeof name === "undefined") {
+		name = nsFilter.nsHtml.fGetCurrentFilterNameIntern();
+	}
+	name = 'filter_' + name;
+	//update the saved key so it no longer contains name
+	var aSavedKeys = nsUtil.fGetLocalStorage(nsFilter.sFilterNamesKey);
+	if(!aSavedKeys) {
+		return;
+	}
+	var index = aSavedKeys.indexOf(name);
+	if (index > -1) {
+		aSavedKeys.splice(index, 1);	
+	}
+	nsUtil.fSetLocalStorage(nsFilter.sFilterNamesKey, aSavedKeys);
 
+};
+
+//returns the active filter as an object
 nsFilter.fActiveFilter = function(sName, bUnpack) {
 	if (typeof(sName) === 'undefined' || sName===null)
 		sName = nsFilter.fGetActiveFilter();
@@ -63,10 +94,8 @@ nsFilter.fActiveFilter = function(sName, bUnpack) {
 	
 	if (!oFilter) //get it from the standard names if not
 		oFilter = nsFilter.nsStandardFilters[sName]; 
-	//nsUtil.fLog('this should be unmodified ' + JSON.stringify(nsFilter.nsStandardFilters[sName]));
 	
 	if(!oFilter) {	
-		//console.error('filter not found ' + sName);
 		return;
 	}
 	oFilter = nsUtil.fClone(oFilter);
