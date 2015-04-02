@@ -355,7 +355,7 @@ nsRange.fGetAllUnknownCombinationsThreaded = function() {
 							
 					
 						if(oDoneRecord.total === 0) {
-							var nothingFound = '<strong class="no_results">All results filtered out.</strong>';
+							var nothingFound = '<p class="no_results">All results filtered out.</p>';
 							$('#hero_stat').html(nothingFound);
 							$('#villain_stat').html(nothingFound);
 							$('#textures').html(nothingFound); //should actually be done in the textures method

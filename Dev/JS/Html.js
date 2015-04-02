@@ -318,7 +318,7 @@ nsHtml.fDrawTexturePie = function(oResult) {
 		
 	}
 	$('#textures #pie_hover_title').remove();		
-	$('#textures').prepend('<strong id="pie_hover_title" style="position:absolute;left:5px;top:5px"></strong>'); //to do: styling in css
+	$('#textures').prepend('<p id="pie_hover_title" style="position:absolute;left:5px;top:5px"></p >'); //to do: styling in css
 	
 	var r = Raphael("textures",320,260);
 	var aColors = nsHtml.fGetPieChartColors(pieData.length);
@@ -503,7 +503,7 @@ nsHtml.fDrawResultsStatPie = function(oHeroStat,oDoneRecord,sId) {
 	
 	for (i=0; i< asTitle.length;i++) {
 		if (asTitle[i] === '%OTHERS%')
-			sOthers = sOthers + ' ' + aPropArray[i] + ' WIN: ' +sWinPercent + ' ';
+			sOthers = sOthers + ' ' + aPropArray[i] + ' Win: ' +sWinPercent + ' ';
 			//should figure it out here
 	}
 	
@@ -515,7 +515,7 @@ nsHtml.fDrawResultsStatPie = function(oHeroStat,oDoneRecord,sId) {
 	
 	//pie = r.piechart(320, 240, 100, [55, 20, 13, 32, 5, 1, 2, 10], { legend: ["%%.%% - Enterprise Users", "IE Users"], legendpos: "west", href: ["http://raphaeljs.com", "http://g.raphaeljs.com"]});
 
-	$('#' + sId).prepend('<strong id="pie_hover_title_'+sId+'" style="position:absolute;top:5px;left:5px;"></strong>'); //todo styling in css
+	$('#' + sId).prepend('<p id="pie_hover_title_'+sId+'" style="position:absolute;top:5px;left:5px;"></p>'); //todo styling in css
 	var r = Raphael(sId,320,260);
 	
 	var aColors = nsHtml.fGetPieChartColors(pieData.length);
