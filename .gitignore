@@ -4,5 +4,6 @@ Release/**
 Dev/Mongoose.app
 Dev/Style/*.css
 Dev/FlopYoMama.html
-Dev/Style/Themes/**.css
-
+Dev/Style/Themes/United/FlopYoMama.css
+Dev/Style/Themes/Amelia/FlopYoMama.css
+Dev/Style/Themes/Slate/FlopYoMama.css
