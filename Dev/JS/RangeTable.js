@@ -17,6 +17,15 @@ var RangeItem = AWModel.extend({
 		if (!this.get('custom')) {
 				this.set('selected',val);
 		}
+	},
+	//string representing the custom status AK+ or AK- 
+	//empty string represents non-custom fields
+	toCustomString : function() {
+		if (!this.get('custom')) {
+			return "";
+		}
+		return this.get('pair').toString() + 
+			(this.get('selected') ? '+' : '-');
 	}
 });
 
@@ -106,11 +115,8 @@ var RangeTable = RangeItemList.extend({
 		});
 		return returnMod;
 	},
-	getCustom: function(core) {
-		var mods = this.where({custom: true});
-		return core ? mods.map(function(m) {
-			return {key: m.get('key'), selected : m.get('selected')};
-		}) :mods;  
+	getCustom: function() {
+		return this.where({custom: true});
 	},
 	//todo, the clear custom button doesn't currently call this
 	clearCustom: function(){
@@ -152,15 +158,13 @@ var RangeTableView = AWView.extend({
 			this.render();	
 			
 			this.listenTo(this.model,'change', function(oChanged) {			
-				//for (i=0; i< aChanged.length; i++) {
 					if(!this.currentRangeItemView)
 						this.currentRangeItemView = new RangeItemView({model:oChanged});
 					else
 						this.currentRangeItemView.setModel(oChanged);
 					
 					this.currentRangeItemView.render();
-					
-				//}
+					this.fFixCustomBorders();	
 			});
 	},
 	events: {
@@ -263,6 +267,7 @@ var RangeTableView = AWView.extend({
 			var output = Mustache.render(this.template, oData);
 			this.el.innerHTML = output; //html(output);
 			$(Mustache.render('#{{.}}',this.parent)).append(this.el);
+			console.log('RangeTable.js: render called'); 
 	},
 	renderData: { 		
 			'class': _.isFunction(this.className) ? this.className() : this.className,

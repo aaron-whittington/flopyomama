@@ -43,7 +43,7 @@ a {
   opacity: 1.0;
   text-align: center;
 }
-#con:tent {
+#content {
   /*.animated_transition(1s ease,translate(0,0));
 	&.preload {
 		.transition(none);
@@ -594,8 +594,16 @@ body .popover {
   left: -35px;
   max-width: 35px;
 }
-#filter_editor .modal-dialog {
+#filter_editor .modal-dialog,
+#fixed_range_editor .modal-dialog {
   width: 800px;
+}
+.fixed_range_editor {
+  padding-top: 5px;
+}
+.fixed_range_editor .btn-group {
+  position: relative;
+  top: -8px;
 }
 .btn.test_button {
   /*display: none;*/

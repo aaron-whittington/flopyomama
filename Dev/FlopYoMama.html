@@ -27,7 +27,7 @@
 <script type="text/javascript" src="lib/underscore/underscore-min.js"></script>
 <script type="text/javascript" src="lib/backbone/backbone.js"></script>
 <script type="text/javascript" src="lib/mustache/mustache.js"></script>
-<script type="text/javascript" src="js/AWModel.js"></script><script type="text/javascript" src="js/AWView.js"></script><script type="text/javascript" src="js/route.js"></script><script type="text/javascript" src="js/flopyomama.js"></script><script type="text/javascript" src="js/hand.js"></script><script type="text/javascript" src="js/convert.js"></script><script type="text/javascript" src="js/maths.js"></script><script type="text/javascript" src="js/ui.js"></script><script type="text/javascript" src="js/html.js"></script><script type="text/javascript" src="js/rangelib.js"></script><script type="text/javascript" src="js/util.js"></script><script type="text/javascript" src="js/test.js"></script><script type="text/javascript" src="js/drawinghand.js"></script><script type="text/javascript" src="js/filter.js"></script><script type="text/javascript" src="js/filterHtml.js"></script><script type="text/javascript" src="js/preferences.js"></script><script type="text/javascript" src="js/slider.js"></script><script type="text/javascript" src="js/fixedRange.js"></script><script type="text/javascript" src="js/card.js"></script><script type="text/javascript" src="js/deck.js"></script><script type="text/javascript" src="js/pair.js"></script><script type="text/javascript" src="js/knowncards.js"></script><script type="text/javascript" src="js/rangetable.js"></script><script type="text/javascript" src="js/menu.js"></script>
+<script type="text/javascript" src="js/AWModel.js"></script><script type="text/javascript" src="js/AWView.js"></script><script type="text/javascript" src="js/route.js"></script><script type="text/javascript" src="js/flopyomama.js"></script><script type="text/javascript" src="js/hand.js"></script><script type="text/javascript" src="js/convert.js"></script><script type="text/javascript" src="js/maths.js"></script><script type="text/javascript" src="js/ui.js"></script><script type="text/javascript" src="js/html.js"></script><script type="text/javascript" src="js/rangelib.js"></script><script type="text/javascript" src="js/util.js"></script><script type="text/javascript" src="js/test.js"></script><script type="text/javascript" src="js/drawinghand.js"></script><script type="text/javascript" src="js/filter.js"></script><script type="text/javascript" src="js/filterHtml.js"></script><script type="text/javascript" src="js/preferences.js"></script><script type="text/javascript" src="js/slider.js"></script><script type="text/javascript" src="js/fixedRange.js"></script><script type="text/javascript" src="js/fixedRangeEditor.js"></script><script type="text/javascript" src="js/card.js"></script><script type="text/javascript" src="js/deck.js"></script><script type="text/javascript" src="js/pair.js"></script><script type="text/javascript" src="js/knowncards.js"></script><script type="text/javascript" src="js/rangetable.js"></script><script type="text/javascript" src="js/menu.js"></script>
 </head>
 <body class="DEV_VERSION">
 
@@ -90,7 +90,7 @@
 			<div id="collapseOne" class="panel-body collapse in">
 				<div class="panel-inner">				
 					<ul id="fixed_ranges" class="nav nav-pills nav-stacked"  >
-						<li id="new_fixed"><a>New/Edit<span class="glyphicon glyphicon-pencil"></span></a></li>	
+						<li id="new_fixed"><a data-toggle="modal" href="#fixed_range_editor">New/Edit<span class="glyphicon glyphicon-pencil"></span></a></li>	
 					</ul>
 					
 				</div>
@@ -212,7 +212,6 @@
 			<h4 class="modal-title">Edit / Create Filters</h4>
 		  </div>
 		  <div class="modal-body">
-			<p>One fine body&hellip;</p>
 		  </div>
 		  <div class="modal-footer">
 			<div class ='row'>
@@ -230,4 +229,29 @@
 		</div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
 </div>
+<div id='fixed_range_editor' class="modal fade">
+  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h4 class="modal-title">Edit Fixed Ranges</h4>
+		  </div>
+		  <div class="modal-body">
+		  </div>
+		  <div class="modal-footer">
+			<div class ='row'>
+				<div class= 'col-lg-2 col-md-2 btn-left'>
+					
+				</div>
+				<div class= 'col-lg-10 col-md-10 btn-right'>	
+					<button type="button" id="close_fixed_ranges"  class="txt_btn btn btn-warning" data-dismiss="modal">Close</button>				
+					<button type="button" id="save_fixed_ranges" class="txt_btn btn btn-primary">Save<span class="glyphicon glyphicon-floppy-disk"></span></button>
+				</div>
+			</div>
+		  </div>
+		</div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
 </div>
+</div>
+</body>
+</html>

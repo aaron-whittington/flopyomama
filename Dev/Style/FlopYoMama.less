@@ -55,7 +55,7 @@ a {
 	text-align: center;
 }
 
-#con:tent { 
+#content { 
 //breaks piechart legend
 	/*.animated_transition(1s ease,translate(0,0));
 	&.preload {
@@ -422,8 +422,17 @@ body .popover {
 }
 
 
-#filter_editor .modal-dialog {
+#filter_editor .modal-dialog, #fixed_range_editor .modal-dialog {
 	width: 800px;
+}
+
+.fixed_range_editor {
+  padding-top: 5px;
+}
+
+.fixed_range_editor .btn-group {
+  position: relative;
+  top: -8px;
 }
 
 .btn.test_button  {
