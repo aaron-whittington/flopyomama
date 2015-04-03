@@ -30,31 +30,74 @@ module.exports = function(grunt) {
           '-W097': true /*ignore 'use strict' in file rather than function*/ 
         },
         all : ['./Dev/JS/*.js']
-    }
+    },
+	uglify: {
+		RELEASE: {
+			options: {
+				mangle: true,
+				compress: {
+					drop_console: true
+				}
+			},
+			files: [{
+				expand: true,
+				cwd: './Dev/JS',
+				src: '*.js',
+				dest: './Release/JS'
+			}]
+		}
+	},
+	preprocess: {
+		options: {
+			context: {
+				DEBUG: true
+			}
+		},
+		htmlDev: {
+			src: './Dev/FlopYoMamaTemplate.html',
+			dest: './Dev/FlopYoMama.html'
+		},
+		htmlRelease: {
+			src: './Dev/FlopYoMamaTemplate.html',
+			dest: './Release/FlopYoMama.html',
+			options: {
+				context: {
+					DEBUG: false
+				}
+			}
+		}
+	},
+	less: {
+		dev: {
+			options: {
+				
+			},
+			files: {
+				'./Dev/Style/FlopYoMama.css': './Dev/Style/FlopYoMama.less'
+			}
+		},
+		release: {
+			options: {
+				compress: true,	
+			},
+			files: {
+				'./Dev/Style/FlopYoMama.css': './Release/Style/FlopYoMama.less'
+			}
+		}
+	}
   });
 
   // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  
   grunt.loadNpmTasks('grunt-contrib-jshint');
-
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-preprocess');
 
   grunt.registerTask('watch-all', ['watch']);
-
   grunt.registerTask('jshint-all', ['jshint']);
- 
-  grunt.registerTask('build', 'Build all with the script.', function() {
-  
-  	var done = this.async();
-    buildScript.nsBuild.fMain('all', done);
-   // grunt.log.write('Logging some stuff...').ok();
-  });
 
-  grunt.registerTask('build-dev', 'Build all with the dev script.', function() {
-  
-  	var done = this.async();
-    buildScript.nsBuild.fMain('dev', done);
-   // grunt.log.write('Logging some stuff...').ok();
-  });
+  grunt.registerTask('build-release',['uglify', 'preprocess', 'less']);   
+  grunt.registerTask('build-dev', [ 'preprocess', 'less'] );
 };
