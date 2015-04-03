@@ -123,8 +123,9 @@ FixedRangeEditorView = AWView.extend({
 			var doSave = function() {
 
 				that.model.trigger('save');
-
-				//now update the collection
+				
+				//now update the collection. if one with the same id is there
+				//remove it
 				var foundOne =that.collection.findWhere({
 					id :that.model.get('id')
 				}); 
@@ -133,6 +134,7 @@ FixedRangeEditorView = AWView.extend({
 					that.collection.remove(foundOne);			
 				}
 				
+				//add it back to the collection 
 				that.collection.add(that.model);
 
 				//we have to close now or else fix up the fact

@@ -7,7 +7,11 @@ var RangeItem = AWModel.extend({
 		custom:false		
 	},
 	initialize: function(o) {
-		this.set('pair', new Pair(o.pair));
+
+		if(! (o.pair instanceof Pair) ){
+			this.set('pair', new Pair(o.pair));
+		}
+
 		for(var prop in o.pair) {
 			this.set(prop,o.pair[prop]); //especially ranks, for the searches
 		}
@@ -115,8 +119,15 @@ var RangeTable = RangeItemList.extend({
 		});
 		return returnMod;
 	},
-	getCustom: function() {
-		return this.where({custom: true});
+	getCustom: function(clone) {
+		var custom =  this.where({custom: true});
+		if(!clone) { 
+			return custom;
+		} else {
+			return _.map(custom, function(o) {
+				return o.clone();
+			});
+		}
 	},
 	//todo, the clear custom button doesn't currently call this
 	clearCustom: function(){

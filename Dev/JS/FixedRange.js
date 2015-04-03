@@ -68,7 +68,7 @@ FixedRange.fromCurrent = function(slider, rangeTable) {
 			name : name,
 			sliderVal: slider.get('value'),
 			sliderScale: slider.getScaleId(),
-			custom: rangeTable.getCustom()
+			custom: rangeTable.getCustom(true)
 		});
 	return range;
 };
