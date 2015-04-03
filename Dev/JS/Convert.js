@@ -3,10 +3,9 @@ var nsConvert = {};
 
 var fGetRandomCards = function(i) {
 
-	var aAll =flopYoMama.knownCards.allUnknown(true);
-	
-	aReturnCards = [];
-	aReturnCardIndex = [];
+	var aAll =flopYoMama.knownCards.allUnknown(true),
+		aReturnCards = [],
+		aReturnCardIndex = [];
 	while (aReturnCards.length < i) {
 		var random = Math.floor((Math.random()*aAll.length));
 		if(jQuery.inArray(random, aReturnCardIndex)<0) {
@@ -19,7 +18,7 @@ var fGetRandomCards = function(i) {
 
 //takes a string such as A'\u2663' to the proper card object
 nsConvert.fConvertStringToCardObject = function(s) {
- //'\u2663'
+	var oCard;
 	if (typeof s === "string") {
 		oCard = {};
 		oCard.rank = nsConvert.rankCharToNumber(s[0]);
@@ -27,7 +26,7 @@ nsConvert.fConvertStringToCardObject = function(s) {
 	}
 	else { //param is an array
 		var returnArray = [];
-		for (i=0;i<s.length; i++)
+		for (var i=0;i<s.length; i++)
 			returnArray.push(nsConvert.fConvertCardStringToCardObject(s[i]));
 			
 		return returnArray;

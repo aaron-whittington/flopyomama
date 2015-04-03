@@ -53,7 +53,7 @@ module.exports = function(grunt) {
 				dest: './Release/JS'
 			}]
 		},
-		FUTURE: {
+	/*	FUTURE: {
 			options: {
 				mangle: {
 					toplevel: true
@@ -75,12 +75,13 @@ module.exports = function(grunt) {
 					  './Dev/Lib/jquery-ui/js/jquery-ui-1.10.3.custom.min.js'],
 				dest: './Release/JS/Future.js'
 			}]
-		}
+		} */
 	},
 	preprocess: {
 		options: {
 			context: {
-				DEBUG: true
+				DEBUG: true,
+				BUILD_INFO: 'Build: ' + new Date().toUTCString() + " (D)" 
 			}
 		},
 		htmlDev: {
@@ -92,7 +93,8 @@ module.exports = function(grunt) {
 			dest: './Release/FlopYoMama.html',
 			options: {
 				context: {
-					DEBUG: false
+					DEBUG: false,
+					BUILD_INFO: 'Build: ' + new Date().toUTCString()
 				}
 			}
 		}
