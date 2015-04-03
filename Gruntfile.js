@@ -31,9 +31,19 @@ module.exports = function(grunt) {
 	uglify: {
 		RELEASE: {
 			options: {
-				mangle: true,
+				mangle: {
+				/*	toplevel: true*/
+				},
 				compress: {
-					drop_console: true
+					drop_console: true,
+					sequences: true,
+					dead_code: true,
+					conditionals: true,
+					booleans: true,
+					unused: true,
+					if_return: true,
+					join_vars: true,
+					screw_ie8: true
 				}
 			},
 			files: [{
@@ -41,6 +51,29 @@ module.exports = function(grunt) {
 				cwd: './Dev/JS',
 				src: '*.js',
 				dest: './Release/JS'
+			}]
+		},
+		FUTURE: {
+			options: {
+				mangle: {
+					toplevel: true
+				},
+				compress: {
+					drop_console: true,
+					sequences: true,
+					dead_code: true,
+					conditionals: true,
+					booleans: true,
+					unused: true,
+					if_return: true,
+					join_vars: true,
+					screw_ie8: true
+				}
+			},
+			files: [{
+				src: ['./Dev/JS/*.js', 
+					  './Dev/Lib/jquery-ui/js/jquery-ui-1.10.3.custom.min.js'],
+				dest: './Release/JS/Future.js'
 			}]
 		}
 	},
