@@ -1,6 +1,3 @@
-
-var buildScript =  	require('./Build.js');
-  	
 module.exports = function(grunt) {
 
   // Project configuration.
@@ -81,7 +78,7 @@ module.exports = function(grunt) {
 				compress: true,	
 			},
 			files: {
-				'./Dev/Style/FlopYoMama.css': './Release/Style/FlopYoMama.less'
+				'./Release/Style/FlopYoMama.css': './Dev/Style/FlopYoMama.less'
 			}
 		}
 	}
