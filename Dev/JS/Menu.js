@@ -199,7 +199,7 @@ $(function() {
 				group: rangeMenuActionGroup, 
 				action:'clearBoard',
 				clearBoard: function(e) {
-					nsUI.fDeleteBoard();
+					flopYoMama.knownCardsView.deleteBoard();
 				},
 				selectable: false
 			}
