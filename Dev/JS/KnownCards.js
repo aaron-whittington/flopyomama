@@ -30,29 +30,6 @@ var KnownCards = AWModel.extend({
 		}
 	},
 	initialize: function() {
-		//initialize from router
-		if(routerValues.hand || routerValues.board) {
-			this.set('hand', new CardList(routerValues.hand));
-			this.set('board', new CardList(routerValues.board));
-		}
-		//read from the localstorage 
-		else {
-			var boardArray = nsUtil.fGetLocalStorage("board_array"),
-				i;
-
-			if (!boardArray)
-				return;
-
-			for(i=0; i<2; i++) {
-				if(boardArray[i])
-					this.get('hand').add( new Card(boardArray[i]) );
-			}
-
-			for(i=2; i<7;i++) {
-				if(boardArray[i])
-					this.get('board').add( new Card(boardArray[i]) );
-			}
-		}
 		//was nsUI.fAfterBoardChnage
 		this.on('finalize', function() {
 			nsHtml.fRedrawBoardSelectionTable();
@@ -74,6 +51,29 @@ var KnownCards = AWModel.extend({
 		this.on('change', function() {
 			this.saveBoardState();
 		});
+		//initialize from router
+		if(routerValues.hand || routerValues.board) {
+			this.set('hand', new CardList(routerValues.hand));
+			this.set('board', new CardList(routerValues.board));
+		}
+		//read from the localstorage 
+		else {
+			var boardArray = nsUtil.fGetLocalStorage("board_array"),
+				i;
+
+			if (boardArray) {
+
+				for(i=0; i<2; i++) {
+					if(boardArray[i])
+						this.get('hand').add( new Card(boardArray[i]) );
+				}
+
+				for(i=2; i<7;i++) {
+					if(boardArray[i])
+						this.get('board').add( new Card(boardArray[i]) );
+				}
+			}
+		}
 	},
 	saveBoardState: function() {
 		var boardArray = [],
