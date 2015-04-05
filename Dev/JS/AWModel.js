@@ -142,11 +142,9 @@ var AWCollection = Backbone.Collection.extend({
 		var s= '';
 		this.forEach(function(oItem) {
 			s+=oItem.toDisplayString();
-			//if(bSeparator)
-			s+=' ';
+			if(bSeparator)
+				s+=' ';
 		});
-	//	if (bSeparator)
-	//		s = s.substring(0,s.length -1);
 		return s;		
 	},
 	test: function() {
