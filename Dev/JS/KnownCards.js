@@ -323,7 +323,7 @@ var KnownCardsView = Backbone.View.extend({
 		for(var i=0; i< arguments.length; i++) {
 			fDeleteSingleBoard(arguments[i]);
 		}
-
+		this.updateModel()
 	},
 	//selects the board with the card defined by search
 	selectKnown: function(search) {

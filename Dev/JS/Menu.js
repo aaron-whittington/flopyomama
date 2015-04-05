@@ -179,9 +179,6 @@ var MenuItemView = AWView.extend({
 	template: 	"<a>{{{displayValue}}}{{{icon}}}</a>" 
 });
 
-
-
-
 $(function() {
 	
 	var standardGroup = new MenuItemGroup();
@@ -200,6 +197,7 @@ $(function() {
 				action:'clearBoard',
 				clearBoard: function(e) {
 					flopYoMama.knownCardsView.deleteBoard();
+					flopYoMama.knownCards.trigger('finalize');
 				},
 				selectable: false
 			}

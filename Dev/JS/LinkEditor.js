@@ -3,7 +3,7 @@
 var LinkEditorView = AWView.extend({
 	initialize: function() {
 		var that = this;
-		this.listenTo(flopYoMama.router, "route:main", function() {
+		this.listenTo(flopYoMama.knownCards, "finalize", function() {
 			this.setFromRoute();
 		});
 
@@ -18,7 +18,7 @@ var LinkEditorView = AWView.extend({
 
 	},
 	updateFields: function() {
-		
+
 		var linkText = '<a href="' + location.href + '">' +
 					$('#lg_display').val() +
 					'</a>';
@@ -29,14 +29,16 @@ var LinkEditorView = AWView.extend({
 	setFromRoute: function() {
 		//set the display text from the route
 		var prefix = 'FYM: ',
-			hand = routerValues.hand,
-			board = routerValues.board;
+			oHand = flopYoMama.knownCards.get('hand'),
+			oBoard = flopYoMama.knownCards.get('board'),
+			display;
 
-		var oHand = new CardList(hand),
-			oBoard = new CardList(board);
-
-		var display = prefix + oHand.toDisplayString() + ', ' + 
-			oBoard.toDisplayString();
+		if(oHand.length > 0 || oBoard.length > 0 ) {
+			display = prefix + oHand.toDisplayString() + ', ' +
+				oBoard.toDisplayString();
+		} else {
+			display = "FlopYoMama";
+		}
 
 		$('#lg_display').val(display);
 
@@ -46,6 +48,5 @@ var LinkEditorView = AWView.extend({
 });
 
 $(function() {
-	
 	var lev = new LinkEditorView();
 });
