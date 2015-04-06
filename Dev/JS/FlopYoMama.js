@@ -251,6 +251,7 @@ $(document).ready(function() {
 			$('#filter_config').attr('title', 'Filter');
 			nsUtil.fSetLocalStorage("filter_settings", '');
 		}
+		flopYoMama.updateRoute();
 		nsUI.fEvaluateKnownCards();
 	
 		//{oPair: oPair, aPair: actualPairs, sPair: pairString}
@@ -408,29 +409,42 @@ $(function(){
 var flopYoMama = {};
 var FlopYoMama = AWModel.extend({	
 	initialize : function() {
-		
+	
+		//silently update the route based on the values of the models
 		flopYoMama.updateRoute = function() {
 
 			var hand = flopYoMama.knownCards.get('hand'),
 				board = flopYoMama.knownCards.get('board');
 
-			var routerValue = "slider=" + flopYoMama.slider.get('value') + 
-							  "&hand=" + hand +
-							  "&board=" + board;
+			var custom = flopYoMama.rangeTable.getCustom();
+			var aCustom = _.map(custom, function(e) {
+				return e.toCustomString();
+			});
+			var sCustom = aCustom.join(',');
+			var filter = nsFilter.fGetActiveFilter() || "";
+
+			var routerValue = "hand=" + hand +
+							  "&board=" + board + 
+							  "&slider=" + flopYoMama.slider.get('value') +
+							  "&range=" + flopYoMama.slider.getScaleId() +
+							  "&custom=" + sCustom +
+							  "&filter=" + filter;
 			flopYoMama.router.navigate(routerValue,
 				{trigger: false});
 
 		}
 		/*router*/
 		flopYoMama.router = new TableRouter();
-		Backbone.history.start({pushState: false}); //, root: "/dev/flopyomama.html"
-		
+		//this triggers the routing once (with the values the user passed
+		//to the url)
+		Backbone.history.start({pushState: false});
+
+
 		/*known cards*/
 		flopYoMama.allCards = new ImmutableDeck();
 		flopYoMama.knownCards = new KnownCards();	
 		flopYoMama.knownCardsView = new KnownCardsView({model:flopYoMama.knownCards});
 		flopYoMama.knownCardsView.render();
-
 
 		/*slider*/		
 		routerValueSlider = routerValues.slider;
@@ -457,7 +471,6 @@ var FlopYoMama = AWModel.extend({
 		});
 
 		this.listenTo(flopYoMama.rangeTable, 'finalize', this.finalizeHandler);
-			
 
 		flopYoMama.slider.trigger('finalize');					
 	},

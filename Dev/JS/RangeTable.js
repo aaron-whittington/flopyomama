@@ -13,7 +13,7 @@ var RangeItem = AWModel.extend({
 		}
 
 		for(var prop in o.pair) {
-			this.set(prop,o.pair[prop]); //especially ranks, for the searches
+			this.set(prop,o.pair[prop]); 
 		}
 		this.set('key',this.get('pair').toString());
 	},
@@ -46,6 +46,7 @@ var RangeItemListModel = AWCollectionModel.extend({
 var RangeTable = RangeItemList.extend({
 	className: 'RangeTable',
 	initialize: function() {		
+
 		for (rank1=14; rank1>1;rank1--) {
 			for (rank2=14;rank2>1; rank2--){
 				var rangeItem = {pair: 
@@ -64,6 +65,10 @@ var RangeTable = RangeItemList.extend({
 			this.trigger('updateModels', this.amChanged);
 			this.amChanged =[];
 		});
+
+		if(routerValues.custom) {
+			this.setCustom(routerValues.custom);
+		}
 
 	},
 	listenToSlider: function(slider) {
@@ -134,6 +139,24 @@ var RangeTable = RangeItemList.extend({
 		_.each(this.getCustom(), function(m) {
 			m.set('custom', false);
 		});
+	},
+	//sets the custom cards from the custom string (AKo+, KK-)...etc.
+	setCustom: function(sCustom) {
+		if (!sCustom) {
+			return;
+		}
+
+		//split on plus, minus, but not end
+		var aCustom = sCustom.split(','), 
+			that = this;
+		_.each(aCustom, function(c) {
+			var pairName = c.substring(0,c.length-1);
+			var inclusion = c.substring(c.length -1, c.length); 
+			var rangeItem = that.findPairString(pairName);
+			rangeItem.set('custom', true);
+			var selected = inclusion === '+' ? true : false; 
+			rangeItem.set('selected', selected);
+		});
 	}
 	
 });
@@ -147,7 +170,6 @@ var RangeTableView = AWView.extend({
 	initialize: function() {									
 			var renderData = this.renderData;
 			
-			//this.currentRangeItemView = new RangeItemView(this.model.rangeItemAt(14,14));
 			this.model.tableLoop(
 				function(mod) {
 					renderData.row.push([]);				

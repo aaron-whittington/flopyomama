@@ -1,30 +1,34 @@
 
-
 var routerValues = {};
 
 var TableRouter = Backbone.Router.extend({
 
   routes: {
     "help":                 "help",    // #help
-    "slider=(:value)&hand=(:value1)&board=(:value2)":        "main", 
-	"beer/:query/p:page": 		"search"   // #search/kiwis/p7
+    "hand=(:v1)&board=(:v2)&slider=(:v3)&range=(:v4)&custom=(:v5)&filter=(:v6)": "main" 
   },
 
   help: function() {
     
   },
 
-	main: function(slider, hand, board) {					
-		routerValues.slider =slider;
+	main: function(hand, board, slider, range, custom, filter) {					
 		routerValues.hand = hand;
 		routerValues.board = board;
-		
+		routerValues.slider =slider;
+		routerValues.custom = custom;
+		routerValues.filter = filter;
+			
 		if(typeof flopYoMama !== "undefined" && flopYoMama.knownCards) {
 			window.flopYoMama.knownCards.trigger('update', hand, board);	
 		} 	
 
 		if(typeof flopYoMama !== "undefined" && flopYoMama.slider) {
 			window.flopYoMama.sliderView.trigger('update', slider);	
+		} 	
+
+		if(typeof flopYoMama !== "undefined" && flopYoMama.rangeTable) {
+			window.flopYoMama.rangeTable.setCustom(custom);	
 		} 	
   }
 });
