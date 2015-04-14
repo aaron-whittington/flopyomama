@@ -52,6 +52,7 @@
 <script type="text/javascript" src="js/KnownCards.js"></script>
 <script type="text/javascript" src="js/RangeTable.js"></script>
 <script type="text/javascript" src="js/Menu.js"></script>
+<script type="text/javascript" src="js/Settings.js"></script>
 <!-- @if DEBUG = true -->
 <script type="text/javascript" src="js/Test.js"></script>
 <!-- @endif -->
@@ -63,7 +64,7 @@
 <body class="RELEASE_VERSION">
 <!-- @endif -->
 
-<div id="content" class="four_color container preload">
+<div id="content" class="container preload">
 	<div class="header row">
 		<h1 id="program_name">FlopYoMama</h1>
 
@@ -194,7 +195,6 @@
 						<span class="caret"></span>
 					</button>	
 					<ul id='filter_config_menu' class="ctrls dropdown-menu">
-
 						<li class="divider"></li>								
 						<li id="new_edit_filter"> 
 						<a data-toggle="modal" href="#filter_editor">New/Edit Filters</a>
@@ -205,7 +205,7 @@
 				<button id="link_generator_button" data-toggle="modal" href="#link_generator" title='Create links to this hand/setings' type = "button" class="btn btn-default">
 					<span class="glyphicon glyphicon-link"></span>
 				</button>
-				<button id="settings" title='Settings & Tools' type = "button" class="btn btn-default">
+				<button id="settings" data-toggle="modal" href="#settings_modal" title='Settings & Tools' type = "button" class="btn btn-default">
 					<span class="glyphicon glyphicon-wrench"></span>
 				</button>
 			</div> 
@@ -304,6 +304,28 @@
 							<code id="lg_code"></code>
 						</div>
 					</form>
+				</div>
+				<div class="modal-footer">
+					<div class ='row'>
+						<div class= 'col-lg-2 col-md-2 btn-left'>
+
+						</div>
+						<div class= 'col-lg-10 col-md-10 btn-right'>	
+							<button type="button" id="close_link_generator"  class="txt_btn btn btn-warning" data-dismiss="modal">Close</button>				
+						</div>
+					</div>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+	<div id='settings_modal' class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Settings & Tools</h4>
+				</div>
+				<div class="modal-body">
 				</div>
 				<div class="modal-footer">
 					<div class ='row'>

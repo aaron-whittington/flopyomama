@@ -58,6 +58,14 @@ nsUtil.fClone = function(o) {
 	return JSON.parse(JSON.stringify(o));
 };
 
+nsUtil.fImportLocalStorage = function(sFile) {
+	var oParsed = JSON.parse(sFile);
+	for(var prop in oParsed) {
+		var gotOne = oParsed[prop];
+		localStorage.setItem(prop,gotOne);
+	}
+};
+
 nsUtil.fExportLocalStorage = function(fTest) {
 	if (nsUtil.fType != 'function'){
 		fTest = function() {return true;};

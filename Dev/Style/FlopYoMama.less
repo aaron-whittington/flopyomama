@@ -171,7 +171,7 @@ body .card.selected, .pair_string.selected{
 	}
 }
 
-#content {
+body {
 	.suit_H {
 		color: red;
 	} 
@@ -197,10 +197,20 @@ body .card.selected, .pair_string.selected{
 	}
 }
 
+a {
+  position: relative;
+}
 
+.dropdown-menu a .glyphicon {
+  position: absolute;
+  right: 20px;
+  top:6px;
+}
 
-a .glyphicon {
-	float: right;
+.panel a .glyphicon {
+  position: absolute;
+  right: 20px;
+  top: 12px;
 }
 
 .ctrls.dropdown-menu li.active, .ctrls.dropdown-menu li.active a{
@@ -212,8 +222,6 @@ a .glyphicon {
 	position: relative;
 }
 
-
-
 #content td.highlight {	
 	.animated_transition(0.5s,translate(5px,-5px)); 	
 	background-color: black;		
@@ -221,6 +229,9 @@ a .glyphicon {
 	z-index: 5;	
 }
 
+#import_btn {
+	margin-top: 8px;
+}
 /********************************************************************************************************Range Area*********************************************************************************************/
 
 #range_buttons {
