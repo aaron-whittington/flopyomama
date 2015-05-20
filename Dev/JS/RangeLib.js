@@ -272,14 +272,14 @@ nsRange.fGetAllUnknownCombinationsThreaded = function() {
 	var oVillainStat = {};
 	var fStartWorker = function(aSplitStartingHands) {
 		
-		var sWorkerName = 'worker.js';
+		var sWorkerName = 'Worker.js';
 		var state = window.history.state;
 		if (state!==null) {
 			var test = state.valueOf();
 			var test2 = state.toString();
 			
 		}
-		var worker = new Worker('js/' + sWorkerName); 
+		var worker = new Worker('JS/' + sWorkerName); 
 		nsRange.aCurrentWorkers.push(worker);
 		
 		worker.addEventListener('message', function(e) {
@@ -429,8 +429,8 @@ nsRange.fGetTextures = function() {
 	var oFilter = nsFilter.fActiveFilter(null, true);
 	
 	var fStartWorker = function() {
-		var sWorkerName = 'workerTextures.js';
-		var worker = new Worker('js/'+ sWorkerName); //don't know why I specify path like this from html root	
+		var sWorkerName = 'WorkerTextures.js';
+		var worker = new Worker('JS/'+ sWorkerName); //don't know why I specify path like this from html root	
 		worker.addEventListener('message', function(e) {												
 				if (e.data.type === 'console')
 					nsUtil.fLog(e.data.msg);
