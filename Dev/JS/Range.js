@@ -1,5 +1,6 @@
-﻿var Range = AWModel.extend({
-	initialize: function() {
+﻿
+var Range = AWModel.extend({
+    initialize: function() {
 
-	}
+    }
 });
