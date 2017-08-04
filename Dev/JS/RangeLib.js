@@ -235,7 +235,6 @@ var fGetStatisticalFromPercent = function(fPercent) {
 	return aReturn;
 };
 
-
 nsRange.aCurrentWorkers = [];
 
 nsRange.fKillCurrentWorkers = function() {
@@ -246,6 +245,7 @@ nsRange.fKillCurrentWorkers = function() {
 	nsRange.aCurrentWorkers = [];	
 };
 
+ 
 nsRange.fGetAllUnknownCombinationsThreaded = function() {
 		$('.no_results').remove();
 	var MAX_WORKERS = 4;
@@ -270,6 +270,7 @@ nsRange.fGetAllUnknownCombinationsThreaded = function() {
 	var oDoneRecord = {iCountWon: 0, iCountLost:0, iCountDraw:0,total:0};
 	var oHeroStat = {};
 	var oVillainStat = {};
+
 	var fStartWorker = function(aSplitStartingHands) {
 		
 		var sWorkerName = 'Worker.js';

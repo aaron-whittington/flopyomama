@@ -38,6 +38,7 @@ nsWorker.fCalculateBoards = function(aoStartingHands, aKnownCards, aUnknownCards
     var startLength = aoStartingHands.length;
     var totalCombinationsMultiplier = 0;
     var oPair, i;
+
     for (i = 0; i < startLength; i++) {
         oPair = aoStartingHands[i].oPair;
         var actualPairs = aoStartingHands[i].aPair; //now we have an array of villain's starting hands

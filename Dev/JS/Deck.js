@@ -25,5 +25,20 @@ var Deck = CardList.extend({
 	initialize: function() {
 		var id = new ImmutableDeck();
 		this.models = id.models;
-	}
+	},
+    //deck - cards to remove  
+    getDifference: function(toRemove, bToAtts) {
+        var cl = this.filter(function(c) {
+			var found = toRemove.where({rank: c.get('rank'),suit: c.get('suit')});
+			return found.length < 1;
+		});
+
+		if (bToAtts) {
+			return cl.map( function(m) {
+				return m.attributes;
+			});
+		} else {
+			return cl;
+		}
+    } 
 });

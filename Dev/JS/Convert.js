@@ -35,6 +35,12 @@ nsConvert.fConvertStringToCardObject = function(s) {
 	return oCard; 
 }
 
+//takes a card list and returns an equivalent list of cards, cycled to a standard
+//ordering of suits (so we don't have to do redundant comparisons)
+nsConvert.fStandardizeCardList = function() {
+
+}
+
 nsConvert.fConvertCardObjectToString = function(oCard) {
 	return nsConvert.rankNumberToChar(oCard.rank)+nsConvert.suitToDisplayChar(oCard.suit);
 }

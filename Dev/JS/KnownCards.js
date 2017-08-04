@@ -14,20 +14,7 @@ var KnownCards = AWModel.extend({
 	},
 	allUnknown: function(bToAtts) {
 		var allKnown = this.allKnown();
-		var ac = this.get('deck');
-		var cl = ac.filter(function(c) {
-		
-			var found = allKnown.where({rank: c.get('rank'),suit: c.get('suit')});
-			return found.length < 1;
-		});
-
-		if (bToAtts) {
-			return cl.map( function(m) {
-				return m.attributes;
-			});
-		} else {
-			return cl;
-		}
+		return this.get('deck').getDifference(allKnown, bToAtts); 
 	},
 	initialize: function() {
 		//was nsUI.fAfterBoardChnage
