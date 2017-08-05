@@ -7,3 +7,8 @@ Dev/FlopYoMama.html
 Dev/Style/Themes/United/FlopYoMama.css
 Dev/Style/Themes/Amelia/FlopYoMama.css
 Dev/Style/Themes/Slate/FlopYoMama.css
+.tscache
+Dev/TS/*.js
+Dev/TS/*.map
+Dev/JS/Generated/*.js
+Devtools
