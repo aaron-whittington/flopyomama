@@ -442,7 +442,7 @@ var FlopYoMama = AWModel.extend({
 
 
         /*known cards*/
-        flopYoMama.allCards = new ImmutableDeck();
+        flopYoMama.allCards = new Deck();
         flopYoMama.knownCards = new KnownCards();
         flopYoMama.knownCardsView = new KnownCardsView({
             model: flopYoMama.knownCards

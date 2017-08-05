@@ -30,12 +30,13 @@ module.exports = function(grunt) {
     },
     ts: {
         default : {
-           src: ["./Dev/TS/*.ts"]
+		    src: ["./Dev/TS/*.ts"],
+		    outDir: "./Dev/TS/Generated"
         }
     },
     browserify: {
         default : {        
-            src :  ["./Dev/TS/*.js"],
+            src :  ["./Dev/TS/Generated/*.js", "./Dev/JS/*.js"],
             dest:  "./Dev/JS/Generated/browserified.js"
         }
     },

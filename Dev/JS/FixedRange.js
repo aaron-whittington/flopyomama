@@ -1,3 +1,5 @@
+AWModel = require('./AWModel');
+
 FixedRange = AWModel.extend({
     initialize: function() {
 
@@ -311,3 +313,5 @@ $(document).ready(function() {
         editorView.trySave();
     });
 });
+
+module.exports = FixedRange;

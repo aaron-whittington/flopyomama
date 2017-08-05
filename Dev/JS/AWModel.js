@@ -194,3 +194,5 @@ var AWCollectionModel = AWModel.extend({
         return this._collection.toJSON();
     }
 });
+
+module.exports = AWModel;

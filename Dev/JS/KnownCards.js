@@ -1,3 +1,5 @@
+//var Deck = exports.Deck;
+//var CardList = exports.CardList;
 var KnownCards = AWModel.extend({
     defaults: {
         hand: new CardList(),

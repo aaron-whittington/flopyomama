@@ -1,3 +1,6 @@
+
+var nsFilter = {};
+
 nsFilter.nsHtml = {};
 
 nsFilter.nsHtml.fGetFilterUI = function() {
