@@ -72,7 +72,11 @@ var CardList = AWCollection.extend({
             aoCards.push(new Card(prm[i]));
         }
         return aoCards;
-    }
+    },
+    getSuitStandardizedCardList: function() {
+
+
+    } 
 });
 
 
