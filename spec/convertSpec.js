@@ -3,10 +3,10 @@ describe("Deck", function() {
     var nsConvert = require('../Dev/JS/Convert');
         var Card = require('../Dev/JS/Card');
 
-    /*it('should have get random cards', function() {
+    xit('should have get random cards', function() {
         nsConvert.fGetRandomCards(3);
                 expect(deck.models.length).toEqual(52);
-    });*/
+    });
         
     it('should convert strings to card objects', function() {
         var result = nsConvert.fConvertStringToCardObject('AH');

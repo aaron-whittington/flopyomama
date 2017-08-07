@@ -1,3 +1,7 @@
+var AWModel = require('./core/AWModel');
+var nsConvert = require('./Convert');
+var nsMath = require('./Maths');
+
 var Pair = AWModel.extend({
     className: 'Pair',
     _stringToPrm: function(aArgs) {
@@ -64,7 +68,7 @@ var Pair = AWModel.extend({
                 rank: rank2,
                 suit: 4
             });
-            aAllKinds = fCombinatorics(aCards, 2);
+            aAllKinds = nsMath.combine(aCards, 2);
         } else {
             aCards.push({
                 rank: rank2,
@@ -98,7 +102,7 @@ var Pair = AWModel.extend({
                 rank: rank1,
                 suit: 4
             });
-            aAllKinds = fCombinatorics(aCards, 2);
+            aAllKinds = nsMath.combine(aCards, 2);
         }
 
         //order within each pair		
@@ -169,50 +173,4 @@ var Pair = AWModel.extend({
     }
 });
 
-var PairList = AWCollection.extend({
-    className: 'PairList',
-    model: Pair
-});
-
-var PairListModel = AWCollectionModel.extend({
-    className: 'PairListModel',
-    collection: PairList
-});
-
-var PairView = Backbone.View.extend({
-    initialize: function() {
-        //this.render();	
-    },
-    tagName: 'td',
-    className: function() {
-        if (_.isUndefined(this.model))
-            return "";
-        var sClass = 'offsuit';
-        if (this.model.bPPair()) {
-            sClass = 'pPair';
-        } else if (this.model.get('suited')) {
-            sClass = 'suit';
-        }
-        return sClass;
-    },
-    render: function() {
-        ////suit offsuit pPair
-        var oData = this.renderData();
-        var output = Mustache.render(this.template, oData);
-        this.$el.html(output);
-        return output;
-    },
-    renderData: function() {
-        return {
-            'class': this.className(),
-            'id': this.model.toString(),
-            'id_prefix': 'op_range_',
-            'string': this.model.toString()
-        };
-    },
-    template: "<td class='{{class}}' id='{{id_prefix}}{{id}}'>\
-					<div class='pair_wrapper'>\
-					<div class='static_bg'>&nbsp;</div>\
-					<div class='inner_pair'>{{string}}</div>\
-				</td>"
-});
+module.exports = Pair;

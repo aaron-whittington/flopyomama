@@ -49,7 +49,7 @@ nsWorker.fCalculateBoards = function(aoStartingHands, aKnownCards, aUnknownCards
     var approxTotalComb = totalCombinations * totalCombinationsMultiplier / 1.14; //from empirical testing 1.139
 
     //var combinatoricsStartTime= new Date().getTime(); COMBINATORICS FAST
-    var aBoards = fCombinatorics(aUnknownCards, numberOfOpenBoardHandPlaces);
+    var aBoards = nsMath.combine(aUnknownCards, numberOfOpenBoardHandPlaces);
 
     if (aBoards.length === 0) { //board is full but we want to go once through the loop anyway {
         aBoards[0] = [];

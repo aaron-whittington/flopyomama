@@ -1,4 +1,9 @@
-﻿
+﻿var Modernizr = require('modernizr'); 
+var $ = require('jquery');
+var nsUI = require('./Ui');
+var nsUitl = require('./Util');
+
+
 var TOTAL_STARTING_COMBINATIONS = 1326.0;
 
 var modern = Modernizr.csstransforms &&
@@ -8,7 +13,6 @@ var modern = Modernizr.csstransforms &&
     Modernizr.webworkers;
 
 if (!modern) {
-
     if (confirm("FlopYoMama uses some advanced browser features. " +
             "We recommend the latest Chrome/Safari/Chromium " +
             "on a decent machine.\n\n" +

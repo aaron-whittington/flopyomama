@@ -1,13 +1,14 @@
 ﻿var AWModel = require('./core/AWModel');
 var AWCollection = require('./core/AWCollection');
 var AWCollectionModel = require('./core/AWCollectionModel');
+var nsConvert = require('./Convert');
 
 var Card = AWModel.extend({
     className: 'Card',
     _stringToPrm: function(aArgs) {
         var cardString = aArgs[0];
         if (cardString.length !== 2)
-            throw "card constructor called with invalid prop: " + prm[0];
+            throw "card constructor called with invalid prop: " + aArgs[0];
         var rankChar = cardString[0].toUpperCase();
         var suitChar = cardString[1].toUpperCase();
         var rank = nsConvert.rankCharToNumber(rankChar);
