@@ -1,4 +1,7 @@
-﻿
+﻿var CardList =  require('./CardList');
+var Card = require('./Card');
+var Backbone = require('backbone');
+
 var ImmutableDeck = CardList.extend({
     initialize: function() {
         for (var suit = 4; suit > 0; suit--) {
@@ -46,3 +49,5 @@ var Deck = CardList.extend({
         }
     }
 });
+
+module.exports = Deck;

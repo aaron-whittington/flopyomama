@@ -1,10 +1,9 @@
 ﻿
-var nsMaths = {};
+var nsMath= {};
 
-var fCombinatorics = function(aN, k) {
+nsMath.combine = function(aN, k) {
     if (k === 0)
         return [];
-
 
     var aDisplace = [];
 
@@ -43,16 +42,16 @@ var fCombinatorics = function(aN, k) {
     return returnArray;
 }; // end func
 
-var fNumberOfCombinations = function(n, k) {
-    return factorial(n) / (factorial(k) * factorial(n - k));
+nsMath.numberOfCombinations = function(n, k) {
+    return nsMath.factorial(n) / (nsMath.factorial(k) * nsMath.factorial(n - k));
 };
 
-var factorial = function(n) {
+nsMath.factorial = function(n) {
     if (n <= 1) return 1;
-    return n * factorial(n - 1);
+    return n *nsMath.factorial(n - 1);
 };
 
-nsMaths.fShuffle = function(aArray, iMaxSub) {
+nsMath.shuffle = function(aArray, iMaxSub) {
     var returnArray = [];
     var arrayLength = aArray.length;
     if (arrayLength === 0)
@@ -60,8 +59,9 @@ nsMaths.fShuffle = function(aArray, iMaxSub) {
     if (typeof iMaxSub === "undefined")
         iMaxSub = arrayLength;
 
-    for (i = arrayLength; i > 0; i--) {
-        var randomIndex = Math.floor((Math.random() * (i - 1)));
+    var randomIndex;
+    for (var i = arrayLength; i > 0; i--) {
+        randomIndex = Math.floor((Math.random() * (i - 1)));
         returnArray.push(aArray[randomIndex]);
         if (returnArray.length >= iMaxSub)
             return returnArray;
@@ -70,3 +70,5 @@ nsMaths.fShuffle = function(aArray, iMaxSub) {
 
     return returnArray;
 };
+
+module.exports = nsMath;

@@ -23,7 +23,9 @@ slanskyRanges[8] = ["J7s", "96s", "85s", "74s", "42s", "32s", "A9o", "K9o", "Q9o
     "T8o", "87o", "76o", "65o", "54o"
 ];
 
-var fGetSlanskyFromPercent = function(fPercent) {
+var range = {};
+
+nsRange.fGetSlanskyFromPercent = function(fPercent) {
     var aReturn = [];
     var iHandsAdded = 0;
     for (var slanskyRange = 1; slanskyRange < slanskyRanges.length; slanskyRange++) {
@@ -41,7 +43,6 @@ var fGetSlanskyFromPercent = function(fPercent) {
     return aReturn;
 };
 
-var range = {};
 range.aStatData = [];
 range.aStatData.push({
     sPair: "AA",
@@ -889,7 +890,7 @@ range.aStatData.push({
     iSampleSize: 369182
 });
 
-var fGetStatisticalFromPercent = function(fPercent) {
+nsRange.fGetStatisticalFromPercent = function(fPercent) {
     var aReturn = [];
     var iHandsAdded = 0;
     var lastEquity = 0;
@@ -995,7 +996,7 @@ nsRange.fGetAllUnknownCombinationsThreaded = function() {
                 oDoneRecord.total += oResult.total;
                 //self.fPostDone({iCountWon: iCountWon, iCountLost:iCountLost, iCountDraw:iCountDraw,total:numberDone});
 
-                oHeroStat = fCombineObjects(oResult.oHeroStat, oHeroStat, function(a, b) {
+                oHeroStat = nsUtil.combineObjects(oResult.oHeroStat, oHeroStat, function(a, b) {
                     if (typeof a === "undefined")
                         a = {
                             lossCount: 0,
@@ -1008,12 +1009,12 @@ nsRange.fGetAllUnknownCombinationsThreaded = function() {
                             wonCount: 0,
                             drawCount: 0
                         };
-                    return fCombineObjects(a, b, function(a, b) {
+                    return nsUtil.combineObjects(a, b, function(a, b) {
                         return a + b;
                     });
                 });
 
-                oVillainStat = fCombineObjects(oResult.oVillainStat, oVillainStat, function(a, b) {
+                oVillainStat = nsUtil.combineObjects(oResult.oVillainStat, oVillainStat, function(a, b) {
                     if (typeof a === "undefined")
                         a = {
                             lossCount: 0,
@@ -1026,7 +1027,7 @@ nsRange.fGetAllUnknownCombinationsThreaded = function() {
                             wonCount: 0,
                             drawCount: 0
                         };
-                    return fCombineObjects(a, b, function(a, b) {
+                    return nsUtil.combineObjects(a, b, function(a, b) {
                         return a + b;
                     });
                 });

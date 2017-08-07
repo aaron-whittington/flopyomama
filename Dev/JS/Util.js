@@ -1,7 +1,7 @@
 ﻿
 var nsUtil = {};
 
-var fCombineObjects = function(a, b, fn) {
+nsUtil.combineObjects = function(a, b, fn) {
 
     //combines the two objects and performs the function with the properties of the arguments
     var returnObject = {},
@@ -14,14 +14,6 @@ var fCombineObjects = function(a, b, fn) {
             returnObject[prop] = fn(a[prop], b[prop]);
     }
     return returnObject;
-};
-
-
-var fSortPropertiesOfObject = function(ob, fn) {
-    var returnProp = [];
-    for (var prop in oVillainStat) {
-        returnProp.push(prop);
-    }
 };
 
 
@@ -104,3 +96,5 @@ nsUtil.fGetLocalStorage = function(v) {
 nsUtil.fLog = function(text) {
     console.log(text);
 };
+
+module.exports = nsUtil;

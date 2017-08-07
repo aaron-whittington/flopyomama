@@ -1,4 +1,7 @@
-﻿
+﻿var AWModel = require('./core/AWModel');
+var AWCollection = require('./core/AWCollection');
+var AWCollectionModel = require('./core/AWCollectionModel');
+
 var Card = AWModel.extend({
     className: 'Card',
     _stringToPrm: function(aArgs) {
@@ -85,3 +88,5 @@ var CardListList = AWCollection.extend({
     className: 'CardListList',
     model: CardListModel
 });
+
+module.exports = Card;

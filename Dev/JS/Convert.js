@@ -1,7 +1,9 @@
 ﻿ /*takes AAo und generates AcAd,AsAh ...and so on*/
+var _ = require('underscore');
 var nsConvert = {};
 
-var fGetRandomCards = function(i) {
+/*TODO: remove reference to global knownCards object*/
+nsConvert.fGetRandomCards = function(i) {
 
     var aAll = flopYoMama.knownCards.allUnknown(true),
         aReturnCards = [],
@@ -26,7 +28,7 @@ nsConvert.fConvertStringToCardObject = function(s) {
     } else { //param is an array
         var returnArray = [];
         for (var i = 0; i < s.length; i++)
-            returnArray.push(nsConvert.fConvertCardStringToCardObject(s[i]));
+            returnArray.push(nsConvert.fConvertStringToCardObject(s[i]));
 
         return returnArray;
     }
@@ -34,19 +36,13 @@ nsConvert.fConvertStringToCardObject = function(s) {
     return oCard;
 }
 
-//takes a card list and returns an equivalent list of cards, cycled to a standard
-//ordering of suits (so we don't have to do redundant comparisons)
-nsConvert.fStandardizeCardList = function() {
-
-}
-
 nsConvert.fConvertCardObjectToString = function(oCard) {
     return nsConvert.rankNumberToChar(oCard.rank) + nsConvert.suitToDisplayChar(oCard.suit);
 }
 
 
-//remove known board cards from pair array (SHOULD BE SOMEWHERE ELSE)
-var fFilterCardPairArray = function(pairArray, aKnown, aFilterPairs) {
+//remove known board cards from pair array
+nsConvert.fFilterCardPairArray = function(pairArray, aKnown, aFilterPairs) {
     var cardArrayLength = pairArray.length;
     var aKnownLength = aKnown.length;
     var returnArray = []
@@ -155,3 +151,5 @@ _.extend(nsConvert, {
         return null;
     }
 }); //expose this stuff
+
+module.exports = nsConvert;
