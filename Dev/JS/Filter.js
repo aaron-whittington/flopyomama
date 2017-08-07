@@ -1,3 +1,5 @@
+var nsUtil = require('./Util');
+
 var nsFilter = {};
 nsFilter.bEdited = false;
 nsFilter.sOriginalJSON = '';
@@ -111,7 +113,7 @@ nsFilter.fInit = function() {
 //save filter
 nsFilter.fSaveFilter = function() {
     var oJson = nsFilter.fCurrentToJSON();
-    var sName = 'filter_' + nsFilter.nsHtml.fGetCurrentFilterNameIntern();
+    var sName = 'filter_' + nsFilterHtml.fGetCurrentFilterNameIntern();
     nsUtil.fSetLocalStorage(sName, oJson);
     var aExisting = nsUtil.fGetLocalStorage(nsFilter.sFilterNamesKey);
     if (!aExisting)
@@ -126,7 +128,7 @@ nsFilter.fSaveFilter = function() {
 //the name of the current filter
 nsFilter.fDeleteFilter = function(name) {
     if (typeof name === "undefined") {
-        name = nsFilter.nsHtml.fGetCurrentFilterNameIntern();
+        name = nsFilterHtml.fGetCurrentFilterNameIntern();
     }
     name = 'filter_' + name;
     //update the saved key so it no longer contains name
@@ -374,23 +376,4 @@ nsFilter.fSetEditedJson = function() {
     nsFilter.sEditedJSON = JSON.stringify(nsFilter.fCurrentToJSON());
 };
 
-
-
-/*
-nsFilter.nsStandardFilters['strong_hand'] = {
-											"oValues":{
-												"sub_filter_type":"class_group","group_log_op":"log_op_or"},
-											"sub":[
-												{"oValues":{"sub_filter_type":"class_made_hand","comparator_op":"at_least","made_hand_op":"made_hand_2"}},
-												{"oValues":{"sub_filter_type":"class_drawing_hand","comparator_op":"at_least","drawing_hand_op":"drawing_hand_3"}}]};
-
-nsFilter.nsStandardFilters['junk'] = {
-										"oValues":
-											{"sub_filter_type":"class_group","group_log_op":"log_op_and"},
-										"sub":[
-											{"oValues":{"sub_filter_type":"class_made_hand","comparator_op":"at_most","made_hand_op":"made_hand_0"}},
-											{"oValues":{"sub_filter_type":"class_drawing_hand","comparator_op":"at_most","drawing_hand_op":"drawing_hand_2"}}]}; 
-										
-nsFilter.nsStandardFilters['bluffy'] =	{
-											"oValues":{"sub_filter_type":"class_group","group_log_op":"log_op_or"},
-											"sub":[{"oValues":{"sub_filter_type":"class_filter","sub_filter_op":"strong_hand"}},{"oValues":{"sub_filter_type":"class_filter","sub_filter_op":"junk"}}]} */
+module.exports = nsFilter;

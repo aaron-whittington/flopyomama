@@ -1,4 +1,4 @@
-AWModel = require('./AWModel');
+AWModel = require('./core/AWModel');
 
 FixedRange = AWModel.extend({
     initialize: function() {

@@ -36,7 +36,7 @@ module.exports = function(grunt) {
     },
     browserify: {
         default : {        
-            src :  ["./Dev/TS/Generated/*.js", "./Dev/JS/*.js"],
+            src :  ["./Dev/JS/*.js", "./Dev/JS/**/*.js", "!./Dev/JS/Generated/*"],
             dest:  "./Dev/JS/Generated/browserified.js"
         }
     },
@@ -127,6 +127,6 @@ module.exports = function(grunt) {
   grunt.registerTask('watch-all', ['watch']);
   grunt.registerTask('jshint-all', ['jshint']);
 
-  grunt.registerTask('build-release',['uglify', 'preprocess', 'less', 'ts', 'browserify']);   
-  grunt.registerTask('build-dev', [ 'preprocess', 'less', 'ts', 'browserify'] );
+  grunt.registerTask('build-release',['uglify', 'preprocess', 'less', 'browserify']);   
+  grunt.registerTask('build-dev', [ 'preprocess', 'less', 'browserify'] );
 };

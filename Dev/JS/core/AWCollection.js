@@ -1,5 +1,6 @@
 var  _ = require('underscore');
 var Backbone = require('backbone');
+var nsUtil = require('../Util');
 
 //collection with custom constructors
 var AWCollection = Backbone.Collection.extend({

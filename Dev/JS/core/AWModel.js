@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
+var nsUtil = require('../Util');
 //modell with custom constructors
 var AWModel = Backbone.Model.extend({
     //call constructor methods with args from special classes 

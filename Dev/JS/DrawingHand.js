@@ -164,7 +164,6 @@ nsDrawingHand.fFindBestStraightDraw = function(aCards) {
                 if (memberInStraight === 0)
                     findRank = 14;
             }
-            //nsUtil.fLog("lowrank " + iLowRank + " memberinstraight " + memberInStraight + " findrank " +findRank)
 
             var aMembersOfRank = nsHand.fFindAllCardsWithRank(aCards, findRank);
             if (aMembersOfRank.length > 0)
@@ -237,3 +236,5 @@ nsDrawingHand.fFindBestStraightDraw = function(aCards) {
         return aFoundDraws[0];
     return null;
 };
+
+module.exports = nsDrawingHand;

@@ -1,5 +1,5 @@
-var $ = require('JQuery');
-var nsUtil = require('Util');
+var $ = require('jquery');
+var nsUtil = require('./Util');
 
 var KnownCardsView = Backbone.View.extend({
     initialize: function() {
