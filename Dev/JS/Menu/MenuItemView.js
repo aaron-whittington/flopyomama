@@ -1,102 +1,7 @@
-"strict mode";
-
-var MenuItemGroup = function(name, exclusive) {
-    if (_.isUndefined(exclusive))
-        exclusive = false;
-    if (_.isUndefined(name))
-        name = "main";
-};
-
-var MenuItem = AWModel.extend({
-    className: 'MenuItem',
-    defaults: {
-        selectable: true,
-        selected: false,
-        action: null,
-        value: 1,
-        dispayValue: this.value,
-        divider: false,
-        group: null
-    },
-    initialize: function(o) {
-
-    }
-});
-
-var MenuList = AWCollection.extend({
-    className: 'MenuCollection',
-    model: MenuItem
-});
-
-var MenuListModel = AWCollectionModel.extend({
-    className: 'MenuListModel',
-    collection: MenuList
-});
-
-
-var MenuView = AWView.extend({
-    initialize: function() {
-        this.compiledTemplate = Mustache.compile(this.template); //this could be in awview base
-        //var elTest = $(Mustache.render('#{{.}}',this.idPrefix() + this.id()));
-        //if (_.isElement(elTest[0])) {
-        //	this.el = elTest[0];
-        //	this.$el = elTest;
-        //} // could also be in base
-        var that = this;
-        that.views = []; ///CAN'T FIGURE OUT WHY THIS IS BEING PERSISTED FROM BASE
-        this.model._collection.forEach(function(mod) {
-            that.views.push(new MenuItemView({
-                'model': mod,
-                'parentView': that
-            }));
-        });
-    },
-    id: "",
-    tagName: 'ul',
-    idPrefix: function() {
-        return "menu-";
-    },
-    views: [],
-    className: function() {
-        return "ctrls dropdown-menu";
-    },
-    after: 'rand_ctrl',
-    events: {
-        'click': "handleMainClick"
-    },
-    handleMainClick: function() {
-        /*called when the UL is clicked. OK 
-        alert("handleMainClick called in MenuView")*/
-    },
-    render: function() {
-        var oData = {
-            id: this.id,
-            className: this.className(),
-            html: [],
-            tagName: this.tagName
-        };
-        var menuView = this;
-
-        _.forEach(this.views, function(view) {
-            var viewEl = view.render().el;
-            menuView.$el.append(viewEl);
-            //oData.html.push(view.render());
-        });
-
-        //var rendered = this.compiledTemplate(oData);
-        //this.$el.html(rendered);
-        this.$el.attr("class", this.className());
-        this.$el.attr("id", this.id);
-        return this;
-
-    },
-    template: "\
-					{{#html}}\
-						{{{.}}}\
-					{{/html}}\
-				"
-});
-
+var AWView = require('../Core/AWView');
+var MenuListModel = require('./MenuListModel');
+var MenuItemGroup = require('./MenuItemGroup');
+var MenuView = require('./MenuView');
 
 var MenuItemView = AWView.extend({
     initialize: function(oData) {
@@ -184,6 +89,8 @@ var MenuItemView = AWView.extend({
     template: "<a>{{{displayValue}}}{{{icon}}}</a>"
 });
 
+module.exports = MenuItemView;
+/*
 $(function() {
 
     var standardGroup = new MenuItemGroup();
@@ -238,14 +145,10 @@ $(function() {
         model: randomMenu,
         id: "random_menu"
     });
-    /*for (var i=0;i<randomModelView.views.length;i++)  {
-    	randomModelView.views[i].el = "body";
-    }*/
     randomModelView.render();
     $("#rand_ctrl").after(randomModelView.el);
     //loggingModelView.render();
 
-    /***********************************    RANDOM     ******************************************************/
     $('body').on('click touchstart', '#rand', function() {
         var aCards = fGetRandomCards(7);
 
@@ -268,4 +171,4 @@ $(function() {
         flopYoMama.knownCards.trigger('finalize');
 
     });
-});
+});*/

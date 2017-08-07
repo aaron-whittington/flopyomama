@@ -1,5 +1,5 @@
 "use strict"
-
+var AWView = require('../Core/AWView');
 var LinkEditorView = AWView.extend({
     initialize: function() {
         var that = this;
@@ -50,3 +50,5 @@ var LinkEditorView = AWView.extend({
 $(function() {
     var lev = new LinkEditorView();
 });
+
+module.exports = LinkEditorView;

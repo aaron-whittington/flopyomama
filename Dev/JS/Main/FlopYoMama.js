@@ -2,6 +2,7 @@
 var nsUI = require('../Core/Ui');
 var nsUitl = require('../Core/Util');
 var nsFilter = require('../Filter/Filter');
+var nsFilterHtml = require('../Filter/FilterHtml');
 var Deck = require('../Card/Deck');
 var KnownCards = require('../KnownCards/KnownCards');
 var KnownCardsView = require('../KnownCards/KnownCardsView');
@@ -17,7 +18,7 @@ var TOTAL_STARTING_COMBINATIONS = 1326.0;
 $(document).ready(function() {
     //were we ever modern?
     nsFilter.fInit();
-    nsFilter.nsHtml.fReBuildFilterMenu();
+    nsFilterHtml.fReBuildFilterMenu();
     //filter settings before slider, because slider triggers eval
     var localFilterSettings = nsUtil.fGetLocalStorage("filter_settings");
     if (localFilterSettings !== null && localFilterSettings !== '') {
@@ -265,7 +266,7 @@ $(function() {
     $('#content').removeClass('preload');
 
     $('#filter_editor').bind('hide.bs.modal', function() {
-        if (nsFilter.nsHtml.fUpdateUI()) {
+        if (nsFilterHtml.fUpdateUI()) {
             if (confirm('You have unsaved changes. Do you wish to discard them?'))
                 return true;
             else return false;
@@ -275,8 +276,8 @@ $(function() {
     $('#discard_filter').click(function() {
         if (confirm('Discard changes?')) {
             nsFilter.sEditedJSON = nsFilter.sOriginalJSON;
-            nsFilter.nsHtml.fLoadFilterFromObject(nsFilter.sOriginalJSON);
-            nsFilter.nsHtml.fUpdateUI();
+            nsFilterHtml.fLoadFilterFromObject(nsFilter.sOriginalJSON);
+            nsFilterHtml.fUpdateUI();
         }
     });
 
@@ -284,7 +285,7 @@ $(function() {
         //todo add name
         if (confirm('Really delete this filter?')) {
             nsFilter.fDeleteFilter();
-            nsFilter.nsHtml.fReBuildFilterMenu();
+            nsFilterHtml.fReBuildFilterMenu();
             nsFilter.fClearFilter();
             $('#filter_editor').trigger('show.bs.modal');
         }
@@ -292,17 +293,17 @@ $(function() {
 
     $('#save_filter').click(function() {
         nsFilter.fSaveFilter();
-        nsFilter.nsHtml.fReBuildFilterMenu();
+        nsFilterHtml.fReBuildFilterMenu();
         nsFilter.sEditedJSON = nsFilter.sOriginalJSON;
-        nsFilter.nsHtml.fUpdateUI();
+        nsFilterHtml.fUpdateUI();
     });
 
     //new subfilter clicks	
     $('#filter_editor').on('click', '.new_subfilter', function() {
         var thisRow = $(this).parents('.filter_ctrl_row');
-        nsFilter.nsHtml.fAddSubRow(thisRow);
+        nsFilterHtml.fAddSubRow(thisRow);
         nsFilter.fSetEditedJson();
-        nsFilter.nsHtml.fUpdateUI();
+        nsFilterHtml.fUpdateUI();
     });
 
     //delete subfilter clicks
@@ -322,7 +323,7 @@ $(function() {
         }
 
         nsFilter.fSetEditedJson();
-        nsFilter.nsHtml.fUpdateUI();
+        nsFilterHtml.fUpdateUI();
     });
 
     //dropdown menu clicks
@@ -344,7 +345,7 @@ $(function() {
         if (!bNothingChanged) {
             //changing the type of the row				
             if ($(this).parent().is('.sub_filter_type')) {
-                var sHtml = nsFilter.nsHtml.fSubFilterButtonGroup(val, hasDeleteButton);
+                var sHtml = nsFilterHtml.fSubFilterButtonGroup(val, hasDeleteButton);
 
                 //changing the type of the row may require deleting subnodes
                 if (thisRow.next().is('.filter_group_subgroup')) {
@@ -359,23 +360,23 @@ $(function() {
                 labelButton.html(displayVal);
             }
             nsFilter.fSetEditedJson();
-            nsFilter.nsHtml.fUpdateUI();
+            nsFilterHtml.fUpdateUI();
         }
     });
 
     //open empty modal		
     $('body').on('show.bs.modal', '#filter_editor', function() {
-        nsFilter.nsHtml.fLoadNew();
+        nsFilterHtml.fLoadNew();
 
         setTimeout(function() {
             nsUI.fAddEventsToCombobox('sel_filter');
 
             $('#sel_filter').keypress(function() {
-                nsFilter.nsHtml.fUpdateUI();
+                nsFilterHtml.fUpdateUI();
             });
             nsFilter.sEditedJSON = '';
             nsFilter.sOriginalJSON = '';
-            nsFilter.nsHtml.fUpdateUI();
+            nsFilterHtml.fUpdateUI();
             $('#sel_filter').bind('validated', function() {
                 if (nsFilter.sOriginalJSON !== nsFilter.sEditedJSON)
                     return;
@@ -388,7 +389,7 @@ $(function() {
                 else
                     filterId = '';
 
-                sInnerHtml = nsFilter.nsHtml.fFilterHtmlFromSelect(filterId);
+                sInnerHtml = nsFilterHtml.fFilterHtmlFromSelect(filterId);
                 $('#filter_editor .modal-body').append(sInnerHtml);
 
                 var original = nsFilter.fCurrentToJSON();
