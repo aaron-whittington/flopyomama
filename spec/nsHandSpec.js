@@ -1,8 +1,7 @@
 describe("NSHand", function() {
  
-	var nsHand = require('../Dev/JS/NSHand');
-    var nsConvert = require('../Dev/JS/Convert');
-
+	var nsHand = require('../Dev/JS/Hand/NSHand');
+    var nsConvert = require('../Dev/JS/Core/Convert');
 
 	it('should handle high card hands', function() {
         var cards1 = nsConvert.fConvertStringToCardObject(['A♥', 'K♣', 'Q♣', 'J♦', '5♦', '3♣', '2♠']);

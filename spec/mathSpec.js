@@ -1,4 +1,4 @@
-var nsMath = require('../Dev/JS/Maths');
+var nsMath = require('../Dev/JS/Core/Math');
 
 it('should calculate combinations correctly', function() {
         expect(nsMath.combine([1,2,3], 1)).toEqual([[1],[2],[3]]);

@@ -1,6 +1,6 @@
 describe("Pair", function() {
 
-	var Pair = require('../Dev/JS/Pair');
+	var Pair = require('../Dev/JS/Pair/Pair');
 	var pair;
 
 	it('should create suited and unsuited pairs ', function() {

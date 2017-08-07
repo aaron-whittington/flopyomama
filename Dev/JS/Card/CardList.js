@@ -1,5 +1,5 @@
 ﻿var Card = require('./Card');
-var AWCollection = require('./core/AWCollection');
+var AWCollection = require('../Core/AWCollection');
 
 var CardList = AWCollection.extend({
     className: 'CardList',

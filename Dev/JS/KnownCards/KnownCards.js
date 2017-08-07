@@ -1,9 +1,9 @@
-var AWModel = require('./core/AWModel');
-var nsHtml = require('./Html');
-var CardList = require('./CardList');
-var Deck = require('./Deck');
-var nsUi = require('./UI');
-var nsUtil = require('./Util');
+var AWModel = require('../Core/AWModel');
+var nsHtml = require('../Core/Html');
+var CardList = require('../Card/CardList');
+var Deck = require('../Card/Deck');
+var nsUi = require('../Core/UI');
+var nsUtil = require('../Core/Util');
 
 var KnownCards = AWModel.extend({
     defaults: {

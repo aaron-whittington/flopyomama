@@ -1,3 +1,4 @@
+var AWView = require('../Core/AWView');
 //item view for the fixed range editor
 FixedRangeEditorItemView = AWView.extend({
     initialize: function() {

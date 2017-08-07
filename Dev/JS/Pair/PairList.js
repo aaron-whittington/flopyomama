@@ -1,5 +1,5 @@
 
-var AWCollection = require('./core/AWCollection');
+var AWCollection = require('../Core/AWCollection');
 
 var PairList = AWCollection.extend({
     className: 'PairList',

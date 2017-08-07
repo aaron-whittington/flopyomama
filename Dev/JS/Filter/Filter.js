@@ -1,4 +1,4 @@
-var nsUtil = require('./Util');
+var nsUtil = require('../Core/Util');
 
 var nsFilter = {};
 nsFilter.bEdited = false;

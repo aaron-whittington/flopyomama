@@ -1,7 +1,7 @@
-﻿var AWModel = require('./core/AWModel');
-var AWCollection = require('./core/AWCollection');
-var AWCollectionModel = require('./core/AWCollectionModel');
-var nsConvert = require('./Convert');
+﻿var AWModel = require('../Core/AWModel');
+var AWCollection = require('../Core/AWCollection');
+var AWCollectionModel = require('../Core/AWCollectionModel');
+var nsConvert = require('../Core/Convert');
 
 var Card = AWModel.extend({
     className: 'Card',

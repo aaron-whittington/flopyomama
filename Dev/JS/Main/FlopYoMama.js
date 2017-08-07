@@ -1,7 +1,16 @@
 ﻿var $ = require('jquery');
-var nsUI = require('./Ui');
-var nsUitl = require('./Util');
-
+var nsUI = require('../Core/Ui');
+var nsUitl = require('../Core/Util');
+var nsFilter = require('../Filter/Filter');
+var Deck = require('../Card/Deck');
+var KnownCards = require('../KnownCards/KnownCards');
+var KnownCardsView = require('../KnownCards/KnownCardsView');
+var Slider = require('../Slider/Slider');
+var SliderView = require('../Slider/SliderView');
+var RangeTypeSeletView = require('../Range/RangeTypeSelectView');
+var RangeTable = require('../Range/RangeTable'); 
+var RangeTableView = require('../Range/RangeTableView');
+var AWModel = require('../Core/AWModel');
 
 var TOTAL_STARTING_COMBINATIONS = 1326.0;
 
@@ -478,7 +487,5 @@ var FlopYoMama = AWModel.extend({
 
 
 $(function() {
-
     new FlopYoMama();
-
 });

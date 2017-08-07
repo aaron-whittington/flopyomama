@@ -1,20 +1,19 @@
 
-var nsFilter = {};
+var nsFilter = require('./Filter');
+var nsFilterHtml = {};
 
-nsFilter.nsHtml = {};
-
-nsFilter.nsHtml.fGetFilterUI = function() {
+nsFilterHtml.fGetFilterUI = function() {
     var sHtml = '<div class="row form-group">';
     sHtml += '<label id="sel_filter_label" for="sel_filter" class="col-lg-3 control-label">Select filter</label>';
     sHtml += '<div class="col-lg-9">';
-    sHtml += nsFilter.nsHtml.fGetFilterCombobox();
+    sHtml += nsFilterHtml.fGetFilterCombobox();
     sHtml += '</div>';
     sHtml += '</div>';
     return sHtml;
 };
 
 
-nsFilter.nsHtml.fReBuildFilterMenu = function() {
+nsFilterHtml.fReBuildFilterMenu = function() {
     //first delete existing
     $('#filter_config_menu li.filter').remove();
     var sHtml = '';
@@ -41,7 +40,7 @@ nsFilter.nsHtml.fReBuildFilterMenu = function() {
     $('#filter_config_menu').prepend(sHtml);
 };
 
-nsFilter.nsHtml.fGetFilterCombobox = function() {
+nsFilterHtml.fGetFilterCombobox = function() {
     var aValues = [],
         aDisplay = [];
     $('#filter_config_menu .filter').each(function() {
@@ -62,7 +61,7 @@ nsFilter.nsHtml.fGetFilterCombobox = function() {
     return nsUI.clBootstrapCombobox('sel_filter', aValues, aDisplay, 'Click button or type (new) name');
 };
 
-nsFilter.nsHtml.fWrapSubFilterButtonGroup = function(sBtnGroup) {
+nsFilterHtml.fWrapSubFilterButtonGroup = function(sBtnGroup) {
     var colOffsetTag = '',
         iIndent = 0;
     var colTag = 'col-lg-' + (12 - iIndent);
@@ -77,33 +76,33 @@ nsFilter.nsHtml.fWrapSubFilterButtonGroup = function(sBtnGroup) {
 };
 
 //fuer untergruppen damit wir einen baum struktur behalten
-nsFilter.nsHtml.fWrapSubFilterGroup = function(sGroupGroup) {
+nsFilterHtml.fWrapSubFilterGroup = function(sGroupGroup) {
     sHtml = '<div class = "filter_group_subgroup"><img class="brace" src="Style/GullBraceLeft.svg">' + sGroupGroup + '</div>';
     return sHtml;
 };
 
-nsFilter.nsHtml.fFilterHtmlFromSelect = function(sVal) {
+nsFilterHtml.fFilterHtmlFromSelect = function(sVal) {
     var sHtml = '<div id="filter_loaded" class="well">';
 
     var oSettings = nsFilter.fActiveFilter(sVal);
     if (typeof oSettings !== 'undefined' && oSettings !== null) {
         //get the json object		
-        sHtml += nsFilter.nsHtml.fLoadFilterFromObject(oSettings);
+        sHtml += nsFilterHtml.fLoadFilterFromObject(oSettings);
 
     } else { //new
-        sHtml += nsFilter.nsHtml.fWrapSubFilterButtonGroup(nsFilter.nsHtml.fSubFilterButtonGroup(nsFilter.nsStandard.oGroup));
+        sHtml += nsFilterHtml.fWrapSubFilterButtonGroup(nsFilterHtml.fSubFilterButtonGroup(nsFilter.nsStandard.oGroup));
     }
     sHtml += '</div>';
     return sHtml;
 };
 
-nsFilter.nsHtml.fLoadNew = function() {
-    var sHtml = nsFilter.nsHtml.fGetFilterUI();
+nsFilterHtml.fLoadNew = function() {
+    var sHtml = nsFilterHtml.fGetFilterUI();
     $('#filter_editor .modal-body').html(sHtml);
 };
 
 
-nsFilter.nsHtml.fUpdateUI = function() {
+nsFilterHtml.fUpdateUI = function() {
     var sString = 'Select filter';
     var bReturn = true;
     if (nsFilter.sOriginalJSON !== nsFilter.sEditedJSON) {
@@ -129,44 +128,44 @@ nsFilter.nsHtml.fUpdateUI = function() {
     return bReturn;
 };
 
-nsFilter.nsHtml.fLoadFilterFromObject = function(oSettings, bDeleteButton) {
+nsFilterHtml.fLoadFilterFromObject = function(oSettings, bDeleteButton) {
     var sHtml = '';
     if (typeof bDeleteButton === "undefined")
         bDeleteButton = false;
-    sHtml += nsFilter.nsHtml.fWrapSubFilterButtonGroup(nsFilter.nsHtml.fSubFilterButtonGroup(oSettings.oValues, bDeleteButton));
+    sHtml += nsFilterHtml.fWrapSubFilterButtonGroup(nsFilterHtml.fSubFilterButtonGroup(oSettings.oValues, bDeleteButton));
     if (typeof(oSettings.sub) !== 'undefined') {
         var sInnerHtml = '';
         for (var i = 0; i < oSettings.sub.length; i++) {
-            sInnerHtml += nsFilter.nsHtml.fLoadFilterFromObject(oSettings.sub[i], true);
+            sInnerHtml += nsFilterHtml.fLoadFilterFromObject(oSettings.sub[i], true);
         }
 
-        sInnerHtml = nsFilter.nsHtml.fWrapSubFilterGroup(sInnerHtml);
+        sInnerHtml = nsFilterHtml.fWrapSubFilterGroup(sInnerHtml);
         sHtml += sInnerHtml;
     }
     return sHtml;
 };
 
-nsFilter.nsHtml.fAddSubRow = function(thisRow, sType) {
+nsFilterHtml.fAddSubRow = function(thisRow, sType) {
     if (typeof sType === 'undefined')
         sType = 'class_made_hand';
     var thisCol = thisRow.children().first();
     //var iThisIndent = nsFilter.fGetIndent(thisCol);
-    var sHtml = nsFilter.nsHtml.fSubFilterButtonGroup(sType, true);
-    var sHtmlRow = nsFilter.nsHtml.fWrapSubFilterButtonGroup(sHtml, 0);
+    var sHtml = nsFilterHtml.fSubFilterButtonGroup(sType, true);
+    var sHtmlRow = nsFilterHtml.fWrapSubFilterButtonGroup(sHtml, 0);
     if (thisRow.next().is('.filter_group_subgroup')) {
         thisRow.next().append(sHtmlRow);
     } //wrapper for subfilters already there
     else { //need new subfilter container
-        var sHtmlWrappedRow = nsFilter.nsHtml.fWrapSubFilterGroup(sHtmlRow);
+        var sHtmlWrappedRow = nsFilterHtml.fWrapSubFilterGroup(sHtmlRow);
         thisRow.after(sHtmlWrappedRow);
     }
 };
 
-nsFilter.nsHtml.fTypeStringToClass = function(sPrefix, sType) {
+nsFilterHtml.fTypeStringToClass = function(sPrefix, sType) {
     return sPrefix + sType.replace(/\s+/g, '_').toLowerCase();
 };
 
-nsFilter.nsHtml.fSubFilterButtonGroup = function(oValues, bRemoveButton) {
+nsFilterHtml.fSubFilterButtonGroup = function(oValues, bRemoveButton) {
     var sType = nsUtil.fType(oValues);
     if (sType === "string")
         sSelected = oValues;
@@ -182,7 +181,7 @@ nsFilter.nsHtml.fSubFilterButtonGroup = function(oValues, bRemoveButton) {
 
     sHtml = '';
     //generate a class for this type
-    var sClass = nsFilter.nsHtml.fTypeStringToClass('filter_btns_', sSelected);
+    var sClass = nsFilterHtml.fTypeStringToClass('filter_btns_', sSelected);
     sHtml += '<div class="btn-group ' + sClass + '  filter_ctrl_btn_group">';
 
     if (typeof bRemoveButton === 'undefined')
@@ -190,59 +189,59 @@ nsFilter.nsHtml.fSubFilterButtonGroup = function(oValues, bRemoveButton) {
 
     switch (sSelected) {
         case 'class_group':
-            sHtml += nsFilter.nsHtml.fGroupTypeFilterButtonGroup(oValues);
+            sHtml += nsFilterHtml.fGroupTypeFilterButtonGroup(oValues);
             break;
         case 'class_made_hand':
-            sHtml += nsFilter.nsHtml.fMadeHandTypeFilterButtonGroup(oValues);
+            sHtml += nsFilterHtml.fMadeHandTypeFilterButtonGroup(oValues);
             break;
         case 'class_drawing_hand':
-            sHtml += nsFilter.nsHtml.fDrawingHandTypeFilterButtonGroup(oValues);
+            sHtml += nsFilterHtml.fDrawingHandTypeFilterButtonGroup(oValues);
             break;
         case 'class_filter':
-            sHtml += nsFilter.nsHtml.fFilterTypeFilterButtonGroup(oValues);
+            sHtml += nsFilterHtml.fFilterTypeFilterButtonGroup(oValues);
             break;
         default:
     }
 
     if (bRemoveButton)
-        sHtml += nsFilter.nsHtml.fRemoveFilterButton();
+        sHtml += nsFilterHtml.fRemoveFilterButton();
 
     sHtml += '</div>'; // end btn-group
     return sHtml;
 };
 
-nsFilter.nsHtml.fGroupTypeFilterButtonGroup = function(oValues) {
+nsFilterHtml.fGroupTypeFilterButtonGroup = function(oValues) {
     var sHtml = '';
-    sHtml += nsFilter.nsHtml.fSubFilterTypeButtons('class_group');
-    sHtml += nsFilter.nsHtml.fLogicalOpButtons(oValues.group_log_op);
-    sHtml += nsFilter.nsHtml.fNewSubFilterButton();
+    sHtml += nsFilterHtml.fSubFilterTypeButtons('class_group');
+    sHtml += nsFilterHtml.fLogicalOpButtons(oValues.group_log_op);
+    sHtml += nsFilterHtml.fNewSubFilterButton();
     return sHtml;
 };
 
-nsFilter.nsHtml.fMadeHandTypeFilterButtonGroup = function(oValues) {
+nsFilterHtml.fMadeHandTypeFilterButtonGroup = function(oValues) {
     var sHtml = '';
-    sHtml += nsFilter.nsHtml.fSubFilterTypeButtons('class_made_hand');
-    sHtml += nsFilter.nsHtml.fAtLeastFilterTypeButtons(oValues.comparator_op);
-    sHtml += nsFilter.nsHtml.fMadeHandFilterTypeButtons(oValues.made_hand_op);
+    sHtml += nsFilterHtml.fSubFilterTypeButtons('class_made_hand');
+    sHtml += nsFilterHtml.fAtLeastFilterTypeButtons(oValues.comparator_op);
+    sHtml += nsFilterHtml.fMadeHandFilterTypeButtons(oValues.made_hand_op);
     return sHtml;
 };
 
-nsFilter.nsHtml.fDrawingHandTypeFilterButtonGroup = function(oValues) {
+nsFilterHtml.fDrawingHandTypeFilterButtonGroup = function(oValues) {
     var sHtml = '';
-    sHtml += nsFilter.nsHtml.fSubFilterTypeButtons('class_drawing_hand');
-    sHtml += nsFilter.nsHtml.fAtLeastFilterTypeButtons(oValues.comparator_op);
-    sHtml += nsFilter.nsHtml.fDrawingHandFilterTypeButtons(oValues.drawing_hand_op);
+    sHtml += nsFilterHtml.fSubFilterTypeButtons('class_drawing_hand');
+    sHtml += nsFilterHtml.fAtLeastFilterTypeButtons(oValues.comparator_op);
+    sHtml += nsFilterHtml.fDrawingHandFilterTypeButtons(oValues.drawing_hand_op);
     return sHtml;
 };
 
-nsFilter.nsHtml.fFilterTypeFilterButtonGroup = function(oValues) {
+nsFilterHtml.fFilterTypeFilterButtonGroup = function(oValues) {
     var sHtml = '';
-    sHtml += nsFilter.nsHtml.fSubFilterTypeButtons('class_filter');
-    sHtml += nsFilter.nsHtml.fSubFilterSelectionButtons(oValues.sub_filter_op);
+    sHtml += nsFilterHtml.fSubFilterTypeButtons('class_filter');
+    sHtml += nsFilterHtml.fSubFilterSelectionButtons(oValues.sub_filter_op);
     return sHtml;
 };
 
-nsFilter.nsHtml.fSubFilterTypeButtons = function(sSelected) {
+nsFilterHtml.fSubFilterTypeButtons = function(sSelected) {
     if (typeof sSelected === 'undefined')
         sSelected = 'class_group';
 
@@ -293,7 +292,7 @@ nsFilter.nsHtml.fSubFilterTypeButtons = function(sSelected) {
     return sHtml;
 };
 
-nsFilter.nsHtml.fLogicalOpButtons = function(sSelected) {
+nsFilterHtml.fLogicalOpButtons = function(sSelected) {
 
     var asClass = [];
     asClass[0] = 'log_op_or';
@@ -334,7 +333,7 @@ nsFilter.nsHtml.fLogicalOpButtons = function(sSelected) {
     return sHtml;
 };
 
-nsFilter.nsHtml.fAtLeastFilterTypeButtons = function(sSelected) {
+nsFilterHtml.fAtLeastFilterTypeButtons = function(sSelected) {
 
     var asClass = [];
     asClass[0] = 'at_least';
@@ -375,7 +374,7 @@ nsFilter.nsHtml.fAtLeastFilterTypeButtons = function(sSelected) {
     return sHtml;
 };
 
-nsFilter.nsHtml.fMadeHandFilterTypeButtons = function(sSelected) {
+nsFilterHtml.fMadeHandFilterTypeButtons = function(sSelected) {
 
     /*oHand.HIGH_CARD = 0;
     oHand.PAIR = 1;
@@ -428,12 +427,12 @@ nsFilter.nsHtml.fMadeHandFilterTypeButtons = function(sSelected) {
     return sHtml;
 };
 
-nsFilter.nsHtml.fGetCurrentFilterNameIntern = function() {
+nsFilterHtml.fGetCurrentFilterNameIntern = function() {
     var valDisplay = $('#sel_filter input').val();
     return valDisplay.split(' ').join('_').toLowerCase();
 };
 
-nsFilter.nsHtml.fSubFilterSelectionButtons = function(sSelected) {
+nsFilterHtml.fSubFilterSelectionButtons = function(sSelected) {
 
     var aValidSelections = [];
     var aValidSelectionStrings = [];
@@ -448,7 +447,7 @@ nsFilter.nsHtml.fSubFilterSelectionButtons = function(sSelected) {
         if (currentId !== id) {
             aValidSelections.push(id);
             aValidSelectionStrings.push(currentHtml);
-            asClass.push(nsFilter.nsHtml.fTypeStringToClass('', currentHtml));
+            asClass.push(nsFilterHtml.fTypeStringToClass('', currentHtml));
         }
     });
 
@@ -461,7 +460,7 @@ nsFilter.nsHtml.fSubFilterSelectionButtons = function(sSelected) {
             }
         }
     }
-    var currentNameSearch = nsFilter.nsHtml.fGetCurrentFilterNameIntern();
+    var currentNameSearch = nsFilterHtml.fGetCurrentFilterNameIntern();
     var sHtml = '';
     sHtml += '<button type="button" class="btn btn-default">';
     sHtml += aValidSelectionStrings[selectedIndex];
@@ -487,7 +486,7 @@ nsFilter.nsHtml.fSubFilterSelectionButtons = function(sSelected) {
     return sHtml;
 };
 
-nsFilter.nsHtml.fDrawingHandFilterTypeButtons = function(sSelected) {
+nsFilterHtml.fDrawingHandFilterTypeButtons = function(sSelected) {
 
     /*
     nsDrawingHand.BACKDOOR_STRAIGHT_DRAW=0;
@@ -537,7 +536,7 @@ nsFilter.nsHtml.fDrawingHandFilterTypeButtons = function(sSelected) {
     return sHtml;
 };
 
-nsFilter.nsHtml.fNewSubFilterButton = function() {
+nsFilterHtml.fNewSubFilterButton = function() {
     var sHtml = '';
     sHtml += '<button title="New Subfilter" class="new_subfilter btn-success btn" type="button">';
     sHtml += '<span class="glyphicon glyphicon-plus-sign"></span>';
@@ -545,7 +544,7 @@ nsFilter.nsHtml.fNewSubFilterButton = function() {
     return sHtml;
 };
 
-nsFilter.nsHtml.fRemoveFilterButton = function() {
+nsFilterHtml.fRemoveFilterButton = function() {
     var sHtml = '';
     sHtml += '<button title="Delete subfilter" class="delete_subfilter btn-warning btn" type="button">';
     sHtml += '<span class="glyphicon glyphicon-minus-sign"></span>';

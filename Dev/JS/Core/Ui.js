@@ -236,7 +236,4 @@ nsUI.fAddEventsToCombobox = function(sId, fVal) {
         fVal = fStandardValidate;
 
     fVal();
-    //<span class="glyphicon glyphicon-ok"></span>
-    //<span class="glyphicon glyphicon-remove"></span>
-    //<span class="glyphicon glyphicon-plus-sign"></span>
 };

@@ -1,6 +1,6 @@
-var AWModel = require('./core/AWModel');
-var nsConvert = require('./Convert');
-var nsMath = require('./Maths');
+var AWModel = require('../Core/AWModel');
+var nsConvert = require('../Core/Convert');
+var nsMath = require('../Core/Math');
 
 var Pair = AWModel.extend({
     className: 'Pair',

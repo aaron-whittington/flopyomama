@@ -6,7 +6,7 @@ self.addEventListener('message', function(e) {
     switch (data.cmd) {
         case 'start':
             //self.postMessage({'command recieved start');
-            importScripts("../Lib/underscore/underscore-min.js", 'Maths.js', 'Hand.js', 'Convert.js');
+            importScripts("../Lib/underscore/underscore-min.js", '../Core/Math.js', '../Core/Hand.js', '../Core/Convert.js');
 
 
             nsWorker.fCalculateBoards(data.aoStartingHands, data.aKnownCards, data.aUnknownCards, data.aFixedBoardCards, data.numberOfOpenBoardHandPlaces, data.oFilter);

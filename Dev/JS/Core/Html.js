@@ -656,3 +656,5 @@ nsHtml.fInitResultPopovers = function() {
     });
 
 };
+
+module.exports = nsHtml;

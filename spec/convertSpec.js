@@ -1,7 +1,7 @@
-describe("Deck", function() {
+describe("Convert", function() {
 
-    var nsConvert = require('../Dev/JS/Convert');
-        var Card = require('../Dev/JS/Card');
+    var nsConvert = require('../Dev/JS/Core/Convert');
+        var Card = require('../Dev/JS/Card/Card');
 
     xit('should have get random cards', function() {
         nsConvert.fGetRandomCards(3);
