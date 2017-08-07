@@ -186,7 +186,7 @@ var Deck = CardList.extend({
 
 module.exports = Deck;
 
-},{"./Card":1,"./CardList":2,"backbone":55}],4:[function(require,module,exports){
+},{"./Card":1,"./CardList":2,"backbone":58}],4:[function(require,module,exports){
 var  _ = require('underscore');
 var Backbone = require('backbone');
 var nsUtil = require('./Util');
@@ -274,7 +274,7 @@ var AWCollection = Backbone.Collection.extend({
 
 module.exports = AWCollection;
 
-},{"./Util":14,"backbone":55,"underscore":57}],5:[function(require,module,exports){
+},{"./Util":14,"backbone":58,"underscore":60}],5:[function(require,module,exports){
 var AWModel = require('./AWModel');
 var AWCollection = require('./AWCollection');
 
@@ -402,7 +402,7 @@ var AWModel = Backbone.Model.extend({
 
 module.exports = AWModel;
 
-},{"./Util":14,"backbone":55,"underscore":57}],7:[function(require,module,exports){
+},{"./Util":14,"backbone":58,"underscore":60}],7:[function(require,module,exports){
 "strict mode"
 var Backbone = require('backbone');
 var AWView = Backbone.View.extend({
@@ -414,7 +414,7 @@ var AWView = Backbone.View.extend({
 });
 
 module.exports = AWView;
-},{"backbone":55}],8:[function(require,module,exports){
+},{"backbone":58}],8:[function(require,module,exports){
  /*takes AAo und generates AcAd,AsAh ...and so on*/
 var _ = require('underscore');
 var nsConvert = {};
@@ -571,7 +571,7 @@ _.extend(nsConvert, {
 
 module.exports = nsConvert;
 
-},{"underscore":57}],9:[function(require,module,exports){
+},{"underscore":60}],9:[function(require,module,exports){
 
 var nsHtml = {};
 
@@ -1687,6 +1687,158 @@ nsUtil.fLog = function(text) {
 module.exports = nsUtil;
 
 },{}],15:[function(require,module,exports){
+var nsFilter = require('../Filter/Filter');
+var nsFilterHtml = require('../Filter/FilterHtml');
+var nsUtil = require('../Core/Util');
+
+$(function() {
+
+    nsFilter.fInit();
+    nsFilterHtml.fReBuildFilterMenu();
+
+    //filter settings before slider, because slider triggers eval
+
+    var localFilterSettings = nsUtil.fGetLocalStorage("filter_settings");
+    if (localFilterSettings !== null && localFilterSettings !== '') {
+        nsUI.fToggleCheckableMenu($('#' + localFilterSettings), true);
+        nsUtil.fLog('toggle: ' + localFilterSettings);
+    }
+
+    $('#filter_editor').bind('hide.bs.modal', function() {
+        if (nsFilterHtml.fUpdateUI()) {
+            if (confirm('You have unsaved changes. Do you wish to discard them?'))
+                return true;
+            else return false;
+        }
+    });
+
+    $('#discard_filter').click(function() {
+        if (confirm('Discard changes?')) {
+            nsFilter.sEditedJSON = nsFilter.sOriginalJSON;
+            nsFilterHtml.fLoadFilterFromObject(nsFilter.sOriginalJSON);
+            nsFilterHtml.fUpdateUI();
+        }
+    });
+
+    $('#delete_filter').click(function() {
+        //todo add name
+        if (confirm('Really delete this filter?')) {
+            nsFilter.fDeleteFilter();
+            nsFilterHtml.fReBuildFilterMenu();
+            nsFilter.fClearFilter();
+            $('#filter_editor').trigger('show.bs.modal');
+        }
+    });
+
+    $('#save_filter').click(function() {
+        nsFilter.fSaveFilter();
+        nsFilterHtml.fReBuildFilterMenu();
+        nsFilter.sEditedJSON = nsFilter.sOriginalJSON;
+        nsFilterHtml.fUpdateUI();
+    });
+
+    //new subfilter clicks	
+    $('#filter_editor').on('click', '.new_subfilter', function() {
+        var thisRow = $(this).parents('.filter_ctrl_row');
+        nsFilterHtml.fAddSubRow(thisRow);
+        nsFilter.fSetEditedJson();
+        nsFilterHtml.fUpdateUI();
+    });
+
+    //delete subfilter clicks
+    $('#filter_editor').on('click', '.delete_subfilter', function() {
+        var thisRow = $(this).parents('.filter_ctrl_row');
+        var next = thisRow.next();
+        if (thisRow.next().is('.filter_group_subgroup')) {
+            if (thisRow.next().children().length > 0)
+                if (confirm('Deleting a group requires deleting all sub-elements! Continue?')) {
+                    next.remove();
+                    thisRow.remove();
+                }
+        } //wrapper for subfilters already there
+        else { //need new subfilter container
+            thisRow.remove();
+
+        }
+
+        nsFilter.fSetEditedJson();
+        nsFilterHtml.fUpdateUI();
+    });
+
+    //dropdown menu clicks
+    $('#filter_editor').on('click', '#filter_loaded .dropdown-menu li', function() {
+        var labelButton = $(this).parent().parent().prev();
+        var hasDeleteButton = false;
+        var buttonContainer = $(this).parent().parent().parent().parent();
+        var thisRow = $(this).parents('.filter_ctrl_row');
+
+        if ($(this).parents('.filter_group_subgroup').length > 0)
+            hasDeleteButton = true;
+        var displayVal = $(this).find('a').html();
+        var val = $(this).find('a').attr('class');
+        var bNothingChanged = $(this).hasClass('selected');
+
+        $(this).addClass('selected active').siblings().removeClass('selected active');
+
+        //do nothing if val isn't new
+        if (!bNothingChanged) {
+            //changing the type of the row				
+            if ($(this).parent().is('.sub_filter_type')) {
+                var sHtml = nsFilterHtml.fSubFilterButtonGroup(val, hasDeleteButton);
+
+                //changing the type of the row may require deleting subnodes
+                if (thisRow.next().is('.filter_group_subgroup')) {
+                    if (thisRow.next().children().length > 0)
+                        if (confirm('Changing this group type will delete sub-elements! Continue?')) {
+                            thisRow.next().remove();
+                            buttonContainer.html(sHtml);
+                        }
+                } else
+                    buttonContainer.html(sHtml);
+            } else {
+                labelButton.html(displayVal);
+            }
+            nsFilter.fSetEditedJson();
+            nsFilterHtml.fUpdateUI();
+        }
+    });
+
+    //open empty modal		
+    $('body').on('show.bs.modal', '#filter_editor', function() {
+        nsFilterHtml.fLoadNew();
+
+        setTimeout(function() {
+            nsUI.fAddEventsToCombobox('sel_filter');
+
+            $('#sel_filter').keypress(function() {
+                nsFilterHtml.fUpdateUI();
+            });
+            nsFilter.sEditedJSON = '';
+            nsFilter.sOriginalJSON = '';
+            nsFilterHtml.fUpdateUI();
+            $('#sel_filter').bind('validated', function() {
+                if (nsFilter.sOriginalJSON !== nsFilter.sEditedJSON)
+                    return;
+                $('#filter_loaded').remove();
+                var filterId;
+                var sId = $('#sel_filter li.active').attr('id');
+
+                if (sId)
+                    filterId = sId.substring('sel_'.length);
+                else
+                    filterId = '';
+
+                sInnerHtml = nsFilterHtml.fFilterHtmlFromSelect(filterId);
+                $('#filter_editor .modal-body').append(sInnerHtml);
+
+                var original = nsFilter.fCurrentToJSON();
+                nsFilter.sEditedJSON = original;
+                nsFilter.sOriginalJSON = original;
+            });
+        }, 1);
+    });
+});
+},{"../Core/Util":14,"../Filter/Filter":16,"../Filter/FilterHtml":17}],16:[function(require,module,exports){
 var nsUtil = require('../Core/Util');
 
 var nsFilter = {};
@@ -2067,9 +2219,10 @@ nsFilter.fSetEditedJson = function() {
 
 module.exports = nsFilter;
 
-},{"../Core/Util":14}],16:[function(require,module,exports){
+},{"../Core/Util":14}],17:[function(require,module,exports){
 
 var nsFilter = require('./Filter');
+var nsUtil = require('../Core/Util');
 var nsFilterHtml = {};
 
 nsFilterHtml.fGetFilterUI = function() {
@@ -2081,7 +2234,6 @@ nsFilterHtml.fGetFilterUI = function() {
     sHtml += '</div>';
     return sHtml;
 };
-
 
 nsFilterHtml.fReBuildFilterMenu = function() {
     //first delete existing
@@ -2621,7 +2773,9 @@ nsFilterHtml.fRemoveFilterButton = function() {
     sHtml += '</button>';
     return sHtml;
 };
-},{"./Filter":15}],17:[function(require,module,exports){
+
+module.exports = nsFilterHtml;
+},{"../Core/Util":14,"./Filter":16}],18:[function(require,module,exports){
 
 var nsDrawingHand = {};
 
@@ -2862,7 +3016,7 @@ nsDrawingHand.fFindBestStraightDraw = function(aCards) {
 };
 
 module.exports = nsDrawingHand;
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 
 
 var oHand = {};
@@ -2896,7 +3050,7 @@ oHand.TOP_Pair = 0;
 module.exports = oHand;
 
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 
 var oHand = require('./Hand');
 var nsHand = {}; 
@@ -3309,7 +3463,7 @@ nsHand.fFindHighCards = function(aCards) {
 
 module.exports = nsHand;
 
-},{"./Hand":18}],20:[function(require,module,exports){
+},{"./Hand":19}],21:[function(require,module,exports){
 var AWModel = require('../Core/AWModel');
 var nsHtml = require('../Core/Html');
 var CardList = require('../Card/CardList');
@@ -3415,7 +3569,7 @@ var KnownCards = AWModel.extend({
 
 module.exports = KnownCards;
 
-},{"../Card/CardList":2,"../Card/Deck":3,"../Core/AWModel":6,"../Core/Html":9,"../Core/UI":12,"../Core/Util":14}],21:[function(require,module,exports){
+},{"../Card/CardList":2,"../Card/Deck":3,"../Core/AWModel":6,"../Core/Html":9,"../Core/UI":12,"../Core/Util":14}],22:[function(require,module,exports){
 var $ = require('jquery');
 var nsUtil = require('../Core/Util');
 
@@ -3698,12 +3852,10 @@ var KnownCardsView = Backbone.View.extend({
 
 module.exports = KnownCardsView;
 
-},{"../Core/Util":14,"jquery":56}],22:[function(require,module,exports){
+},{"../Core/Util":14,"jquery":59}],23:[function(require,module,exports){
 var $ = require('jquery');
 var nsUI = require('../Core/Ui');
-var nsUitl = require('../Core/Util');
-var nsFilter = require('../Filter/Filter');
-var nsFilterHtml = require('../Filter/FilterHtml');
+var nsUtil = require('../Core/Util');
 var Deck = require('../Card/Deck');
 var KnownCards = require('../KnownCards/KnownCards');
 var KnownCardsView = require('../KnownCards/KnownCardsView');
@@ -3717,37 +3869,6 @@ var AWModel = require('../Core/AWModel');
 var TOTAL_STARTING_COMBINATIONS = 1326.0;
 
 $(document).ready(function() {
-    //were we ever modern?
-    nsFilter.fInit();
-    nsFilterHtml.fReBuildFilterMenu();
-    //filter settings before slider, because slider triggers eval
-    var localFilterSettings = nsUtil.fGetLocalStorage("filter_settings");
-    if (localFilterSettings !== null && localFilterSettings !== '') {
-        nsUI.fToggleCheckableMenu($('#' + localFilterSettings), true);
-        nsUtil.fLog('toggle: ' + localFilterSettings);
-        //$('#filter_config_menu').attr('title', 'Filter' + $('#' + localFilterSettings).find('a').html().substring());
-    }
-
-    /*changing the themes*/
-    $('#dev_menu .theme_select li').click(function() {
-        var themeName = $(this).children('a').first().attr('href').substring(1);
-        var refMain = "style/flopyomama.css";
-        var refBS = "lib/bootstrap/dist/css/bootstrap.min.css";
-        if (themeName !== 'default_theme') {
-            refMain = "style/themes/" + themeName + "/flopyomama.css";
-            refBS = "style/themes/" + themeName + "/bootstrap.min.css";
-        }
-        nsUtil.fLog(refMain);
-        nsUtil.fLog(refBS);
-        $('link.btstrap').attr('href', refBS);
-        $('link.main').attr('href', refMain);
-        nsUI.fEvaluateKnownCards(); //colors refresh. would be better just to redraw the pies...also won't work if the css isn't there yet
-        /*$('link.main').one('load',function() {
-        	nsUI.fEvaluateKnownCards(); //colors refresh. would be better just to redraw the pies...
-        });*/
-    });
-
-
     /**********************************************PROGRESS BARS***************************************************************/
 
     $('#results_progress').bind('done', function() {
@@ -3966,140 +4087,6 @@ $(function() {
 
     $('#content').removeClass('preload');
 
-    $('#filter_editor').bind('hide.bs.modal', function() {
-        if (nsFilterHtml.fUpdateUI()) {
-            if (confirm('You have unsaved changes. Do you wish to discard them?'))
-                return true;
-            else return false;
-        }
-    });
-
-    $('#discard_filter').click(function() {
-        if (confirm('Discard changes?')) {
-            nsFilter.sEditedJSON = nsFilter.sOriginalJSON;
-            nsFilterHtml.fLoadFilterFromObject(nsFilter.sOriginalJSON);
-            nsFilterHtml.fUpdateUI();
-        }
-    });
-
-    $('#delete_filter').click(function() {
-        //todo add name
-        if (confirm('Really delete this filter?')) {
-            nsFilter.fDeleteFilter();
-            nsFilterHtml.fReBuildFilterMenu();
-            nsFilter.fClearFilter();
-            $('#filter_editor').trigger('show.bs.modal');
-        }
-    });
-
-    $('#save_filter').click(function() {
-        nsFilter.fSaveFilter();
-        nsFilterHtml.fReBuildFilterMenu();
-        nsFilter.sEditedJSON = nsFilter.sOriginalJSON;
-        nsFilterHtml.fUpdateUI();
-    });
-
-    //new subfilter clicks	
-    $('#filter_editor').on('click', '.new_subfilter', function() {
-        var thisRow = $(this).parents('.filter_ctrl_row');
-        nsFilterHtml.fAddSubRow(thisRow);
-        nsFilter.fSetEditedJson();
-        nsFilterHtml.fUpdateUI();
-    });
-
-    //delete subfilter clicks
-    $('#filter_editor').on('click', '.delete_subfilter', function() {
-        var thisRow = $(this).parents('.filter_ctrl_row');
-        var next = thisRow.next();
-        if (thisRow.next().is('.filter_group_subgroup')) {
-            if (thisRow.next().children().length > 0)
-                if (confirm('Deleting a group requires deleting all sub-elements! Continue?')) {
-                    next.remove();
-                    thisRow.remove();
-                }
-        } //wrapper for subfilters already there
-        else { //need new subfilter container
-            thisRow.remove();
-
-        }
-
-        nsFilter.fSetEditedJson();
-        nsFilterHtml.fUpdateUI();
-    });
-
-    //dropdown menu clicks
-    $('#filter_editor').on('click', '#filter_loaded .dropdown-menu li', function() {
-        var labelButton = $(this).parent().parent().prev();
-        var hasDeleteButton = false;
-        var buttonContainer = $(this).parent().parent().parent().parent();
-        var thisRow = $(this).parents('.filter_ctrl_row');
-
-        if ($(this).parents('.filter_group_subgroup').length > 0)
-            hasDeleteButton = true;
-        var displayVal = $(this).find('a').html();
-        var val = $(this).find('a').attr('class');
-        var bNothingChanged = $(this).hasClass('selected');
-
-        $(this).addClass('selected active').siblings().removeClass('selected active');
-
-        //do nothing if val isn't new
-        if (!bNothingChanged) {
-            //changing the type of the row				
-            if ($(this).parent().is('.sub_filter_type')) {
-                var sHtml = nsFilterHtml.fSubFilterButtonGroup(val, hasDeleteButton);
-
-                //changing the type of the row may require deleting subnodes
-                if (thisRow.next().is('.filter_group_subgroup')) {
-                    if (thisRow.next().children().length > 0)
-                        if (confirm('Changing this group type will delete sub-elements! Continue?')) {
-                            thisRow.next().remove();
-                            buttonContainer.html(sHtml);
-                        }
-                } else
-                    buttonContainer.html(sHtml);
-            } else {
-                labelButton.html(displayVal);
-            }
-            nsFilter.fSetEditedJson();
-            nsFilterHtml.fUpdateUI();
-        }
-    });
-
-    //open empty modal		
-    $('body').on('show.bs.modal', '#filter_editor', function() {
-        nsFilterHtml.fLoadNew();
-
-        setTimeout(function() {
-            nsUI.fAddEventsToCombobox('sel_filter');
-
-            $('#sel_filter').keypress(function() {
-                nsFilterHtml.fUpdateUI();
-            });
-            nsFilter.sEditedJSON = '';
-            nsFilter.sOriginalJSON = '';
-            nsFilterHtml.fUpdateUI();
-            $('#sel_filter').bind('validated', function() {
-                if (nsFilter.sOriginalJSON !== nsFilter.sEditedJSON)
-                    return;
-                $('#filter_loaded').remove();
-                var filterId;
-                var sId = $('#sel_filter li.active').attr('id');
-
-                if (sId)
-                    filterId = sId.substring('sel_'.length);
-                else
-                    filterId = '';
-
-                sInnerHtml = nsFilterHtml.fFilterHtmlFromSelect(filterId);
-                $('#filter_editor .modal-body').append(sInnerHtml);
-
-                var original = nsFilter.fCurrentToJSON();
-                nsFilter.sEditedJSON = original;
-                nsFilter.sOriginalJSON = original;
-            });
-        }, 1);
-    });
-
 
 });
 var flopYoMama = {};
@@ -4192,7 +4179,7 @@ $(function() {
     new FlopYoMama();
 });
 
-},{"../Card/Deck":3,"../Core/AWModel":6,"../Core/Ui":13,"../Core/Util":14,"../Filter/Filter":15,"../Filter/FilterHtml":16,"../KnownCards/KnownCards":20,"../KnownCards/KnownCardsView":21,"../Range/RangeTable":44,"../Range/RangeTableView":45,"../Range/RangeTypeSelectView":46,"../Slider/Slider":51,"../Slider/SliderView":52,"jquery":56}],23:[function(require,module,exports){
+},{"../Card/Deck":3,"../Core/AWModel":6,"../Core/Ui":13,"../Core/Util":14,"../KnownCards/KnownCards":21,"../KnownCards/KnownCardsView":22,"../Range/RangeTable":45,"../Range/RangeTableView":46,"../Range/RangeTypeSelectView":47,"../Slider/Slider":54,"../Slider/SliderView":55,"jquery":59}],24:[function(require,module,exports){
 var AWModel = require('../Core/AWModel');
 var MenuItem = AWModel.extend({
     className: 'MenuItem',
@@ -4211,7 +4198,7 @@ var MenuItem = AWModel.extend({
 });
 
 module.exports = MenuItem;
-},{"../Core/AWModel":6}],24:[function(require,module,exports){
+},{"../Core/AWModel":6}],25:[function(require,module,exports){
 
 var _ = require('underscore');
 var MenuItemGroup = function(name, exclusive) {
@@ -4222,7 +4209,7 @@ var MenuItemGroup = function(name, exclusive) {
 };
 
 module.exports = MenuItemGroup;
-},{"underscore":57}],25:[function(require,module,exports){
+},{"underscore":60}],26:[function(require,module,exports){
 var AWView = require('../Core/AWView');
 var MenuListModel = require('./MenuListModel');
 var MenuItemGroup = require('./MenuItemGroup');
@@ -4398,7 +4385,7 @@ $(function() {
     });
 });*/
 
-},{"../Core/AWView":7,"./MenuItemGroup":24,"./MenuListModel":27,"./MenuView":28}],26:[function(require,module,exports){
+},{"../Core/AWView":7,"./MenuItemGroup":25,"./MenuListModel":28,"./MenuView":29}],27:[function(require,module,exports){
 var MenuItem = require('./MenuItem');
 var AWCollection = require("../Core/AWCollection");
 var MenuList = AWCollection.extend({
@@ -4407,7 +4394,7 @@ var MenuList = AWCollection.extend({
 });
 
 module.exports = MenuList;
-},{"../Core/AWCollection":4,"./MenuItem":23}],27:[function(require,module,exports){
+},{"../Core/AWCollection":4,"./MenuItem":24}],28:[function(require,module,exports){
 "strict mode";
 var _ = require('underscore');
 var MenuList = require('./MenuList');
@@ -4427,7 +4414,7 @@ var MenuListModel = AWCollectionModel.extend({
 
 module.exports = MenuListModel;
 
-},{"../Core/AWCollectionModel":5,"./MenuList":26,"underscore":57}],28:[function(require,module,exports){
+},{"../Core/AWCollectionModel":5,"./MenuList":27,"underscore":60}],29:[function(require,module,exports){
 
 var AWView = require('../Core/AWView');
 var MenuItemView = require('./MenuItemView');
@@ -4495,7 +4482,7 @@ var MenuView = AWView.extend({
 });
 
 module.exports = MenuView;
-},{"../Core/AWView":7,"./MenuItemView":25}],29:[function(require,module,exports){
+},{"../Core/AWView":7,"./MenuItemView":26}],30:[function(require,module,exports){
 var AWModel = require('../Core/AWModel');
 var nsConvert = require('../Core/Convert');
 var nsMath = require('../Core/Math');
@@ -4673,7 +4660,7 @@ var Pair = AWModel.extend({
 
 module.exports = Pair;
 
-},{"../Core/AWModel":6,"../Core/Convert":8,"../Core/Math":10}],30:[function(require,module,exports){
+},{"../Core/AWModel":6,"../Core/Convert":8,"../Core/Math":10}],31:[function(require,module,exports){
 
 var AWCollection = require('../Core/AWCollection');
 var Pair = require('./Pair');
@@ -4685,7 +4672,7 @@ var PairList = AWCollection.extend({
 
 module.exports = PairList;
 
-},{"../Core/AWCollection":4,"./Pair":29}],31:[function(require,module,exports){
+},{"../Core/AWCollection":4,"./Pair":30}],32:[function(require,module,exports){
 
 var PairList = require('./PairList');
 var AWCollectionModel = require('../Core/AWCollectionModel');
@@ -4695,7 +4682,7 @@ var PairListModel = AWCollectionModel.extend({
 });
 module.exports = PairListModel;
 
-},{"../Core/AWCollectionModel":5,"./PairList":30}],32:[function(require,module,exports){
+},{"../Core/AWCollectionModel":5,"./PairList":31}],33:[function(require,module,exports){
 
 var Backbone = require('backbone');
 
@@ -4739,7 +4726,7 @@ var PairView = Backbone.View.extend({
 
 module.exports = PairView;
 
-},{"backbone":55}],33:[function(require,module,exports){
+},{"backbone":58}],34:[function(require,module,exports){
 var AWModel = require('../Core/AWModel');
 
 var FixedRange = AWModel.extend({
@@ -4821,7 +4808,7 @@ FixedRange.fromCurrent = function(slider, rangeTable) {
     return range;
 };
 module.exports = FixedRange;
-},{"../Core/AWModel":6}],34:[function(require,module,exports){
+},{"../Core/AWModel":6}],35:[function(require,module,exports){
 var AWView = require('../Core/AWView');
 //item view for the fixed range editor
 FixedRangeEditorItemView = AWView.extend({
@@ -5022,7 +5009,7 @@ FixedRangeEditorView = AWView.extend({
         '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6"><strong>Custom</strong></div>' +
         '</div>'
 });
-},{"../Core/AWView":7}],35:[function(require,module,exports){
+},{"../Core/AWView":7}],36:[function(require,module,exports){
 var _=require('underscore');
 var AWCollection = require('../Core/AWCollection');
 var FixedRange = require('./FixedRange');
@@ -5194,7 +5181,7 @@ FixedRangeList.default = {
 };
 
 module.exports = FixedRangeList;
-},{"../Core/AWCollection":4,"./FixedRange":33,"underscore":57}],36:[function(require,module,exports){
+},{"../Core/AWCollection":4,"./FixedRange":34,"underscore":60}],37:[function(require,module,exports){
 var AWView = require('../Core/AWView');
 var FixedRangeList = require('./FixedRangeList');
 var FixedRangeView = require('./FixedRangeView');
@@ -5243,7 +5230,7 @@ $(document).ready(function() {
 });
 */
 
-},{"../Core/AWView":7,"./FixedRangeList":35,"./FixedRangeView":37}],37:[function(require,module,exports){
+},{"../Core/AWView":7,"./FixedRangeList":36,"./FixedRangeView":38}],38:[function(require,module,exports){
 var AWView = require('../Core/AWView');
 var $ = require('jquery');
 //view of ranges for clicking loading
@@ -5277,7 +5264,7 @@ var FixedRangeView = AWView.extend({
 });
 
 module.exports = FixedRangeView;
-},{"../Core/AWView":7,"jquery":56}],38:[function(require,module,exports){
+},{"../Core/AWView":7,"jquery":59}],39:[function(require,module,exports){
 
 var AWModel = require('../Core/AWModel');
 
@@ -5317,7 +5304,7 @@ var RangeItem = AWModel.extend({
 
 module.exports = RangeItem;
 
-},{"../Core/AWModel":6}],39:[function(require,module,exports){
+},{"../Core/AWModel":6}],40:[function(require,module,exports){
 var AWCollection = require('../Core/AWCollection');
 var RangeItem = require('./RangeItem');
 
@@ -5332,7 +5319,7 @@ var RangeItemList = AWCollection.extend({
 });*/
 
 module.exports = RangeItemList;
-},{"../Core/AWCollection":4,"./RangeItem":38}],40:[function(require,module,exports){
+},{"../Core/AWCollection":4,"./RangeItem":39}],41:[function(require,module,exports){
 var AWView = require('../Core/AWView');
 
 var RangeItemView = AWView.extend({
@@ -5396,7 +5383,7 @@ var RangeItemView = AWView.extend({
 });
 
 module.exports = RangeItemView;
-},{"../Core/AWView":7}],41:[function(require,module,exports){
+},{"../Core/AWView":7}],42:[function(require,module,exports){
 var $ = require('jquery');
 var sklanskyRange = require('./RangeScaleSklansky');
 var procentualRange = require('./RangeScaleProcentual'); 
@@ -5716,7 +5703,7 @@ nsRange.fGetStartingHandsFromRangeGrid = function(bAll) {
 
 module.exports = nsRange;
 
-},{"./RangeScaleProcentual":42,"./RangeScaleSklansky":43,"jquery":56}],42:[function(require,module,exports){
+},{"./RangeScaleProcentual":43,"./RangeScaleSklansky":44,"jquery":59}],43:[function(require,module,exports){
 
 var range = {};
 range.aStatData = [];
@@ -6568,7 +6555,7 @@ range.aStatData.push({
 
 module.exports = range;
 
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 /*SLANSKY RANGES http://en.wikipedia.org/wiki/Texas_hold_%27em_starting_hands*/
 
 var sklanskyRanges = [];
@@ -6590,7 +6577,7 @@ sklanskyRanges[8] = ["J7s", "96s", "85s", "74s", "42s", "32s", "A9o", "K9o", "Q9
 
 module.exports = sklanskyRanges;
 
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 var RangeItemList = require('./RangeItemList');
 
 var RangeTable = RangeItemList.extend({
@@ -6724,7 +6711,7 @@ var RangeTable = RangeItemList.extend({
     }
 
 });
-},{"./RangeItemList":39}],45:[function(require,module,exports){
+},{"./RangeItemList":40}],46:[function(require,module,exports){
 
 var AWView = require('../Core/AWView');
 var RangeTableView = AWView.extend({
@@ -6891,7 +6878,7 @@ var RangeTableView = AWView.extend({
 				</table>"
 });
 
-},{"../Core/AWView":7}],46:[function(require,module,exports){
+},{"../Core/AWView":7}],47:[function(require,module,exports){
 var Bacbone = require('backbone');
 
 var RangeTypeSelectView = Backbone.View.extend({
@@ -6923,7 +6910,7 @@ var RangeTypeSelectView = Backbone.View.extend({
 });
 
 module.exports = RangeTypeSelectView;
-},{"backbone":55}],47:[function(require,module,exports){
+},{"backbone":58}],48:[function(require,module,exports){
 
 
 
@@ -7078,7 +7065,21 @@ var getExactPreflopOdds = function(heroCard1, heroCard2, badGuyCard1, badGuyCard
 
 
 
-},{}],48:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
+
+
+var SettingsModel = require('./Settings');
+var SettingsView = require('./SettingsView');
+var $ = require('jquery');
+$(function() {
+    var sm = new SettingsModel();
+    var sv = new SettingsView({
+        model: sm,
+        el: $('#settings_modal .modal-body')[0]
+    });
+    sv.render();
+});
+},{"./Settings":52,"./SettingsView":53,"jquery":59}],50:[function(require,module,exports){
 "use strict"
 var AWView = require('../Core/AWView');
 var LinkEditorView = AWView.extend({
@@ -7133,7 +7134,7 @@ $(function() {
 });
 
 module.exports = LinkEditorView;
-},{"../Core/AWView":7}],49:[function(require,module,exports){
+},{"../Core/AWView":7}],51:[function(require,module,exports){
 nsPrefs = {};
 
 nsPrefs.nsConst = {};
@@ -7160,9 +7161,9 @@ nsPrefs.nsConst.BAR_GRAPHS = 0;
 nsPrefs.nsConst.PIE_GRAPHS = 1;
 
 nsPrefs.oGraphType = new nsPrefs.Preference(nsPrefs.nsConst.PIE_GRAPHS, 'Pie charts are yummy.');
-},{}],50:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 "use strict"
-
+var AWModel = require('../Core/AWModel');
 var SettingsModel = AWModel.extend({
     initialize: function() {
 
@@ -7190,7 +7191,10 @@ var SettingsModel = AWModel.extend({
         this.set('exportURI', href);
     }
 });
+module.exports = SettingsModel;
 
+},{"../Core/AWModel":6}],53:[function(require,module,exports){
+var Backbone = require('backbone');
 
 var SettingsView = Backbone.View.extend({
     initialize: function() {
@@ -7259,16 +7263,8 @@ var SettingsView = Backbone.View.extend({
     }
 });
 
-$(function() {
-
-    var sm = new SettingsModel();
-    var sv = new SettingsView({
-        model: sm,
-        el: $('#settings_modal .modal-body')[0]
-    });
-    sv.render();
-});
-},{}],51:[function(require,module,exports){
+module.exports = SettingsView;
+},{"backbone":58}],54:[function(require,module,exports){
 var nsRange = require('../Range/RangeLibrary');
 require('backbone');
 
@@ -7340,7 +7336,7 @@ var Slider = Backbone.Model.extend({
 });
 
 
-},{"../Range/RangeLibrary":41,"backbone":55}],52:[function(require,module,exports){
+},{"../Range/RangeLibrary":42,"backbone":58}],55:[function(require,module,exports){
 var Backbone = require('backbone');
 
 var SliderView = Backbone.View.extend({
@@ -7389,7 +7385,7 @@ var SliderView = Backbone.View.extend({
 });
 
 module.exports = SliderView;
-},{"backbone":55}],53:[function(require,module,exports){
+},{"backbone":58}],56:[function(require,module,exports){
 
 var nsWorker = {};
 
@@ -7712,7 +7708,7 @@ nsWorker.getFlushSuitAndNumber = function(board, oPair) {
         numberFound: foundHowManyOfSuit
     };
 };
-},{}],54:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 
 var nsWorkerTextures = {};
 
@@ -7837,7 +7833,7 @@ var fPostProgress = function(sMessage) {
         msg: sMessage
     });
 };
-},{}],55:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.3.3
 
@@ -9761,7 +9757,7 @@ var fPostProgress = function(sMessage) {
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":56,"underscore":57}],56:[function(require,module,exports){
+},{"jquery":59,"underscore":60}],59:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.2.1
  * https://jquery.com/
@@ -20016,7 +20012,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{}],57:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -21566,4 +21562,4 @@ return jQuery;
   }
 }.call(this));
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57]);

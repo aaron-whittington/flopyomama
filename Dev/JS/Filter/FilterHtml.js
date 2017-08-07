@@ -1,5 +1,6 @@
 
 var nsFilter = require('./Filter');
+var nsUtil = require('../Core/Util');
 var nsFilterHtml = {};
 
 nsFilterHtml.fGetFilterUI = function() {
@@ -11,7 +12,6 @@ nsFilterHtml.fGetFilterUI = function() {
     sHtml += '</div>';
     return sHtml;
 };
-
 
 nsFilterHtml.fReBuildFilterMenu = function() {
     //first delete existing
@@ -551,3 +551,5 @@ nsFilterHtml.fRemoveFilterButton = function() {
     sHtml += '</button>';
     return sHtml;
 };
+
+module.exports = nsFilterHtml;
