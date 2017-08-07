@@ -1,4 +1,5 @@
-﻿var $ = require('jquery');
+﻿var bs = require('bootstrap');
+var $ = require('jquery');
 var nsUI = require('../Core/Ui');
 var nsUtil = require('../Core/Util');
 var Deck = require('../Card/Deck');

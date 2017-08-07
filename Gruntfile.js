@@ -37,7 +37,7 @@ module.exports = function(grunt) {
     browserify: {
         default : {        
             src :  ["./Dev/JS/*.js", "./Dev/JS/**/*.js"],
-            dest:  "./Dev/Generated/browserified.js"
+            dest:  "./Dev/Generated/browserified.js",
         }
     },
 	uglify: {
