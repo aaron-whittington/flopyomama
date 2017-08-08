@@ -1,6 +1,7 @@
 
 var nsFilter = require('./Filter');
 var nsUtil = require('../Core/Util');
+var nsDrawingHand = require('../Hand/DrawingHand');
 var nsFilterHtml = {};
 
 nsFilterHtml.fGetFilterUI = function() {
@@ -488,12 +489,6 @@ nsFilterHtml.fSubFilterSelectionButtons = function(sSelected) {
 
 nsFilterHtml.fDrawingHandFilterTypeButtons = function(sSelected) {
 
-    /*
-    nsDrawingHand.BACKDOOR_STRAIGHT_DRAW=0;
-    nsDrawingHand.GUTSHOT_STRAIGHT_DRAW=1;
-    nsDrawingHand.BACKDOOR_FLUSH_DRAW=2;
-    nsDrawingHand.OPEN_ENDED_STRAIGHT_DRAW=3;
-    nsDrawingHand.FLUSH_DRAW=4;*/
     var asRank = [];
     var asClass = [];
     for (var iHandType = 0; iHandType < 5; iHandType++) {

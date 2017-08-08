@@ -1,4 +1,5 @@
 var nsUtil = require('../Core/Util');
+var nsDrawingHand = require('../Hand/DrawingHand')
 
 var nsFilter = {};
 nsFilter.bEdited = false;

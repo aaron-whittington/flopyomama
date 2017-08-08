@@ -1375,7 +1375,7 @@ var TableRouter = Backbone.Router.extend({
     help: function() {
 
     }, 
-    getRouterValues() {
+    getRouterValues: function() {
         return routerValues;
     },
     main: function(hand, board, slider, range, custom, filter) {
@@ -1848,6 +1848,7 @@ $(function() {
 });
 },{"../Core/Util":16,"../Filter/Filter":18,"../Filter/FilterHtml":19}],18:[function(require,module,exports){
 var nsUtil = require('../Core/Util');
+var nsDrawingHand = require('../Hand/DrawingHand')
 
 var nsFilter = {};
 nsFilter.bEdited = false;
@@ -2227,10 +2228,11 @@ nsFilter.fSetEditedJson = function() {
 
 module.exports = nsFilter;
 
-},{"../Core/Util":16}],19:[function(require,module,exports){
+},{"../Core/Util":16,"../Hand/DrawingHand":20}],19:[function(require,module,exports){
 
 var nsFilter = require('./Filter');
 var nsUtil = require('../Core/Util');
+var nsDrawingHand = require('../Hand/DrawingHand');
 var nsFilterHtml = {};
 
 nsFilterHtml.fGetFilterUI = function() {
@@ -2718,12 +2720,6 @@ nsFilterHtml.fSubFilterSelectionButtons = function(sSelected) {
 
 nsFilterHtml.fDrawingHandFilterTypeButtons = function(sSelected) {
 
-    /*
-    nsDrawingHand.BACKDOOR_STRAIGHT_DRAW=0;
-    nsDrawingHand.GUTSHOT_STRAIGHT_DRAW=1;
-    nsDrawingHand.BACKDOOR_FLUSH_DRAW=2;
-    nsDrawingHand.OPEN_ENDED_STRAIGHT_DRAW=3;
-    nsDrawingHand.FLUSH_DRAW=4;*/
     var asRank = [];
     var asClass = [];
     for (var iHandType = 0; iHandType < 5; iHandType++) {
@@ -2783,7 +2779,7 @@ nsFilterHtml.fRemoveFilterButton = function() {
 };
 
 module.exports = nsFilterHtml;
-},{"../Core/Util":16,"./Filter":18}],20:[function(require,module,exports){
+},{"../Core/Util":16,"../Hand/DrawingHand":20,"./Filter":18}],20:[function(require,module,exports){
 var nsHand = require('./NSHand');
 var oHand = require('./Hand');
 var nsDrawingHand = {};

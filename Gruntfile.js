@@ -66,9 +66,9 @@ module.exports = function(grunt) {
 			},
 			files: [{
 				expand: true,
-				cwd: './Dev/JS',
-				src: '*.js',
-				dest: './Release/JS'
+				cwd: './Dev/Generated',
+				src: 'browserified.js',
+				dest: './Release/Generated'
 			}]
 		},
 	},
@@ -127,6 +127,6 @@ module.exports = function(grunt) {
   grunt.registerTask('watch-all', ['watch']);
   grunt.registerTask('jshint-all', ['jshint']);
 
-  grunt.registerTask('build-release',['uglify', 'preprocess', 'less', 'browserify']);   
   grunt.registerTask('build-dev', [ 'preprocess', 'less', 'browserify'] );
+  grunt.registerTask('build-release',['build-dev', 'uglify', 'preprocess', 'less']);   
 };
