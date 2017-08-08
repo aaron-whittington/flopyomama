@@ -1,17 +1,4 @@
-﻿var nsUI = require('../Core/Ui');
-var nsUtil = require('../Core/Util');
-var Deck = require('../Card/Deck');
-var KnownCards = require('../KnownCards/KnownCards');
-var KnownCardsView = require('../KnownCards/KnownCardsView');
-var Slider = require('../Slider/Slider');
-var SliderView = require('../Slider/SliderView');
-var RangeTable = require('../Range/RangeTable'); 
-var RangeTableView = require('../Range/RangeTableView');
-var RangeTypeSelectView = require('../Range/RangeTypeSelectView');
-var AWModel = require('../Core/AWModel');
-var TableRouter = require('../Core/Route');
-var Backbone = require('backbone');
-
+﻿FlopYoMama = require('./FlopYoMamaModel');
 $(document).ready(function() {
     /**********************************************PROGRESS BARS***************************************************************/
 
@@ -194,7 +181,7 @@ $(document).ready(function() {
 
     $(document).bind('keydown', function(e) {
         var keyCode = e.keyCode ? e.keyCode : e.which;
-        nsUI.fHandleKeyPress(keyCode, e);
+        nsUI.fHandleKeyPress(keyCode, e, flopYoMama.knownCardsView);
     });
 
     //var $('#known_cards .selected').text-decoration: underline;
@@ -214,12 +201,9 @@ $(document).ready(function() {
             nsUtil.fSetLocalStorage("filter_settings", '');
         }
         flopYoMama.updateRoute();
-        nsUI.fEvaluateKnownCards();
-
-        //{oPair: oPair, aPair: actualPairs, sPair: pairString}
-        //nsUtil.fSetLocalStorage("random_settings", aRandomSetting);
+        flopYoMama.knownCards.evaluateKnownCards();
     });
-    //do this after all document.ready functions are called	
+    //do this AFTER all document.ready functions are called	
     setTimeout(function() {
         $('[title]').tooltip({
             container: 'body'
@@ -227,98 +211,9 @@ $(document).ready(function() {
     }, 1);
 });
 
-$(function() {
-
-    $('#content').removeClass('preload');
-
-
-});
 var flopYoMama = {};
-var FlopYoMama = AWModel.extend({
-    initialize: function() {
-
-        //silently update the route based on the values of the models
-        flopYoMama.updateRoute = function() {
-
-            var hand = flopYoMama.knownCards.get('hand'),
-                board = flopYoMama.knownCards.get('board');
-
-            var custom = flopYoMama.rangeTable.getCustom();
-            var aCustom = _.map(custom, function(e) {
-                return e.toCustomString();
-            });
-            var sCustom = aCustom.join(',');
-            var filter = nsFilter.fGetActiveFilter() || "";
-
-            var routerValue = "hand=" + hand +
-                "&board=" + board +
-                "&slider=" + flopYoMama.slider.get('value') +
-                "&range=" + flopYoMama.slider.getScaleId() +
-                "&custom=" + sCustom +
-                "&filter=" + filter;
-            flopYoMama.router.navigate(routerValue, {
-                trigger: false
-            });
-
-        }
-        /*router*/
-        flopYoMama.router = new TableRouter();
-        //this triggers the routing once (with the values the user passed
-        //to the url)
-        Backbone.history.start({
-            pushState: false
-        });
-
-
-        /*known cards*/
-        flopYoMama.allCards = new Deck();
-        flopYoMama.knownCards = new KnownCards();
-        flopYoMama.knownCardsView = new KnownCardsView({
-            model: flopYoMama.knownCards
-        });
-        flopYoMama.knownCardsView.render();
-
-        /*slider*/
-        routerValueSlider = flopYoMama.router.getRouterValues().slider;
-        flopYoMama.slider = new Slider({
-            value: routerValueSlider
-        });
-        flopYoMama.sliderView = new SliderView({
-            model: flopYoMama.slider,
-            el: $("#range_slider")[0]
-        });
-
-        flopYoMama.rangeTypeSelectView = new RangeTypeSelectView({
-            model: flopYoMama.slider,
-            el: $("#sklansky").parent()[0]
-        });
-
-        /*range table*/
-        flopYoMama.rangeTable = new RangeTable();
-        flopYoMama.rangeTable.listenToSlider(flopYoMama.slider);
-        flopYoMama.rangeTableView = new RangeTableView({
-            model: flopYoMama.rangeTable
-        });
-
-        //Clear custom selection
-        $('#clear_selection').click(function() {
-            flopYoMama.rangeTable.clearCustom();
-            flopYoMama.sliderView.update();
-        });
-
-        this.listenTo(flopYoMama.rangeTable, 'finalize', this.finalizeHandler);
-
-        flopYoMama.slider.trigger('finalize');
-    },
-    finalizeHandler: function(args) {
-        nsUtil.fLog('FlopYoMama.js: Main Ap Finalize');
-        nsUI.fEvaluateKnownCards();
-        flopYoMama.updateRoute();
-
-    }
-});
-
-
 $(function() {
-    new FlopYoMama();
+    $('#content').removeClass('preload');
+    flopYoMama = new FlopYoMama(); 
+    flopYoMama.setUp();
 });

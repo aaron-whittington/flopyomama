@@ -2,8 +2,9 @@ var AWModel = require('../Core/AWModel');
 var nsHtml = require('../Core/Html');
 var CardList = require('../Card/CardList');
 var Deck = require('../Card/Deck');
-var nsUi = require('../Core/Ui');
+var nsUI = require('../Core/Ui');
 var nsUtil = require('../Core/Util');
+var nsRange = require('../Range/RangeLibrary');
 
 var KnownCards = AWModel.extend({
     defaults: {
@@ -30,7 +31,7 @@ var KnownCards = AWModel.extend({
         //was nsUI.fAfterBoardChnage
         this.on('finalize', function() {
             nsHtml.fRedrawBoardSelectionTable();
-            nsUI.fEvaluateKnownCards();
+            this.evaluateKnownCards();
             this.saveBoardState();
             flopYoMama.updateRoute();
         });
@@ -52,6 +53,27 @@ var KnownCards = AWModel.extend({
         this.on('change', function() {
             this.saveBoardState();
         });
+
+    }, 
+    evaluateKnownCards: function() {
+        var knownCards = this;
+        var aCards = knownCards.allKnown(true);
+
+        var bBoardState = knownCards.getBoardState();
+
+        if (bBoardState.bFlop) {
+            nsRange.fGetTextures();
+        } else {
+              //todo this should be in the range view
+            $('#textures').html(''); //delete the range textures
+        }
+
+        if (bBoardState.bFlop && bBoardState.bHand && nsPrefs.oAutomaticSearch.fGet()) {
+
+             nsRange.fGetAllUnknownCombinationsThreaded();
+        } else {
+               nsUI.fDeleteLongStatistics();
+        }
 
     }, 
     loadFromRouter: function() {

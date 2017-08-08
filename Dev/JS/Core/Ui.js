@@ -4,41 +4,17 @@ var nsUI = {};
 
 //this can stay in the ui and not move to the known cards because 
 //it may hand key presses outside of the known cards
-nsUI.fHandleKeyPress = function(keyCode, e) {
+nsUI.fHandleKeyPress = function(keyCode, e, knownCardsView) {
     var d = e.srcElement || e.target;
 
     if (!$(d).hasClass('known')) {
         //nsUI.fHandleKeyPressAnywhereElse(keyCode,e);
         return;
     } else {
-        flopYoMama.knownCardsView.handleKeyPressKnown(keyCode, e);
+        knownCardsView.handleKeyPressKnown(keyCode, e);
     }
 };
 
-//we're going to keep this in the ui, maybe, because it calls a lot of stuff
-//outside the KnownCards model
-nsUI.fEvaluateKnownCards = function() {
-    var aCards = flopYoMama.knownCards.allKnown(true);
-
-    var bBoardState = flopYoMama.knownCards.getBoardState();
-
-    if (bBoardState.bFlop) {
-        nsRange.fGetTextures();
-    } else
-        $('#textures').html(''); //delete the range textures
-
-    if (bBoardState.bFlop && bBoardState.bHand && nsPrefs.oAutomaticSearch.fGet()) {
-
-        nsRange.fGetAllUnknownCombinationsThreaded();
-    } else {
-        nsUI.fDeleteLongStatistics();
-    }
-
-    var myHand = nsDrawingHand.fGetDrawingHands(aCards);
-    nsUtil.fLog(nsDrawingHand.fHandToString(myHand));
-    //$("#hand_description div").html(nsHand.fHandToString(myHand));
-    //now get our records
-};
 
 nsUI.fDeleteLongStatistics = function() {
     $('#hero_stat, #villain_stat').html('');

@@ -47,8 +47,8 @@ var LinkEditorView = AWView.extend({
     }
 });
 
-$(function() {
-    var lev = new LinkEditorView();
-});
+/*$(function() {
+    new LinkEditorView();
+});*/
 
 module.exports = LinkEditorView;

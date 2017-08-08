@@ -186,7 +186,7 @@ var Deck = CardList.extend({
 
 module.exports = Deck;
 
-},{"./Card":1,"./CardList":2,"backbone":61}],4:[function(require,module,exports){
+},{"./Card":1,"./CardList":2,"backbone":63}],4:[function(require,module,exports){
 "use strict";
 var g = {};
 g.RANK_CODES = {};
@@ -319,7 +319,7 @@ var AWCollection = Backbone.Collection.extend({
 
 module.exports = AWCollection;
 
-},{"./Util":16,"backbone":61,"underscore":64}],8:[function(require,module,exports){
+},{"./Util":16,"backbone":63,"underscore":66}],8:[function(require,module,exports){
 var AWModel = require('./AWModel');
 var AWCollection = require('./AWCollection');
 
@@ -447,7 +447,7 @@ var AWModel = Backbone.Model.extend({
 
 module.exports = AWModel;
 
-},{"./Util":16,"backbone":61,"underscore":64}],10:[function(require,module,exports){
+},{"./Util":16,"backbone":63,"underscore":66}],10:[function(require,module,exports){
 "strict mode"
 var Backbone = require('backbone');
 var AWView = Backbone.View.extend({
@@ -459,7 +459,7 @@ var AWView = Backbone.View.extend({
 });
 
 module.exports = AWView;
-},{"backbone":61}],11:[function(require,module,exports){
+},{"backbone":63}],11:[function(require,module,exports){
  /*takes AAo und generates AcAd,AsAh ...and so on*/
 var _ = require('underscore');
 var nsConvert = {};
@@ -616,7 +616,7 @@ _.extend(nsConvert, {
 
 module.exports = nsConvert;
 
-},{"underscore":64}],12:[function(require,module,exports){
+},{"underscore":66}],12:[function(require,module,exports){
 
 var nsHtml = {};
 
@@ -1392,48 +1392,24 @@ var TableRouter = Backbone.Router.extend({
 
 module.exports = TableRouter;
 
-},{"backbone":61}],15:[function(require,module,exports){
+},{"backbone":63}],15:[function(require,module,exports){
 "use strict";
 var globalUi = require('../Constants/Ui');
 var nsUI = {};
 
 //this can stay in the ui and not move to the known cards because 
 //it may hand key presses outside of the known cards
-nsUI.fHandleKeyPress = function(keyCode, e) {
+nsUI.fHandleKeyPress = function(keyCode, e, knownCardsView) {
     var d = e.srcElement || e.target;
 
     if (!$(d).hasClass('known')) {
         //nsUI.fHandleKeyPressAnywhereElse(keyCode,e);
         return;
     } else {
-        flopYoMama.knownCardsView.handleKeyPressKnown(keyCode, e);
+        knownCardsView.handleKeyPressKnown(keyCode, e);
     }
 };
 
-//we're going to keep this in the ui, maybe, because it calls a lot of stuff
-//outside the KnownCards model
-nsUI.fEvaluateKnownCards = function() {
-    var aCards = flopYoMama.knownCards.allKnown(true);
-
-    var bBoardState = flopYoMama.knownCards.getBoardState();
-
-    if (bBoardState.bFlop) {
-        nsRange.fGetTextures();
-    } else
-        $('#textures').html(''); //delete the range textures
-
-    if (bBoardState.bFlop && bBoardState.bHand && nsPrefs.oAutomaticSearch.fGet()) {
-
-        nsRange.fGetAllUnknownCombinationsThreaded();
-    } else {
-        nsUI.fDeleteLongStatistics();
-    }
-
-    var myHand = nsDrawingHand.fGetDrawingHands(aCards);
-    nsUtil.fLog(nsDrawingHand.fHandToString(myHand));
-    //$("#hand_description div").html(nsHand.fHandToString(myHand));
-    //now get our records
-};
 
 nsUI.fDeleteLongStatistics = function() {
     $('#hero_stat, #villain_stat').html('');
@@ -3486,8 +3462,9 @@ var AWModel = require('../Core/AWModel');
 var nsHtml = require('../Core/Html');
 var CardList = require('../Card/CardList');
 var Deck = require('../Card/Deck');
-var nsUi = require('../Core/Ui');
+var nsUI = require('../Core/Ui');
 var nsUtil = require('../Core/Util');
+var nsRange = require('../Range/RangeLibrary');
 
 var KnownCards = AWModel.extend({
     defaults: {
@@ -3514,7 +3491,7 @@ var KnownCards = AWModel.extend({
         //was nsUI.fAfterBoardChnage
         this.on('finalize', function() {
             nsHtml.fRedrawBoardSelectionTable();
-            nsUI.fEvaluateKnownCards();
+            this.evaluateKnownCards();
             this.saveBoardState();
             flopYoMama.updateRoute();
         });
@@ -3536,6 +3513,27 @@ var KnownCards = AWModel.extend({
         this.on('change', function() {
             this.saveBoardState();
         });
+
+    }, 
+    evaluateKnownCards: function() {
+        var knownCards = this;
+        var aCards = knownCards.allKnown(true);
+
+        var bBoardState = knownCards.getBoardState();
+
+        if (bBoardState.bFlop) {
+            nsRange.fGetTextures();
+        } else {
+              //todo this should be in the range view
+            $('#textures').html(''); //delete the range textures
+        }
+
+        if (bBoardState.bFlop && bBoardState.bHand && nsPrefs.oAutomaticSearch.fGet()) {
+
+             nsRange.fGetAllUnknownCombinationsThreaded();
+        } else {
+               nsUI.fDeleteLongStatistics();
+        }
 
     }, 
     loadFromRouter: function() {
@@ -3590,7 +3588,7 @@ var KnownCards = AWModel.extend({
 
 module.exports = KnownCards;
 
-},{"../Card/CardList":2,"../Card/Deck":3,"../Core/AWModel":9,"../Core/Html":12,"../Core/Ui":15,"../Core/Util":16}],24:[function(require,module,exports){
+},{"../Card/CardList":2,"../Card/Deck":3,"../Core/AWModel":9,"../Core/Html":12,"../Core/Ui":15,"../Core/Util":16,"../Range/RangeLibrary":47}],24:[function(require,module,exports){
 var nsUtil = require('../Core/Util');
 var keyboard = require('../Constants/Keyboard');
 var globalUi = require('../Constants/Ui');
@@ -3876,21 +3874,8 @@ var KnownCardsView = Backbone.View.extend({
 
 module.exports = KnownCardsView;
 
-},{"../Card/CardList":2,"../Constants/Keyboard":4,"../Constants/Ui":6,"../Core/Util":16,"backbone":61}],25:[function(require,module,exports){
-var nsUI = require('../Core/Ui');
-var nsUtil = require('../Core/Util');
-var Deck = require('../Card/Deck');
-var KnownCards = require('../KnownCards/KnownCards');
-var KnownCardsView = require('../KnownCards/KnownCardsView');
-var Slider = require('../Slider/Slider');
-var SliderView = require('../Slider/SliderView');
-var RangeTable = require('../Range/RangeTable'); 
-var RangeTableView = require('../Range/RangeTableView');
-var RangeTypeSelectView = require('../Range/RangeTypeSelectView');
-var AWModel = require('../Core/AWModel');
-var TableRouter = require('../Core/Route');
-var Backbone = require('backbone');
-
+},{"../Card/CardList":2,"../Constants/Keyboard":4,"../Constants/Ui":6,"../Core/Util":16,"backbone":63}],25:[function(require,module,exports){
+FlopYoMama = require('./FlopYoMamaModel');
 $(document).ready(function() {
     /**********************************************PROGRESS BARS***************************************************************/
 
@@ -4073,7 +4058,7 @@ $(document).ready(function() {
 
     $(document).bind('keydown', function(e) {
         var keyCode = e.keyCode ? e.keyCode : e.which;
-        nsUI.fHandleKeyPress(keyCode, e);
+        nsUI.fHandleKeyPress(keyCode, e, flopYoMama.knownCardsView);
     });
 
     //var $('#known_cards .selected').text-decoration: underline;
@@ -4093,12 +4078,9 @@ $(document).ready(function() {
             nsUtil.fSetLocalStorage("filter_settings", '');
         }
         flopYoMama.updateRoute();
-        nsUI.fEvaluateKnownCards();
-
-        //{oPair: oPair, aPair: actualPairs, sPair: pairString}
-        //nsUtil.fSetLocalStorage("random_settings", aRandomSetting);
+        flopYoMama.knownCards.evaluateKnownCards();
     });
-    //do this after all document.ready functions are called	
+    //do this AFTER all document.ready functions are called	
     setTimeout(function() {
         $('[title]').tooltip({
             container: 'body'
@@ -4106,23 +4088,40 @@ $(document).ready(function() {
     }, 1);
 });
 
-$(function() {
-
-    $('#content').removeClass('preload');
-
-
-});
 var flopYoMama = {};
+$(function() {
+    $('#content').removeClass('preload');
+    flopYoMama = new FlopYoMama(); 
+    flopYoMama.setUp();
+});
+
+},{"./FlopYoMamaModel":27}],26:[function(require,module,exports){
+var FlopYoMama = require('./FlopYoMamaModel');
+module.exports = new FlopYoMama();
+
+},{"./FlopYoMamaModel":27}],27:[function(require,module,exports){
+var nsUI = require('../Core/Ui');
+var nsUtil = require('../Core/Util');
+var nsFilter = require('../Filter/Filter');
+var Deck = require('../Card/Deck');
+var KnownCards = require('../KnownCards/KnownCards');
+var KnownCardsView = require('../KnownCards/KnownCardsView');
+var Slider = require('../Slider/Slider');
+var SliderView = require('../Slider/SliderView');
+var RangeTable = require('../Range/RangeTable'); 
+var RangeTableView = require('../Range/RangeTableView');
+var RangeTypeSelectView = require('../Range/RangeTypeSelectView');
+var AWModel = require('../Core/AWModel');
+var TableRouter = require('../Core/Route');
+var Backbone = require('backbone');
+var _ = require('underscore');
+
 var FlopYoMama = AWModel.extend({
-    initialize: function() {
+    updateRoute: function() {
+            var hand = this.knownCards.get('hand'),
+                board = this.knownCards.get('board');
 
-        //silently update the route based on the values of the models
-        flopYoMama.updateRoute = function() {
-
-            var hand = flopYoMama.knownCards.get('hand'),
-                board = flopYoMama.knownCards.get('board');
-
-            var custom = flopYoMama.rangeTable.getCustom();
+            var custom = this.rangeTable.getCustom();
             var aCustom = _.map(custom, function(e) {
                 return e.toCustomString();
             });
@@ -4131,78 +4130,81 @@ var FlopYoMama = AWModel.extend({
 
             var routerValue = "hand=" + hand +
                 "&board=" + board +
-                "&slider=" + flopYoMama.slider.get('value') +
-                "&range=" + flopYoMama.slider.getScaleId() +
+                "&slider=" + this.slider.get('value') +
+                "&range=" + this.slider.getScaleId() +
                 "&custom=" + sCustom +
                 "&filter=" + filter;
-            flopYoMama.router.navigate(routerValue, {
+            this.router.navigate(routerValue, {
                 trigger: false
             });
+    },
+    setUp: function() {
+        var that = this;
 
-        }
         /*router*/
-        flopYoMama.router = new TableRouter();
+        this.router = new TableRouter();
         //this triggers the routing once (with the values the user passed
         //to the url)
+
         Backbone.history.start({
             pushState: false
         });
 
 
         /*known cards*/
-        flopYoMama.allCards = new Deck();
-        flopYoMama.knownCards = new KnownCards();
-        flopYoMama.knownCardsView = new KnownCardsView({
-            model: flopYoMama.knownCards
+        this.allCards = new Deck();
+        this.knownCards = new KnownCards();
+        this.knownCardsView = new KnownCardsView({
+            model: this.knownCards
         });
-        flopYoMama.knownCardsView.render();
+        this.knownCardsView.render();
 
         /*slider*/
-        routerValueSlider = flopYoMama.router.getRouterValues().slider;
-        flopYoMama.slider = new Slider({
+        routerValueSlider = this.router.getRouterValues().slider;
+
+        this.slider = new Slider({
             value: routerValueSlider
         });
-        flopYoMama.sliderView = new SliderView({
-            model: flopYoMama.slider,
+        this.sliderView = new SliderView({
+            model: this.slider,
             el: $("#range_slider")[0]
         });
 
-        flopYoMama.rangeTypeSelectView = new RangeTypeSelectView({
-            model: flopYoMama.slider,
+        this.rangeTypeSelectView = new RangeTypeSelectView({
+            model: this.slider,
             el: $("#sklansky").parent()[0]
         });
 
         /*range table*/
-        flopYoMama.rangeTable = new RangeTable();
-        flopYoMama.rangeTable.listenToSlider(flopYoMama.slider);
-        flopYoMama.rangeTableView = new RangeTableView({
-            model: flopYoMama.rangeTable
+        this.rangeTable = new RangeTable();
+        this.rangeTable.listenToSlider(this.slider);
+        this.rangeTableView = new RangeTableView({
+            model: this.rangeTable
         });
 
         //Clear custom selection
         $('#clear_selection').click(function() {
-            flopYoMama.rangeTable.clearCustom();
-            flopYoMama.sliderView.update();
+            that.rangeTable.clearCustom();
+            that.sliderView.update();
         });
 
-        this.listenTo(flopYoMama.rangeTable, 'finalize', this.finalizeHandler);
+        this.listenTo(this.rangeTable, 'finalize', this.finalizeHandler);
 
-        flopYoMama.slider.trigger('finalize');
+        this.slider.trigger('finalize');
+    },
+    initialize: function() {
     },
     finalizeHandler: function(args) {
         nsUtil.fLog('FlopYoMama.js: Main Ap Finalize');
-        nsUI.fEvaluateKnownCards();
-        flopYoMama.updateRoute();
+        this.knownCards.evaluateKnownCards();
+        this.updateRoute();
 
     }
 });
 
+module.exports = FlopYoMama;
 
-$(function() {
-    new FlopYoMama();
-});
-
-},{"../Card/Deck":3,"../Core/AWModel":9,"../Core/Route":14,"../Core/Ui":15,"../Core/Util":16,"../KnownCards/KnownCards":23,"../KnownCards/KnownCardsView":24,"../Range/RangeTable":48,"../Range/RangeTableView":49,"../Range/RangeTypeSelectView":50,"../Slider/Slider":57,"../Slider/SliderView":58,"backbone":61}],26:[function(require,module,exports){
+},{"../Card/Deck":3,"../Core/AWModel":9,"../Core/Route":14,"../Core/Ui":15,"../Core/Util":16,"../Filter/Filter":18,"../KnownCards/KnownCards":23,"../KnownCards/KnownCardsView":24,"../Range/RangeTable":50,"../Range/RangeTableView":51,"../Range/RangeTypeSelectView":52,"../Slider/Slider":59,"../Slider/SliderView":60,"backbone":63,"underscore":66}],28:[function(require,module,exports){
 var AWModel = require('../Core/AWModel');
 var MenuItem = AWModel.extend({
     className: 'MenuItem',
@@ -4221,7 +4223,7 @@ var MenuItem = AWModel.extend({
 });
 
 module.exports = MenuItem;
-},{"../Core/AWModel":9}],27:[function(require,module,exports){
+},{"../Core/AWModel":9}],29:[function(require,module,exports){
 
 var _ = require('underscore');
 var MenuItemGroup = function(name, exclusive) {
@@ -4232,7 +4234,7 @@ var MenuItemGroup = function(name, exclusive) {
 };
 
 module.exports = MenuItemGroup;
-},{"underscore":64}],28:[function(require,module,exports){
+},{"underscore":66}],30:[function(require,module,exports){
 var AWView = require('../Core/AWView');
 var MenuListModel = require('./MenuListModel');
 var MenuItemGroup = require('./MenuItemGroup');
@@ -4408,7 +4410,7 @@ $(function() {
     });
 });*/
 
-},{"../Core/AWView":10,"./MenuItemGroup":27,"./MenuListModel":30,"./MenuView":31}],29:[function(require,module,exports){
+},{"../Core/AWView":10,"./MenuItemGroup":29,"./MenuListModel":32,"./MenuView":33}],31:[function(require,module,exports){
 var MenuItem = require('./MenuItem');
 var AWCollection = require("../Core/AWCollection");
 var MenuList = AWCollection.extend({
@@ -4417,7 +4419,7 @@ var MenuList = AWCollection.extend({
 });
 
 module.exports = MenuList;
-},{"../Core/AWCollection":7,"./MenuItem":26}],30:[function(require,module,exports){
+},{"../Core/AWCollection":7,"./MenuItem":28}],32:[function(require,module,exports){
 "strict mode";
 var MenuList = require('./MenuList');
 var AWCollectionModel = require('../Core/AWCollectionModel');
@@ -4429,7 +4431,7 @@ var MenuListModel = AWCollectionModel.extend({
 
 module.exports = MenuListModel;
 
-},{"../Core/AWCollectionModel":8,"./MenuList":29}],31:[function(require,module,exports){
+},{"../Core/AWCollectionModel":8,"./MenuList":31}],33:[function(require,module,exports){
 
 var AWView = require('../Core/AWView');
 var MenuItemView = require('./MenuItemView');
@@ -4497,7 +4499,7 @@ var MenuView = AWView.extend({
 });
 
 module.exports = MenuView;
-},{"../Core/AWView":10,"./MenuItemView":28}],32:[function(require,module,exports){
+},{"../Core/AWView":10,"./MenuItemView":30}],34:[function(require,module,exports){
 var AWModel = require('../Core/AWModel');
 var nsConvert = require('../Core/Convert');
 var nsMath = require('../Core/Math');
@@ -4675,7 +4677,7 @@ var Pair = AWModel.extend({
 
 module.exports = Pair;
 
-},{"../Core/AWModel":9,"../Core/Convert":11,"../Core/Math":13}],33:[function(require,module,exports){
+},{"../Core/AWModel":9,"../Core/Convert":11,"../Core/Math":13}],35:[function(require,module,exports){
 
 var AWCollection = require('../Core/AWCollection');
 var Pair = require('./Pair');
@@ -4687,7 +4689,7 @@ var PairList = AWCollection.extend({
 
 module.exports = PairList;
 
-},{"../Core/AWCollection":7,"./Pair":32}],34:[function(require,module,exports){
+},{"../Core/AWCollection":7,"./Pair":34}],36:[function(require,module,exports){
 
 var PairList = require('./PairList');
 var AWCollectionModel = require('../Core/AWCollectionModel');
@@ -4697,7 +4699,7 @@ var PairListModel = AWCollectionModel.extend({
 });
 module.exports = PairListModel;
 
-},{"../Core/AWCollectionModel":8,"./PairList":33}],35:[function(require,module,exports){
+},{"../Core/AWCollectionModel":8,"./PairList":35}],37:[function(require,module,exports){
 
 var Backbone = require('backbone');
 
@@ -4741,7 +4743,7 @@ var PairView = Backbone.View.extend({
 
 module.exports = PairView;
 
-},{"backbone":61}],36:[function(require,module,exports){
+},{"backbone":63}],38:[function(require,module,exports){
 
 
 (function(g){
@@ -4817,7 +4819,7 @@ module.exports = PairView;
 
 
 
-},{}],37:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 var AWModel = require('../Core/AWModel');
 
 var FixedRange = AWModel.extend({
@@ -4899,7 +4901,7 @@ FixedRange.fromCurrent = function(slider, rangeTable) {
     return range;
 };
 module.exports = FixedRange;
-},{"../Core/AWModel":9}],38:[function(require,module,exports){
+},{"../Core/AWModel":9}],40:[function(require,module,exports){
 var AWView = require('../Core/AWView');
 //item view for the fixed range editor
 FixedRangeEditorItemView = AWView.extend({
@@ -5100,7 +5102,7 @@ FixedRangeEditorView = AWView.extend({
         '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6"><strong>Custom</strong></div>' +
         '</div>'
 });
-},{"../Core/AWView":10}],39:[function(require,module,exports){
+},{"../Core/AWView":10}],41:[function(require,module,exports){
 var _=require('underscore');
 var AWCollection = require('../Core/AWCollection');
 var FixedRange = require('./FixedRange');
@@ -5272,7 +5274,7 @@ FixedRangeList.default = {
 };
 
 module.exports = FixedRangeList;
-},{"../Core/AWCollection":7,"./FixedRange":37,"underscore":64}],40:[function(require,module,exports){
+},{"../Core/AWCollection":7,"./FixedRange":39,"underscore":66}],42:[function(require,module,exports){
 var AWView = require('../Core/AWView');
 var FixedRangeList = require('./FixedRangeList');
 var FixedRangeView = require('./FixedRangeView');
@@ -5321,7 +5323,7 @@ $(document).ready(function() {
 });
 */
 
-},{"../Core/AWView":10,"./FixedRangeList":39,"./FixedRangeView":41}],41:[function(require,module,exports){
+},{"../Core/AWView":10,"./FixedRangeList":41,"./FixedRangeView":43}],43:[function(require,module,exports){
 var AWView = require('../Core/AWView');
 //view of ranges for clicking loading
 var FixedRangeView = AWView.extend({
@@ -5354,7 +5356,7 @@ var FixedRangeView = AWView.extend({
 });
 
 module.exports = FixedRangeView;
-},{"../Core/AWView":10}],42:[function(require,module,exports){
+},{"../Core/AWView":10}],44:[function(require,module,exports){
 
 var AWModel = require('../Core/AWModel');
 var Pair = require('../Pair/Pair');
@@ -5395,7 +5397,7 @@ var RangeItem = AWModel.extend({
 
 module.exports = RangeItem;
 
-},{"../Core/AWModel":9,"../Pair/Pair":32}],43:[function(require,module,exports){
+},{"../Core/AWModel":9,"../Pair/Pair":34}],45:[function(require,module,exports){
 var AWCollection = require('../Core/AWCollection');
 var RangeItem = require('./RangeItem');
 
@@ -5410,7 +5412,7 @@ var RangeItemList = AWCollection.extend({
 });*/
 
 module.exports = RangeItemList;
-},{"../Core/AWCollection":7,"./RangeItem":42}],44:[function(require,module,exports){
+},{"../Core/AWCollection":7,"./RangeItem":44}],46:[function(require,module,exports){
 var AWView = require('../Core/AWView');
 var _ = require('underscore');
 
@@ -5476,7 +5478,7 @@ var RangeItemView = AWView.extend({
 
 module.exports = RangeItemView;
 
-},{"../Core/AWView":10,"underscore":64}],45:[function(require,module,exports){
+},{"../Core/AWView":10,"underscore":66}],47:[function(require,module,exports){
 var $ = require('jquery');
 var Pair = require('../Pair/Pair');
 var sklanskyRanges = require('./RangeScaleSklansky');
@@ -5798,7 +5800,7 @@ nsRange.fGetStartingHandsFromRangeGrid = function(bAll) {
 
 module.exports = nsRange;
 
-},{"../Constants/Poker":5,"../Pair/Pair":32,"./RangeScaleProcentual":46,"./RangeScaleSklansky":47,"jquery":62}],46:[function(require,module,exports){
+},{"../Constants/Poker":5,"../Pair/Pair":34,"./RangeScaleProcentual":48,"./RangeScaleSklansky":49,"jquery":64}],48:[function(require,module,exports){
 
 var range = {};
 range.aStatData = [];
@@ -6650,7 +6652,7 @@ range.aStatData.push({
 
 module.exports = range;
 
-},{}],47:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 /*SLANSKY RANGES http://en.wikipedia.org/wiki/Texas_hold_%27em_starting_hands*/
 
 var sklanskyRanges = [];
@@ -6672,7 +6674,7 @@ sklanskyRanges[8] = ["J7s", "96s", "85s", "74s", "42s", "32s", "A9o", "K9o", "Q9
 
 module.exports = sklanskyRanges;
 
-},{}],48:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 var RangeItemList = require('./RangeItemList');
 var _ = require('underscore');
 var nsUtil = require('../Core/Util');
@@ -6811,7 +6813,7 @@ var RangeTable = RangeItemList.extend({
 
 module.exports = RangeTable;
 
-},{"../Core/Util":16,"./RangeItemList":43,"underscore":64}],49:[function(require,module,exports){
+},{"../Core/Util":16,"./RangeItemList":45,"underscore":66}],51:[function(require,module,exports){
 
 var AWView = require('../Core/AWView');
 var RangeItemView = require('./RangeItemView');
@@ -6982,7 +6984,7 @@ var RangeTableView = AWView.extend({
 
 module.exports = RangeTableView;
 
-},{"../Core/AWView":10,"./RangeItemView":44,"underscore":64}],50:[function(require,module,exports){
+},{"../Core/AWView":10,"./RangeItemView":46,"underscore":66}],52:[function(require,module,exports){
 var Backbone = require('backbone');
 var nsUI = require('../Core/Ui');
 
@@ -7016,7 +7018,7 @@ var RangeTypeSelectView = Backbone.View.extend({
 
 module.exports = RangeTypeSelectView;
 
-},{"../Core/Ui":15,"backbone":61}],51:[function(require,module,exports){
+},{"../Core/Ui":15,"backbone":63}],53:[function(require,module,exports){
 
 
 
@@ -7129,7 +7131,7 @@ var getExactPreflopOdds = function(heroCard1, heroCard2, badGuyCard1, badGuyCard
 
 
 
-},{}],52:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 
 var SettingsModel = require('./Settings');
 var SettingsView = require('./SettingsView');
@@ -7142,7 +7144,7 @@ $(function() {
     });
     sv.render();
 });
-},{"./Settings":55,"./SettingsView":56,"jquery":62}],53:[function(require,module,exports){
+},{"./Settings":57,"./SettingsView":58,"jquery":64}],55:[function(require,module,exports){
 "use strict"
 var AWView = require('../Core/AWView');
 var LinkEditorView = AWView.extend({
@@ -7192,12 +7194,13 @@ var LinkEditorView = AWView.extend({
     }
 });
 
-$(function() {
-    var lev = new LinkEditorView();
-});
+/*$(function() {
+    new LinkEditorView();
+});*/
 
 module.exports = LinkEditorView;
-},{"../Core/AWView":10}],54:[function(require,module,exports){
+
+},{"../Core/AWView":10}],56:[function(require,module,exports){
 nsPrefs = {};
 
 nsPrefs.nsConst = {};
@@ -7224,7 +7227,7 @@ nsPrefs.nsConst.BAR_GRAPHS = 0;
 nsPrefs.nsConst.PIE_GRAPHS = 1;
 
 nsPrefs.oGraphType = new nsPrefs.Preference(nsPrefs.nsConst.PIE_GRAPHS, 'Pie charts are yummy.');
-},{}],55:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 "use strict"
 var AWModel = require('../Core/AWModel');
 var nsUtil = require('../Core/Util');
@@ -7257,7 +7260,7 @@ var SettingsModel = AWModel.extend({
 });
 module.exports = SettingsModel;
 
-},{"../Core/AWModel":9,"../Core/Util":16}],56:[function(require,module,exports){
+},{"../Core/AWModel":9,"../Core/Util":16}],58:[function(require,module,exports){
 var Backbone = require('backbone');
 
 var SettingsView = Backbone.View.extend({
@@ -7328,7 +7331,7 @@ var SettingsView = Backbone.View.extend({
 });
 
 module.exports = SettingsView;
-},{"backbone":61}],57:[function(require,module,exports){
+},{"backbone":63}],59:[function(require,module,exports){
 var nsRange = require('../Range/RangeLibrary');
 var nsUtil = require('../Core/Util');
 var Backbone = require('backbone');
@@ -7403,7 +7406,7 @@ var Slider = Backbone.Model.extend({
 
 module.exports = Slider;
 
-},{"../Core/Util":16,"../Range/RangeLibrary":45,"backbone":61,"underscore":64}],58:[function(require,module,exports){
+},{"../Core/Util":16,"../Range/RangeLibrary":47,"backbone":63,"underscore":66}],60:[function(require,module,exports){
 var Backbone = require('backbone');
 var noUiSlider = require('nouislider');
 
@@ -7465,7 +7468,7 @@ var SliderView = Backbone.View.extend({
 
 module.exports = SliderView;
 
-},{"backbone":61,"nouislider":63}],59:[function(require,module,exports){
+},{"backbone":63,"nouislider":65}],61:[function(require,module,exports){
 
 var nsWorker = {};
 
@@ -7789,7 +7792,7 @@ nsWorker.getFlushSuitAndNumber = function(board, oPair) {
     };
 };
 
-},{}],60:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 
 var nsWorkerTextures = {};
 
@@ -7914,7 +7917,7 @@ var fPostProgress = function(sMessage) {
         msg: sMessage
     });
 };
-},{}],61:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.3.3
 
@@ -9838,7 +9841,7 @@ var fPostProgress = function(sMessage) {
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":62,"underscore":64}],62:[function(require,module,exports){
+},{"jquery":64,"underscore":66}],64:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.2.1
  * https://jquery.com/
@@ -20093,7 +20096,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{}],63:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 /*! nouislider - 10.1.0 - 2017-07-28 17:11:18 */
 
 (function (factory) {
@@ -22406,7 +22409,7 @@ function closure ( target, options, originalOptions ){
 	};
 
 }));
-},{}],64:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -23956,4 +23959,4 @@ function closure ( target, options, originalOptions ){
   }
 }.call(this));
 
-},{}]},{},[36,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60]);
+},{}]},{},[38,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62]);
