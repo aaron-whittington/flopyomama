@@ -5,10 +5,11 @@ var KnownCards = require('../KnownCards/KnownCards');
 var KnownCardsView = require('../KnownCards/KnownCardsView');
 var Slider = require('../Slider/Slider');
 var SliderView = require('../Slider/SliderView');
-var RangeTypeSeletView = require('../Range/RangeTypeSelectView');
 var RangeTable = require('../Range/RangeTable'); 
 var RangeTableView = require('../Range/RangeTableView');
+var RangeTypeSelectView = require('../Range/RangeTypeSelectView');
 var AWModel = require('../Core/AWModel');
+var TableRouter = require('../Core/Route');
 
 var TOTAL_STARTING_COMBINATIONS = 1326.0;
 
@@ -279,7 +280,7 @@ var FlopYoMama = AWModel.extend({
         flopYoMama.knownCardsView.render();
 
         /*slider*/
-        routerValueSlider = routerValues.slider;
+        routerValueSlider = flopYoMama.router.getRouterValues().slider;
         flopYoMama.slider = new Slider({
             value: routerValueSlider
         });

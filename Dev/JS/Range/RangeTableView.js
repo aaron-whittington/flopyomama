@@ -1,5 +1,6 @@
 
 var AWView = require('../Core/AWView');
+var RangeItemView = require('./RangeItemView');
 var RangeTableView = AWView.extend({
     tagName: 'table',
     className: 'table',
@@ -163,3 +164,5 @@ var RangeTableView = AWView.extend({
 					</tbody>\
 				</table>"
 });
+
+module.exports = RangeTableView;

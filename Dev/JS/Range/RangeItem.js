@@ -1,5 +1,6 @@
 
 var AWModel = require('../Core/AWModel');
+var Pair = require('../Pair/Pair');
 
 var RangeItem = AWModel.extend({
     className: 'RangeItem',

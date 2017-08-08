@@ -1,4 +1,7 @@
 var nsUtil = require('../Core/Util');
+var keyboard = require('../Constants/Keyboard');
+var globalUi = require('../Constants/Ui');
+var CardList = require('../Card/CardList');
 
 var KnownCardsView = Backbone.View.extend({
     initialize: function() {
@@ -121,30 +124,30 @@ var KnownCardsView = Backbone.View.extend({
     handleKeyPressKnown: function(keyCode, e) {
 
         /*allow native tabs*/
-        if (keyCode !== TAB_CODE) {
+        if (keyCode !== keyboard.TAB_CODE) {
             e.preventDefault();
         }
-        if (keyCode === RIGHT_ARROW) {
+        if (keyCode === keyboard.RIGHT_ARROW) {
             this.selectNext();
-        } else if (keyCode === LEFT_ARROW) {
+        } else if (keyCode === keyboard.LEFT_ARROW) {
             this.selectPrev();
         }
-        if (keyCode === BACKSPACE_CODE) {
+        if (keyCode === keyboard.BACKSPACE_CODE) {
             if (!this.deleteSelected())
                 this.selectPrev();
         }
 
-        if (keyCode === DELETE_CODE) {
+        if (keyCode === keyboard.DELETE_CODE) {
             this.deleteSelected();
             e.stopPropagation();
         }
         var val, s;
 
-        if (typeof RANK_CODES[keyCode] !== "undefined") {
+        if (typeof keyboard.RANK_CODES[keyCode] !== "undefined") {
             val = this.getCurrentBoardString();
             if (typeof val !== "undefined") {
 
-                var rank = RANK_CODES[keyCode];
+                var rank = keyboard.RANK_CODES[keyCode];
 
                 s = '' + rank;
 
@@ -152,12 +155,12 @@ var KnownCardsView = Backbone.View.extend({
                     s += val[1];
                 this.setCurrentBoardString(s);
             }
-        } else if (typeof SUIT_CODES[keyCode] !== "undefined") {
+        } else if (typeof keyboard.SUIT_CODES[keyCode] !== "undefined") {
             val = this.getCurrentBoardString();
             /*we must have a current field and the length must be at least 1*/
             if (typeof val != "undefined" && val.length > 0) {
 
-                var suit = SUIT_CODES[keyCode];
+                var suit = keyboard.SUIT_CODES[keyCode];
                 s = '' + val[0] + suit;
                 console.log("now typing suit s= " + s);
                 if (this.validateKeypress(s)) {
@@ -194,10 +197,10 @@ var KnownCardsView = Backbone.View.extend({
         if (typeof html === "undefined")
             return false; /*didn't delete something*/
 
-        if (html === EMPTY_CARD_STRING)
+        if (html === globalUi.EMPTY_CARD_STRING)
             return false;
 
-        this.setCurrentBoardString(EMPTY_CARD_STRING);
+        this.setCurrentBoardString(globalUi.EMPTY_CARD_STRING);
         return true;
     },
     deleteBoard: function() {
@@ -205,18 +208,18 @@ var KnownCardsView = Backbone.View.extend({
         var fDeleteSingleBoard = function(id) {
             if (nsUtil.fType(id) === 'number') {
                 btn = $('.known').eq(id);
-                that.setBoardString(btn, EMPTY_CARD_STRING);
+                that.setBoardString(btn, globalUi.EMPTY_CARD_STRING);
             } else if (nsUtil.fType(id) === 'string') {
                 $('.known').each(function() {
                     if ($(this).val() === id)
-                        that.setBoardString($(this), EMPTY_CARD_STRING);
+                        that.setBoardString($(this), globalUi.EMPTY_CARD_STRING);
                 });
             }
         };
         var btn;
 
         if (arguments.length === 0)
-            this.setBoardString($('.known'), EMPTY_CARD_STRING);
+            this.setBoardString($('.known'), globalUi.EMPTY_CARD_STRING);
 
         for (var i = 0; i < arguments.length; i++) {
             fDeleteSingleBoard(arguments[i]);

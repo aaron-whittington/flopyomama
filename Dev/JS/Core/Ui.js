@@ -1,32 +1,5 @@
-﻿
-"use strict";
-var RANK_CODES = {};
-//bugs 9 key doesn't work;
-/*keyCodes 2 to 9*/
-for (var i = 50; i < 50 + 8; i++) {
-    RANK_CODES[i] = i - 48;
-}
-
-/*tjqka*/
-RANK_CODES[84] = 'T';
-RANK_CODES[74] = 'J';
-RANK_CODES[81] = 'Q';
-RANK_CODES[75] = 'K';
-RANK_CODES[65] = 'A';
-
-/*suits*/
-var SUIT_CODES = {};
-SUIT_CODES[67] = '\u2663'; //club
-SUIT_CODES[68] = '\u2666'; //diamond
-SUIT_CODES[72] = '\u2665'; //heart
-SUIT_CODES[83] = '\u2660'; //spade
-
-var BACKSPACE_CODE = 8;
-var DELETE_CODE = 46;
-var TAB_CODE = 9;
-var LEFT_ARROW = 37;
-var RIGHT_ARROW = 39;
-
+﻿"use strict";
+var globalUi = require('../Constants/Ui');
 var nsUI = {};
 
 //this can stay in the ui and not move to the known cards because 
@@ -81,14 +54,13 @@ nsUI.fSetWinPercentBarZero = function() {
     }, 1);
 };
 
-var EMPTY_CARD_STRING = '';
 
 nsUI.fGetKnownCards = function() {
     var jqCards = $('.known');
     var aCards = [];
     jqCards.each(function() {
         var raw = $(this).val();
-        if (raw !== EMPTY_CARD_STRING)
+        if (raw !== globalUi.EMPTY_CARD_STRING)
             aCards.push(nsConvert.fConvertStringToCardObject(raw));
     });
     return aCards;
@@ -237,3 +209,5 @@ nsUI.fAddEventsToCombobox = function(sId, fVal) {
 
     fVal();
 };
+
+module.exports = nsUI;

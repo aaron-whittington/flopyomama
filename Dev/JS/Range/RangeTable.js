@@ -27,9 +27,9 @@ var RangeTable = RangeItemList.extend({
             this.amChanged = [];
         });
 
-        if (routerValues.custom) {
+        /*if (routerValues.custom) {
             this.setCustom(routerValues.custom);
-        }
+        }*/
 
     },
     listenToSlider: function(slider) {
@@ -131,3 +131,5 @@ var RangeTable = RangeItemList.extend({
     }
 
 });
+
+module.exports = RangeTable;

@@ -1,5 +1,6 @@
 var nsRange = require('../Range/RangeLibrary');
-require('backbone');
+var nsUtil = require('../Core/Util');
+var Backbone = require('backbone');
 
 var Slider = Backbone.Model.extend({
     defaults: {
@@ -68,3 +69,4 @@ var Slider = Backbone.Model.extend({
     }
 });
 
+module.exports = Slider;

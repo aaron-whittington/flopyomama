@@ -1,4 +1,5 @@
-var Bacbone = require('backbone');
+var Backbone = require('backbone');
+var nsUI = require('../Core/Ui');
 
 var RangeTypeSelectView = Backbone.View.extend({
     initialize: function() {

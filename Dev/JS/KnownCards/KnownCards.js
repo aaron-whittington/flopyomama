@@ -2,7 +2,7 @@ var AWModel = require('../Core/AWModel');
 var nsHtml = require('../Core/Html');
 var CardList = require('../Card/CardList');
 var Deck = require('../Card/Deck');
-var nsUi = require('../Core/UI');
+var nsUi = require('../Core/Ui');
 var nsUtil = require('../Core/Util');
 
 var KnownCards = AWModel.extend({
@@ -52,27 +52,30 @@ var KnownCards = AWModel.extend({
         this.on('change', function() {
             this.saveBoardState();
         });
+
+    }, 
+    loadFromRouter: function() {
+        throw 'not yet implemented';
         //initialize from router
         if (routerValues.hand || routerValues.board) {
             this.set('hand', new CardList(routerValues.hand));
             this.set('board', new CardList(routerValues.board));
         }
-        //read from the localstorage 
-        else {
-            var boardArray = nsUtil.fGetLocalStorage("board_array"),
-                i;
+    },
+    loadFromLocalSotrage: function() {
+        var boardArray = nsUtil.fGetLocalStorage("board_array"),
+            i;
 
-            if (boardArray) {
+        if (boardArray) {
 
-                for (i = 0; i < 2; i++) {
-                    if (boardArray[i])
-                        this.get('hand').add(new Card(boardArray[i]));
-                }
+            for (i = 0; i < 2; i++) {
+                if (boardArray[i])
+                    this.get('hand').add(new Card(boardArray[i]));
+            }
 
-                for (i = 2; i < 7; i++) {
-                    if (boardArray[i])
-                        this.get('board').add(new Card(boardArray[i]));
-                }
+            for (i = 2; i < 7; i++) {
+                if (boardArray[i])
+                    this.get('board').add(new Card(boardArray[i]));
             }
         }
     },

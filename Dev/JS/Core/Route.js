@@ -9,8 +9,10 @@ var TableRouter = Backbone.Router.extend({
 
     help: function() {
 
+    }, 
+    getRouterValues() {
+        return routerValues;
     },
-
     main: function(hand, board, slider, range, custom, filter) {
         routerValues.hand = hand;
         routerValues.board = board;
@@ -31,3 +33,5 @@ var TableRouter = Backbone.Router.extend({
         }
     }
 });
+
+module.exports = TableRouter;
