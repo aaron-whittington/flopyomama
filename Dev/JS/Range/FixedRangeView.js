@@ -1,5 +1,4 @@
 var AWView = require('../Core/AWView');
-var $ = require('jquery');
 //view of ranges for clicking loading
 var FixedRangeView = AWView.extend({
     initialize: function() {

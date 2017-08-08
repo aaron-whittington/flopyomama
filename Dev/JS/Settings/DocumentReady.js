@@ -1,5 +1,4 @@
 
-
 var SettingsModel = require('./Settings');
 var SettingsView = require('./SettingsView');
 var $ = require('jquery');

@@ -50,48 +50,6 @@ var deckPermutations = function() {
 
 } 
 
-var enormousOddsObject = {};
-
-
-
-var fGetKeyFromHandList = function(cardlist) {
-
-    var getKeyFromHand = function(card1, card2) {
-        return card1.toString() + card2.toString(); 
-    };
-
-    var standardized = cardlist.cycleToStandardSuits();
-
-    return getKeyFromHand(standardized.models[0], standardized.models[1]) +
-        '-' +
-        getKeyFromHand(standardized.models[2], standardized.models[3]);
-};
-
-var fReverseShodownKey = function(key) {
-    return key.split('-').reverse().join('-');
-
-}
-
-var fAlreadyHasKey = function(key) {
-    if(enormousOddsObject.hasOwnProperty(key)) {
-        console.log("Key found " + key);
-        return true;
-    } 
-
-    if(enormousOddsObject.hasOwnProperty(fReverseShodownKey(key))) {
-        console.log("Reverse key found " + key);
-        return true;
-    } 
-
-    return false;
-
-}
-
-/** sorts hole cards and returns them **/
-var sortPlayerCards = function() {
-
-}
-
 var getExactPreflopOdds = function(heroCard1, heroCard2, badGuyCard1, badGuyCard2) {
     //this finds exact odds against two specific hands
     
