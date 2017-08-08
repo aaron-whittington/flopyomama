@@ -1,8 +1,7 @@
-var AWModel = require('../Core/AWModel');
-
-var FixedRange = AWModel.extend({
+AWModel = require('../../Core/AWModel');
+RangeItem = require('../RangeItem');
+FixedRange = AWModel.extend({
     initialize: function() {
-
         //convert custom objects to custom BB models
         var newCust,
             oldCust = this.get('custom');
@@ -27,7 +26,7 @@ var FixedRange = AWModel.extend({
         });
 
         this.on('activate', function() {
-
+            throw 'why isnt this doing anything';
             var rangeTable = flopYoMama.rangeTable;
             rangeTable.clearCustom();
 

@@ -1,4 +1,4 @@
-var AWView = require('../Core/AWView');
+var AWView = require('../../Core/AWView');
 //view of ranges for clicking loading
 var FixedRangeView = AWView.extend({
     initialize: function() {
@@ -18,6 +18,7 @@ var FixedRangeView = AWView.extend({
         "click": "handleClick"
     },
     handleClick: function(e) {
+        alert('handle click');
         this.model.trigger('activate');
     },
     renderData: function() {

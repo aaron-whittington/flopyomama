@@ -1,5 +1,5 @@
 var _=require('underscore');
-var AWCollection = require('../Core/AWCollection');
+var AWCollection = require('../../Core/AWCollection');
 var FixedRange = require('./FixedRange');
 
 var FixedRangeList = AWCollection.extend({

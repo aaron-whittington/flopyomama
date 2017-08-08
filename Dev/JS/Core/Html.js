@@ -639,6 +639,9 @@ nsHtml.fSetMainStatBar = function(totalWonPer, totalDrawPer, totalLossPer) {
 };
 
 nsHtml.fInitResultPopovers = function() {
+    return;
+    //TODO fix popover
+
     //$(".sub_result_pb").popover('destroy');
     $("#inner-stats .sub_result_pb").popover({
         content: function() {

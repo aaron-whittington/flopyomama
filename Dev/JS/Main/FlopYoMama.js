@@ -17,8 +17,9 @@ $(document).ready(function() {
         $(this).children('div').removeClass('progress-bar-success').css('width', '0%');
         //$(this).children('div').css('width','0%');
     });
-
+/*
     $('#win_percent_bar div').popover({
+
         content: function() {
             var str = '';
             if ($(this).hasClass('progress-bar-success'))
@@ -37,7 +38,7 @@ $(document).ready(function() {
         trigger: 'hover',
         html: true
     });
-
+*/
     $('#win_percent_bar').bind('start', function() { //resets the progress bar to 0 without css transitions
         nsUI.fDeleteLongStatistics();
     });
@@ -122,7 +123,7 @@ $(document).ready(function() {
     $('#range_slider').append('<div class="range_slider_bg">&nbsp;</div>');
     /**************************HAND FLOP BOARD************************/
 
-    $("#known_cards").popover({
+    /*$("#known_cards").popover({
         content: function() {
             return nsHtml.fGetBoardSelectionTable(flopYoMama.knownCards);
         },
@@ -130,16 +131,20 @@ $(document).ready(function() {
         placement: 'bottom',
         trigger: 'manual',
         html: true
-    });
+    });*/
 
     //toggle board selection table when we didn't hit a button
     $('#known_cards [id^=known]').click(function(e) {
+        /*
         if (!$('#board_selection_table').is(':visible'))
             $("#known_cards").popover('show');
+        */
     });
 
     $('body').on('click', '#board_selection_table .glyphicon-remove', function(e) { //only toggle cards when we didn't hit a button		
+        /*
         $("#known_cards").popover('hide');
+        */
     });
 
     /*
