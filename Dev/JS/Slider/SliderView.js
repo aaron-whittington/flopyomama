@@ -20,10 +20,15 @@ var SliderView = Backbone.View.extend({
             tooltips: false
         }); 
         
+        //todo add something like debounce
         slider.on('update', function(values) {
             that.model.set({
                 value: values[0] 
             });
+        });        
+
+        slider.on('end', function(values) {
+            that.model.trigger('finalize', values[0]);
         });        
 /*
         this.$el.slider({
