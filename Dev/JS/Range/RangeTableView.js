@@ -1,8 +1,8 @@
 
-var AWView = require('../Core/AWView');
-var RangeItemView = require('./RangeItemView');
-var _ = require('underscore');
-var RangeTableView = AWView.extend({
+AWView = require('../Core/AWView');
+RangeItemView = require('./RangeItemView');
+_ = require('underscore');
+RangeTableView = AWView.extend({
     tagName: 'table',
     className: 'table',
     id: 'op_range_table',
@@ -144,7 +144,6 @@ var RangeTableView = AWView.extend({
         var output = Mustache.render(this.template, oData);
         this.el.innerHTML = output; //html(output);
         $(Mustache.render('#{{.}}', this.parent)).append(this.el);
-        console.log('RangeTable.js: render called');
     },
     renderData: {
         'class': _.isFunction(this.className) ? this.className() : this.className,
