@@ -7,7 +7,7 @@ var Slider = Backbone.Model.extend({
     defaults: {
         value: 18,
         fRangeFunction: nsRange.getSlanskyFromPercent,
-        max: 50,
+        max: 100,
         min: 0
     },
     initialize: function() {

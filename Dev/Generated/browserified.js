@@ -6835,10 +6835,10 @@ module.exports = RangeTable;
 
 },{"../Core/Util":16,"./RangeItemList":46,"underscore":67}],52:[function(require,module,exports){
 
-var AWView = require('../Core/AWView');
-var RangeItemView = require('./RangeItemView');
-var _ = require('underscore');
-var RangeTableView = AWView.extend({
+AWView = require('../Core/AWView');
+RangeItemView = require('./RangeItemView');
+_ = require('underscore');
+RangeTableView = AWView.extend({
     tagName: 'table',
     className: 'table',
     id: 'op_range_table',
@@ -6980,7 +6980,6 @@ var RangeTableView = AWView.extend({
         var output = Mustache.render(this.template, oData);
         this.el.innerHTML = output; //html(output);
         $(Mustache.render('#{{.}}', this.parent)).append(this.el);
-        console.log('RangeTable.js: render called');
     },
     renderData: {
         'class': _.isFunction(this.className) ? this.className() : this.className,
@@ -7361,7 +7360,7 @@ var Slider = Backbone.Model.extend({
     defaults: {
         value: 18,
         fRangeFunction: nsRange.getSlanskyFromPercent,
-        max: 50,
+        max: 100,
         min: 0
     },
     initialize: function() {
@@ -7433,19 +7432,22 @@ var noUiSlider = require('nouislider');
 var SliderView = Backbone.View.extend({
     initialize: function() {
         var that = this;
-        
+        var sliderRange = {
+            'min': [0],
+            '25%': [5, 1],
+            '50%': [15, 1],
+            '75%': [25, 1],
+            'max': [50]
+        }        
         var slider = noUiSlider.create(this.el, {
             start: that.model.get('value'),
             connect: [true, false],
-            range: {
-                min: that.model.get('min'),
-                max: that.model.get('max')
-            },/*
-            pips: { // Show a scale with the slider
-                mode: 'steps',
-                stepped: true,
-                density: 10 
-            },*/ 
+            range: sliderRange,
+            pips: { 
+                mode: 'range',
+                stepped: false,
+                density: 3 
+            },
             tooltips: false
         }); 
         

@@ -4,19 +4,22 @@ var noUiSlider = require('nouislider');
 var SliderView = Backbone.View.extend({
     initialize: function() {
         var that = this;
-        
+        var sliderRange = {
+            'min': [0],
+            '25%': [5, 1],
+            '50%': [15, 1],
+            '75%': [25, 1],
+            'max': [50]
+        }        
         var slider = noUiSlider.create(this.el, {
             start: that.model.get('value'),
             connect: [true, false],
-            range: {
-                min: that.model.get('min'),
-                max: that.model.get('max')
-            },/*
-            pips: { // Show a scale with the slider
-                mode: 'steps',
-                stepped: true,
-                density: 10 
-            },*/ 
+            range: sliderRange,
+            pips: { 
+                mode: 'range',
+                stepped: false,
+                density: 3 
+            },
             tooltips: false
         }); 
         

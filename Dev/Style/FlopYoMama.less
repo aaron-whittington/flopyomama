@@ -377,7 +377,7 @@ clear: both;
 
 
 #win_percent_bar {
-	height: 1.0em;	
+	height: 1.6em;	
 }
 
 #results .sub_result_pb {
@@ -616,23 +616,12 @@ body .popover {
 #range_slider {
 	position: relative;
 }
-.range_slider_bg {
-	position: absolute;
-	top:0px;
-	bottom:0px;
-	left:0px;
+
+#range_slider .noUi-connect {
 	background: lighten(@brand-info,20%);
 }
 
-.ui-slider-horizontal .ui-slider-handle {
-	top: -.3em;
-	margin-left: -.6em;
+#range_slider .noUi-handle {
+	background: @brand-info;
 }
 
-.ui-slider .ui-slider-handle {
-	position: absolute;
-	z-index: 2;
-	width: 1.2em;
-	height: 1.2em;
-	cursor: default;
-}
