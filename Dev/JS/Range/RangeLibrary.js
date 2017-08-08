@@ -31,8 +31,8 @@ nsRange.getStatisticalFromPercent = function(fPercent) {
     var aReturn = [];
     var iHandsAdded = 0;
     var lastEquity = 0;
-    for (var i = 0; i < procentualRange.aStatData.length; i++) {
-        var hand = procentualRange.aStatData[i].sPair;
+    for (var i = 0; i < procentualRanges.aStatData.length; i++) {
+        var hand = procentualRanges.aStatData[i].sPair;
         var oPair = new Pair(hand);
         iHandsAdded += oPair.get("comb");
         if (oPair.get("suited") === false && oPair.get("rank1") !== oPair.get("rank2"))
@@ -40,8 +40,8 @@ nsRange.getStatisticalFromPercent = function(fPercent) {
         if (iHandsAdded / poker.TOTAL_STARTING_COMBINATIONS <= fPercent) {
 
             aReturn.push(hand);
-            lastEquity = procentualRange.aStatData[i].flEq;
-        } else if (lastEquity === procentualRange.aStatData[i].flEq) //when the equity is the same add them all (actually we should check this...)
+            lastEquity = procentualRanges.aStatData[i].flEq;
+        } else if (lastEquity === procentualRanges.aStatData[i].flEq) //when the equity is the same add them all (actually we should check this...)
             aReturn.push(hand);
         else
             return aReturn;

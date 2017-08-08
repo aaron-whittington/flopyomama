@@ -12,13 +12,12 @@ var FixedRangeView = AWView.extend({
         var oData = this.renderData();
         var output = this.compiledTemplate(oData);
         $('#new_fixed').before(output);
-        this.$el = $(".fixed_range." + oData.id);
+        this.setElement($(".fixed_range." + oData.id));
     },
     events: {
         "click": "handleClick"
     },
     handleClick: function(e) {
-        alert('handle click');
         this.model.trigger('activate');
     },
     renderData: function() {

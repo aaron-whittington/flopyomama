@@ -1,6 +1,6 @@
 ﻿FlopYoMama = require('./FlopYoMamaModel');
 nsHtml = require('../Core/Html');
-nsUi = require('../Core/Ui');
+nsUI = require('../Core/Ui');
 globalUi = require('../Constants/Ui');
 
 $(document).ready(function() {
@@ -120,7 +120,6 @@ $(document).ready(function() {
         }
     });
 
-    $('#range_slider').append('<div class="range_slider_bg">&nbsp;</div>');
     /**************************HAND FLOP BOARD************************/
 
     /*$("#known_cards").popover({

@@ -3886,7 +3886,7 @@ module.exports = KnownCardsView;
 },{"../Card/CardList":2,"../Constants/Keyboard":4,"../Constants/Ui":6,"../Core/Convert":11,"../Core/Util":16,"backbone":66}],25:[function(require,module,exports){
 FlopYoMama = require('./FlopYoMamaModel');
 nsHtml = require('../Core/Html');
-nsUi = require('../Core/Ui');
+nsUI = require('../Core/Ui');
 globalUi = require('../Constants/Ui');
 
 $(document).ready(function() {
@@ -4006,7 +4006,6 @@ $(document).ready(function() {
         }
     });
 
-    $('#range_slider').append('<div class="range_slider_bg">&nbsp;</div>');
     /**************************HAND FLOP BOARD************************/
 
     /*$("#known_cards").popover({
@@ -4871,7 +4870,6 @@ FixedRange = AWModel.extend({
         });
 
         this.on('activate', function() {
-            throw 'why isnt this doing anything';
             var rangeTable = flopYoMama.rangeTable;
             rangeTable.clearCustom();
 
@@ -5343,13 +5341,12 @@ var FixedRangeView = AWView.extend({
         var oData = this.renderData();
         var output = this.compiledTemplate(oData);
         $('#new_fixed').before(output);
-        this.$el = $(".fixed_range." + oData.id);
+        this.setElement($(".fixed_range." + oData.id));
     },
     events: {
         "click": "handleClick"
     },
     handleClick: function(e) {
-        alert('handle click');
         this.model.trigger('activate');
     },
     renderData: function() {
@@ -5545,8 +5542,8 @@ nsRange.getStatisticalFromPercent = function(fPercent) {
     var aReturn = [];
     var iHandsAdded = 0;
     var lastEquity = 0;
-    for (var i = 0; i < procentualRange.aStatData.length; i++) {
-        var hand = procentualRange.aStatData[i].sPair;
+    for (var i = 0; i < procentualRanges.aStatData.length; i++) {
+        var hand = procentualRanges.aStatData[i].sPair;
         var oPair = new Pair(hand);
         iHandsAdded += oPair.get("comb");
         if (oPair.get("suited") === false && oPair.get("rank1") !== oPair.get("rank2"))
@@ -5554,8 +5551,8 @@ nsRange.getStatisticalFromPercent = function(fPercent) {
         if (iHandsAdded / poker.TOTAL_STARTING_COMBINATIONS <= fPercent) {
 
             aReturn.push(hand);
-            lastEquity = procentualRange.aStatData[i].flEq;
-        } else if (lastEquity === procentualRange.aStatData[i].flEq) //when the equity is the same add them all (actually we should check this...)
+            lastEquity = procentualRanges.aStatData[i].flEq;
+        } else if (lastEquity === procentualRanges.aStatData[i].flEq) //when the equity is the same add them all (actually we should check this...)
             aReturn.push(hand);
         else
             return aReturn;
@@ -7451,10 +7448,10 @@ var SliderView = Backbone.View.extend({
     initialize: function() {
         var that = this;
         var sliderRange = {
-            'min': [0],
-            '25%': [5, 1],
-            '50%': [15, 1],
-            '75%': [25, 1],
+            'min': [0, 0.5],
+            '25%': [5, 0.5],
+            '50%': [15, 0.5],
+            '75%': [25, 0.5],
             'max': [50]
         }        
         var slider = noUiSlider.create(this.el, {
@@ -7479,7 +7476,7 @@ var SliderView = Backbone.View.extend({
         slider.on('end', function(values) {
             that.model.trigger('finalize', values[0]);
         });        
-
+        this.slider = slider;
         this.listenTo(this.model, "change:value", this.render);
         this.on('update', this.update);
     },
@@ -7499,6 +7496,7 @@ var SliderView = Backbone.View.extend({
             value = this.model.get("value");
         //nsUtil.fLog('manual SET trigger with value ' +this.model.get('value'));
         this.slider.set(value);    
+        this.model.trigger('finalize', value);
     }
 });
 

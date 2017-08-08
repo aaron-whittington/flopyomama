@@ -26,7 +26,6 @@ FixedRange = AWModel.extend({
         });
 
         this.on('activate', function() {
-            throw 'why isnt this doing anything';
             var rangeTable = flopYoMama.rangeTable;
             rangeTable.clearCustom();
 

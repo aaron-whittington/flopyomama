@@ -5,10 +5,10 @@ var SliderView = Backbone.View.extend({
     initialize: function() {
         var that = this;
         var sliderRange = {
-            'min': [0],
-            '25%': [5, 1],
-            '50%': [15, 1],
-            '75%': [25, 1],
+            'min': [0, 0.5],
+            '25%': [5, 0.5],
+            '50%': [15, 0.5],
+            '75%': [25, 0.5],
             'max': [50]
         }        
         var slider = noUiSlider.create(this.el, {
@@ -33,7 +33,7 @@ var SliderView = Backbone.View.extend({
         slider.on('end', function(values) {
             that.model.trigger('finalize', values[0]);
         });        
-
+        this.slider = slider;
         this.listenTo(this.model, "change:value", this.render);
         this.on('update', this.update);
     },
@@ -53,6 +53,7 @@ var SliderView = Backbone.View.extend({
             value = this.model.get("value");
         //nsUtil.fLog('manual SET trigger with value ' +this.model.get('value'));
         this.slider.set(value);    
+        this.model.trigger('finalize', value);
     }
 });
 
