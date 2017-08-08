@@ -1,6 +1,7 @@
 var nsRange = require('../Range/RangeLibrary');
 var nsUtil = require('../Core/Util');
 var Backbone = require('backbone');
+var _ = require('underscore');
 
 var Slider = Backbone.Model.extend({
     defaults: {
@@ -13,7 +14,7 @@ var Slider = Backbone.Model.extend({
         var fRangeFunction = null;
         var rangeFunctionStored = nsUtil.fGetLocalStorage("range_type");
 
-        fRangeFunction = this.getFnFromScaleId(rangeFunctionStored);
+        var fRangeFunction = this.getFnFromScaleId(rangeFunctionStored);
 
         if (fRangeFunction) {
             this.set("fRangeFunction", fRangeFunction);

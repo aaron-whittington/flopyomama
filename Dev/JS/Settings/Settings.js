@@ -1,5 +1,6 @@
 "use strict"
 var AWModel = require('../Core/AWModel');
+var nsUtil = require('../Core/Util');
 var SettingsModel = AWModel.extend({
     initialize: function() {
 

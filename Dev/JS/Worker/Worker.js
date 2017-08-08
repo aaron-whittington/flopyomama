@@ -254,7 +254,7 @@ var fGetStartingHandsFromRangeArray = function(allStartingPairs, aKnownHands) {
         oPair = new Pair(pairString);
         actualPairs = oPair.toArray(aKnownHands);
         //this is multidimensional array
-        filteredStartingPairs = filteredStartingPairs.concat(actualPairs); //fPushArrayMultiDim = function(parentArray, childArray)
+        filteredStartingPairs = filteredStartingPairs.concat(actualPairs);
     }
     return filteredStartingPairs;
 };

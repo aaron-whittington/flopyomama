@@ -1,9 +1,20 @@
 var Backbone = require('backbone');
+var noUiSlider = require('nouislider');
 
 var SliderView = Backbone.View.extend({
     initialize: function() {
         var that = this;
-        /*this.$el.slider({
+        
+        var slider = noUiSlider.create(this.el, {
+            start: that.model.get('value'),
+            range: {
+                min: that.model.get('min'),
+                max: that.model.get('max')
+            }
+
+        }); 
+/*
+        this.$el.slider({
             change: function(e, ui) {
                 that.model.trigger('finalize', ui.value);
             },
@@ -15,7 +26,8 @@ var SliderView = Backbone.View.extend({
             max: that.model.get("max"),
             min: that.model.get("min"),
             value: that.model.get("value")
-        });*/
+        });
+*/
         this.listenTo(this.model, "change:value", this.render);
         this.on('update', this.update);
 

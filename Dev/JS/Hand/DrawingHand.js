@@ -102,7 +102,7 @@ nsDrawingHand.fFindBestFlushDraw = function(aCards) {
         }
         var minLength = aCards.length === 5 ? 3 : 4; //on the turn we don't want to count having 3 of a color
         if (aCardsOfSuit.length > 2) { //found one
-            flushDraws = fPushArrayMultiDim(flushDraws, aCardsOfSuit);
+            flushDraws.push(aCardsOfSuit);
             break;
         }
     }
@@ -172,7 +172,7 @@ nsDrawingHand.fFindBestStraightDraw = function(aCards) {
                 aStraightRecord[memberInStraight] = null;
         }
 
-        aFoundDrawingStraights = fPushArrayMultiDim(aFoundDrawingStraights, aStraightRecord);
+        aFoundDrawingStraights.push(aStraightRecord);
     }
 
     //now evaluate the straight draws

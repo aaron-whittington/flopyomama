@@ -1,4 +1,6 @@
 var RangeItemList = require('./RangeItemList');
+var _ = require('underscore');
+var nsUtil = require('../Core/Util');
 
 var RangeTable = RangeItemList.extend({
     className: 'RangeTable',

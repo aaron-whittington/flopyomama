@@ -1,4 +1,5 @@
 var AWView = require('../Core/AWView');
+var _ = require('underscore');
 
 var RangeItemView = AWView.extend({
     setModel: function(model) {

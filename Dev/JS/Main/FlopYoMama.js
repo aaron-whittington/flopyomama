@@ -10,8 +10,7 @@ var RangeTableView = require('../Range/RangeTableView');
 var RangeTypeSelectView = require('../Range/RangeTypeSelectView');
 var AWModel = require('../Core/AWModel');
 var TableRouter = require('../Core/Route');
-
-var TOTAL_STARTING_COMBINATIONS = 1326.0;
+var Backbone = require('backbone');
 
 $(document).ready(function() {
     /**********************************************PROGRESS BARS***************************************************************/

@@ -1,6 +1,7 @@
 
 var AWView = require('../Core/AWView');
 var RangeItemView = require('./RangeItemView');
+var _ = require('underscore');
 var RangeTableView = AWView.extend({
     tagName: 'table',
     className: 'table',

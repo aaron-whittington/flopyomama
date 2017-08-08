@@ -119,7 +119,7 @@ nsHand.fFindBestFlush = function(aCards) {
                 aCardsOfSuit.push(aCards[i]);
 
             if (aCardsOfSuit.length === 5) { //found one
-                flushes = fPushArrayMultiDim(flushes, aCardsOfSuit);
+                flushes.push(aCardsOfSuit); 
                 break;
             }
         }
@@ -144,12 +144,6 @@ nsHand.fCompareFlushes = function(flushA, flushB) {
         if (flushA[i].rank !== flushB[i].rank)
             return flushB[i].rank - flushA[i].rank;
     }
-};
-
-var fPushArrayMultiDim = function(parentArray, childArray) {
-
-    parentArray[parentArray.length] = childArray;
-    return parentArray;
 };
 
 nsHand.fFindBestStraight = function(aCards) {
@@ -183,7 +177,7 @@ nsHand.fFindBestStraight = function(aCards) {
 
         }
         if (aStraightRecord.length === 5)
-            aFoundStraights = fPushArrayMultiDim(aFoundStraights, aStraightRecord);
+            aFoundStraights.push(aStraightRecord);
     }
 
 
@@ -191,7 +185,7 @@ nsHand.fFindBestStraight = function(aCards) {
     var aFoundHands = [];
     for (var i = 0; i < aFoundStraights.length; i++) {
         var oStraight = nsHand.fStraightFromAmbig(aFoundStraights[i]);
-        aFoundHands = fPushArrayMultiDim(aFoundHands, oStraight);
+        aFoundHands.push(oStraight);
     }
 
     aFoundHands.sort(nsHand.fCompareHand);

@@ -1,5 +1,5 @@
 var routerValues = {};
-
+var Backbone = require('backbone');
 var TableRouter = Backbone.Router.extend({
 
     routes: {

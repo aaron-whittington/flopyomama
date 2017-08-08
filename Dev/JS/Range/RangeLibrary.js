@@ -1,20 +1,22 @@
 ﻿var $ = require('jquery');
-var sklanskyRange = require('./RangeScaleSklansky');
-var procentualRange = require('./RangeScaleProcentual'); 
+var Pair = require('../Pair/Pair');
+var sklanskyRanges = require('./RangeScaleSklansky');
+var procentualRanges = require('./RangeScaleProcentual'); 
+var poker = require('../Constants/Poker');
 
 var nsRange = {};
 
-nsRange.fGetSlanskyFromPercent = function(fPercent) {
+nsRange.getSlanskyFromPercent = function(fPercent) {
     var aReturn = [];
     var iHandsAdded = 0;
-    for (var slanskyRange = 1; slanskyRange < slanskyRanges.length; slanskyRange++) {
-        for (var iHand = 0; iHand < slanskyRanges[slanskyRange].length; iHand++) {
-            var nextHand = slanskyRanges[slanskyRange][iHand];
+    for (var sklanskyRange = 1; sklanskyRange < sklanskyRanges.length; sklanskyRange++) {
+        for (var iHand = 0; iHand < sklanskyRanges[sklanskyRange].length; iHand++) {
+            var nextHand = sklanskyRanges[sklanskyRange][iHand];
             var oPair = new Pair(nextHand);
             iHandsAdded += oPair.get("comb");
 
-            if (iHandsAdded / TOTAL_STARTING_COMBINATIONS < fPercent) {
-                aReturn = fPushArrayMultiDim(aReturn, nextHand);
+            if (iHandsAdded / poker.TOTAL_STARTING_COMBINATIONS < fPercent) {
+                aReturn.push(nextHand);
             } else
                 return aReturn;
         }
@@ -22,7 +24,7 @@ nsRange.fGetSlanskyFromPercent = function(fPercent) {
     return aReturn;
 };
 
-nsRange.fGetStatisticalFromPercent = function(fPercent) {
+nsRange.getStatisticalFromPercent = function(fPercent) {
     var aReturn = [];
     var iHandsAdded = 0;
     var lastEquity = 0;
@@ -32,7 +34,7 @@ nsRange.fGetStatisticalFromPercent = function(fPercent) {
         iHandsAdded += oPair.get("comb");
         if (oPair.get("suited") === false && oPair.get("rank1") !== oPair.get("rank2"))
             hand = hand[0] + hand[1] + 'o'; //add offsuit symbol
-        if (iHandsAdded / TOTAL_STARTING_COMBINATIONS <= fPercent) {
+        if (iHandsAdded / poker.TOTAL_STARTING_COMBINATIONS <= fPercent) {
 
             aReturn.push(hand);
             lastEquity = procentualRange.aStatData[i].flEq;

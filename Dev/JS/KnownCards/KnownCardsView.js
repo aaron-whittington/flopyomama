@@ -2,6 +2,7 @@ var nsUtil = require('../Core/Util');
 var keyboard = require('../Constants/Keyboard');
 var globalUi = require('../Constants/Ui');
 var CardList = require('../Card/CardList');
+var Backbone = require('backbone');
 
 var KnownCardsView = Backbone.View.extend({
     initialize: function() {
