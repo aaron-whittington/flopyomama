@@ -1,8 +1,10 @@
 var nsUtil = require('../Core/Util');
+var nsConvert = require('../Core/Convert');
 var keyboard = require('../Constants/Keyboard');
 var globalUi = require('../Constants/Ui');
 var CardList = require('../Card/CardList');
 var Backbone = require('backbone');
+
 
 var KnownCardsView = Backbone.View.extend({
     initialize: function() {
@@ -251,7 +253,7 @@ var KnownCardsView = Backbone.View.extend({
                     currentSelected = 1;
                 var tryNode = $('#known_' + currentSelected + ' span');
                 var sHtml = tryNode.html();
-                if (sHtml === EMPTY_CARD_STRING) {
+                if (sHtml === globalUi.EMPTY_CARD_STRING) {
                     $('#known_' + currentSelected).focus();
                     return;
                 }

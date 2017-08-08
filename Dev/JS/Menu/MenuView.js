@@ -1,14 +1,12 @@
 
 var AWView = require('../Core/AWView');
 var MenuItemView = require('./MenuItemView');
+var _ = require('underscore');
+
 var MenuView = AWView.extend({
     initialize: function() {
         this.compiledTemplate = Mustache.compile(this.template); //this could be in awview base
-        //var elTest = $(Mustache.render('#{{.}}',this.idPrefix() + this.id()));
-        //if (_.isElement(elTest[0])) {
-        //	this.el = elTest[0];
-        //	this.$el = elTest;
-        //} // could also be in base
+
         var that = this;
         that.views = []; ///CAN'T FIGURE OUT WHY THIS IS BEING PERSISTED FROM BASE
         this.model._collection.forEach(function(mod) {

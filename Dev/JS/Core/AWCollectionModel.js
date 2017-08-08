@@ -1,5 +1,6 @@
 var AWModel = require('./AWModel');
 var AWCollection = require('./AWCollection');
+var Backbone = require('backbone');
 
 //wraps a collection so it can be used as a model
 var AWCollectionModel = AWModel.extend({

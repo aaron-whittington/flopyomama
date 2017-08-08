@@ -10,5 +10,7 @@ Dev/Style/Themes/Slate/FlopYoMama.css
 .tscache
 Dev/TS/*.js
 Dev/TS/*.map
-Dev/JS/Generated/*.js
+Dev/Generated/*.js
 Devtools
+*.swp
+**/*.swp

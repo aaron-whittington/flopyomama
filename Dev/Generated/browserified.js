@@ -186,7 +186,7 @@ var Deck = CardList.extend({
 
 module.exports = Deck;
 
-},{"./Card":1,"./CardList":2,"backbone":63}],4:[function(require,module,exports){
+},{"./Card":1,"./CardList":2,"backbone":64}],4:[function(require,module,exports){
 "use strict";
 var g = {};
 g.RANK_CODES = {};
@@ -319,9 +319,10 @@ var AWCollection = Backbone.Collection.extend({
 
 module.exports = AWCollection;
 
-},{"./Util":16,"backbone":63,"underscore":66}],8:[function(require,module,exports){
+},{"./Util":16,"backbone":64,"underscore":67}],8:[function(require,module,exports){
 var AWModel = require('./AWModel');
 var AWCollection = require('./AWCollection');
+var Backbone = require('backbone');
 
 //wraps a collection so it can be used as a model
 var AWCollectionModel = AWModel.extend({
@@ -365,7 +366,7 @@ var AWCollectionModel = AWModel.extend({
 
 module.exports = AWCollectionModel;
 
-},{"./AWCollection":7,"./AWModel":9}],9:[function(require,module,exports){
+},{"./AWCollection":7,"./AWModel":9,"backbone":64}],9:[function(require,module,exports){
 var _ = require('underscore');
 var Backbone = require('backbone');
 var nsUtil = require('./Util');
@@ -447,7 +448,7 @@ var AWModel = Backbone.Model.extend({
 
 module.exports = AWModel;
 
-},{"./Util":16,"backbone":63,"underscore":66}],10:[function(require,module,exports){
+},{"./Util":16,"backbone":64,"underscore":67}],10:[function(require,module,exports){
 "strict mode"
 var Backbone = require('backbone');
 var AWView = Backbone.View.extend({
@@ -459,7 +460,7 @@ var AWView = Backbone.View.extend({
 });
 
 module.exports = AWView;
-},{"backbone":63}],11:[function(require,module,exports){
+},{"backbone":64}],11:[function(require,module,exports){
  /*takes AAo und generates AcAd,AsAh ...and so on*/
 var _ = require('underscore');
 var nsConvert = {};
@@ -616,22 +617,25 @@ _.extend(nsConvert, {
 
 module.exports = nsConvert;
 
-},{"underscore":66}],12:[function(require,module,exports){
+},{"underscore":67}],12:[function(require,module,exports){
+
+var nsUtil = require('./Util');
+var nsConvert = require('./Convert');
 
 var nsHtml = {};
 
-nsHtml.fGetBoardSelectionTable = function() {
+nsHtml.fGetBoardSelectionTable = function(knownCards) {
     var sReturn = "<div id='board_selection_table'>";
-    var aCards = flopYoMama.allCards;
+    var aCards = knownCards.allUnknown();
 
     for (var suit = 4; suit > 0; suit--) {
         sReturn += "<div style='white-space: nowrap;'>";
-        aCards.each(function(c) {
+        aCards.forEach(function(c) {
             if (c.get('suit') != suit) {
                 return;
             }
 
-            var found = flopYoMama.knownCards.allKnown().where({
+            var found = knownCards.allKnown().where({
                 'suit': c.get('suit'),
                 'rank': c.get('rank')
             }).length > 0;
@@ -644,8 +648,8 @@ nsHtml.fGetBoardSelectionTable = function() {
 };
 
 //this is inefficient if we've just got a little change
-nsHtml.fRedrawBoardSelectionTable = function() {
-    $('#board_selection_table').parent().html(nsHtml.fGetBoardSelectionTable);
+nsHtml.fRedrawBoardSelectionTable = function(knownCards) {
+    $('#board_selection_table').parent().html(nsHtml.fGetBoardSelectionTable(knownCards));
 };
 
 nsHtml.fWrapCard = function(id, bDisabled, bSelected) {
@@ -1277,7 +1281,8 @@ nsHtml.fInitResultPopovers = function() {
 };
 
 module.exports = nsHtml;
-},{}],13:[function(require,module,exports){
+
+},{"./Convert":11,"./Util":16}],13:[function(require,module,exports){
 
 var nsMath= {};
 
@@ -1392,7 +1397,7 @@ var TableRouter = Backbone.Router.extend({
 
 module.exports = TableRouter;
 
-},{"backbone":63}],15:[function(require,module,exports){
+},{"backbone":64}],15:[function(require,module,exports){
 "use strict";
 var globalUi = require('../Constants/Ui');
 var nsUI = {};
@@ -3481,19 +3486,20 @@ var KnownCards = AWModel.extend({
         } else {
             return cl;
         }
-
     },
     allUnknown: function(bToAtts) {
         var allKnown = this.allKnown();
         return this.get('deck').getDifference(allKnown, bToAtts);
     },
     initialize: function() {
+        var that = this;
         //was nsUI.fAfterBoardChnage
         this.on('finalize', function() {
-            nsHtml.fRedrawBoardSelectionTable();
+            nsHtml.fRedrawBoardSelectionTable(that);
             this.evaluateKnownCards();
             this.saveBoardState();
-            flopYoMama.updateRoute();
+            //TODO fix routing
+            //flopYoMama.updateRoute();
         });
 
         //manually set the hand and the board ... change to manual  
@@ -3516,13 +3522,12 @@ var KnownCards = AWModel.extend({
 
     }, 
     evaluateKnownCards: function() {
-        var knownCards = this;
-        var aCards = knownCards.allKnown(true);
+        var aCards = this.allKnown(true);
 
-        var bBoardState = knownCards.getBoardState();
+        var bBoardState = this.getBoardState();
 
         if (bBoardState.bFlop) {
-            nsRange.fGetTextures();
+            nsRange.fGetTextures(this);
         } else {
               //todo this should be in the range view
             $('#textures').html(''); //delete the range textures
@@ -3530,7 +3535,7 @@ var KnownCards = AWModel.extend({
 
         if (bBoardState.bFlop && bBoardState.bHand && nsPrefs.oAutomaticSearch.fGet()) {
 
-             nsRange.fGetAllUnknownCombinationsThreaded();
+             nsRange.fGetAllUnknownCombinationsThreaded(this);
         } else {
                nsUI.fDeleteLongStatistics();
         }
@@ -3588,12 +3593,14 @@ var KnownCards = AWModel.extend({
 
 module.exports = KnownCards;
 
-},{"../Card/CardList":2,"../Card/Deck":3,"../Core/AWModel":9,"../Core/Html":12,"../Core/Ui":15,"../Core/Util":16,"../Range/RangeLibrary":47}],24:[function(require,module,exports){
+},{"../Card/CardList":2,"../Card/Deck":3,"../Core/AWModel":9,"../Core/Html":12,"../Core/Ui":15,"../Core/Util":16,"../Range/RangeLibrary":48}],24:[function(require,module,exports){
 var nsUtil = require('../Core/Util');
+var nsConvert = require('../Core/Convert');
 var keyboard = require('../Constants/Keyboard');
 var globalUi = require('../Constants/Ui');
 var CardList = require('../Card/CardList');
 var Backbone = require('backbone');
+
 
 var KnownCardsView = Backbone.View.extend({
     initialize: function() {
@@ -3842,7 +3849,7 @@ var KnownCardsView = Backbone.View.extend({
                     currentSelected = 1;
                 var tryNode = $('#known_' + currentSelected + ' span');
                 var sHtml = tryNode.html();
-                if (sHtml === EMPTY_CARD_STRING) {
+                if (sHtml === globalUi.EMPTY_CARD_STRING) {
                     $('#known_' + currentSelected).focus();
                     return;
                 }
@@ -3874,8 +3881,12 @@ var KnownCardsView = Backbone.View.extend({
 
 module.exports = KnownCardsView;
 
-},{"../Card/CardList":2,"../Constants/Keyboard":4,"../Constants/Ui":6,"../Core/Util":16,"backbone":63}],25:[function(require,module,exports){
+},{"../Card/CardList":2,"../Constants/Keyboard":4,"../Constants/Ui":6,"../Core/Convert":11,"../Core/Util":16,"backbone":64}],25:[function(require,module,exports){
 FlopYoMama = require('./FlopYoMamaModel');
+nsHtml = require('../Core/Html');
+nsUi = require('../Core/Ui');
+globalUi = require('../Constants/Ui');
+
 $(document).ready(function() {
     /**********************************************PROGRESS BARS***************************************************************/
 
@@ -3997,7 +4008,7 @@ $(document).ready(function() {
 
     $("#known_cards").popover({
         content: function() {
-            return nsHtml.fGetBoardSelectionTable();
+            return nsHtml.fGetBoardSelectionTable(flopYoMama.knownCards);
         },
         container: '#known_cards',
         placement: 'bottom',
@@ -4036,7 +4047,7 @@ $(document).ready(function() {
             $(this).removeClass('disabled selected');
         } else { //if it's not selected, select it and added to the board, mark it as selected and disabled
             var sReplaced = flopYoMama.knownCardsView.setBoardCard($(this).html());
-            if (sReplaced !== EMPTY_CARD_STRING) { //we replaced a card so disable it in the board
+            if (sReplaced !== globalUi.EMPTY_CARD_STRING) { //we replaced a card so disable it in the board
                 $('#board_selection_table .card').each(function() {
                     if ($(this).html() === sReplaced) {
                         $(this).removeClass('disabled selected');
@@ -4088,14 +4099,13 @@ $(document).ready(function() {
     }, 1);
 });
 
-var flopYoMama = {};
 $(function() {
     $('#content').removeClass('preload');
-    flopYoMama = new FlopYoMama(); 
-    flopYoMama.setUp();
+    window.flopYoMama = new FlopYoMama(); 
+    window.flopYoMama.setUp();
 });
 
-},{"./FlopYoMamaModel":27}],26:[function(require,module,exports){
+},{"../Constants/Ui":6,"../Core/Html":12,"../Core/Ui":15,"./FlopYoMamaModel":27}],26:[function(require,module,exports){
 var FlopYoMama = require('./FlopYoMamaModel');
 module.exports = new FlopYoMama();
 
@@ -4204,7 +4214,95 @@ var FlopYoMama = AWModel.extend({
 
 module.exports = FlopYoMama;
 
-},{"../Card/Deck":3,"../Core/AWModel":9,"../Core/Route":14,"../Core/Ui":15,"../Core/Util":16,"../Filter/Filter":18,"../KnownCards/KnownCards":23,"../KnownCards/KnownCardsView":24,"../Range/RangeTable":50,"../Range/RangeTableView":51,"../Range/RangeTypeSelectView":52,"../Slider/Slider":59,"../Slider/SliderView":60,"backbone":63,"underscore":66}],28:[function(require,module,exports){
+},{"../Card/Deck":3,"../Core/AWModel":9,"../Core/Route":14,"../Core/Ui":15,"../Core/Util":16,"../Filter/Filter":18,"../KnownCards/KnownCards":23,"../KnownCards/KnownCardsView":24,"../Range/RangeTable":51,"../Range/RangeTableView":52,"../Range/RangeTypeSelectView":53,"../Slider/Slider":60,"../Slider/SliderView":61,"backbone":64,"underscore":67}],28:[function(require,module,exports){
+MenuItemGroup = require('./MenuItemGroup');
+MenuListModel = require('./MenuListModel');
+MenuView = require('./MenuView');
+nsConvert = require('../Core/Convert');
+
+$(function() {
+    var standardGroup = new MenuItemGroup();
+    var rangeMenuActionGroup = new MenuItemGroup('clearboard', false);
+    var randomMenu = new MenuListModel([{
+            id: "hand",
+            value: "random_hand",
+            displayValue: "Hand",
+            group: standardGroup,
+            active: true
+        },
+        {
+            divider: true
+        },
+        {
+            id: "flop",
+            value: "random_flop",
+            displayValue: "Flop",
+            group: standardGroup,
+            active: true
+        },
+        {
+            id: "turn",
+            value: "random_turn",
+            displayValue: "Turn",
+            group: standardGroup
+        },
+        {
+            id: "river",
+            value: "random_river",
+            displayValue: "River",
+            group: standardGroup
+        },
+        {
+            divider: true
+        },
+        {
+            value: "clear_board",
+            displayValue: "Clear Board",
+            group: rangeMenuActionGroup,
+            action: 'clearBoard',
+            clearBoard: function(e) {
+                flopYoMama.knownCardsView.deleteBoard();
+                flopYoMama.knownCards.trigger('finalize');
+            },
+            selectable: false
+        }
+    ]);
+    randomMenu.set("id", "random_menu");
+
+    var randomModelView = new MenuView({
+        model: randomMenu,
+        id: "random_menu"
+    });
+    randomModelView.render();
+    $("#rand_ctrl").after(randomModelView.el);
+    //loggingModelView.render();
+
+    $('body').on('click touchstart', '#rand', function() {
+        var flopYoMama = window.flopYoMama;
+        var aCards = nsConvert.fGetRandomCards(7);
+
+        if (randomMenu._collection.get("hand").get("active")) {
+            flopYoMama.knownCardsView.setBoardCard(aCards.slice(0, 2), 0);
+        }
+
+        if (randomMenu._collection.get("flop").get("active")) {
+            flopYoMama.knownCardsView.setBoardCard(aCards.slice(2, 5), 2);
+        }
+
+        if (randomMenu._collection.get("turn").get("active")) {
+            flopYoMama.knownCardsView.setBoardCard(aCards.slice(5, 6), 5);
+        }
+
+        if (randomMenu._collection.get("river").get("active")) {
+            flopYoMama.knownCardsView.setBoardCard(aCards.slice(6, 7), 6);
+        }
+
+        flopYoMama.knownCards.trigger('finalize');
+
+    });
+});
+
+},{"../Core/Convert":11,"./MenuItemGroup":30,"./MenuListModel":33,"./MenuView":34}],29:[function(require,module,exports){
 var AWModel = require('../Core/AWModel');
 var MenuItem = AWModel.extend({
     className: 'MenuItem',
@@ -4223,7 +4321,7 @@ var MenuItem = AWModel.extend({
 });
 
 module.exports = MenuItem;
-},{"../Core/AWModel":9}],29:[function(require,module,exports){
+},{"../Core/AWModel":9}],30:[function(require,module,exports){
 
 var _ = require('underscore');
 var MenuItemGroup = function(name, exclusive) {
@@ -4234,7 +4332,7 @@ var MenuItemGroup = function(name, exclusive) {
 };
 
 module.exports = MenuItemGroup;
-},{"underscore":66}],30:[function(require,module,exports){
+},{"underscore":67}],31:[function(require,module,exports){
 var AWView = require('../Core/AWView');
 var MenuListModel = require('./MenuListModel');
 var MenuItemGroup = require('./MenuItemGroup');
@@ -4327,90 +4425,8 @@ var MenuItemView = AWView.extend({
 });
 
 module.exports = MenuItemView;
-/*
-$(function() {
 
-    var standardGroup = new MenuItemGroup();
-    var rangeMenuActionGroup = new MenuItemGroup('clearboard', false);
-    var randomMenu = new MenuListModel([{
-            id: "hand",
-            value: "random_hand",
-            displayValue: "Hand",
-            group: standardGroup,
-            active: true
-        },
-        {
-            divider: true
-        },
-        {
-            id: "flop",
-            value: "random_flop",
-            displayValue: "Flop",
-            group: standardGroup,
-            active: true
-        },
-        {
-            id: "turn",
-            value: "random_turn",
-            displayValue: "Turn",
-            group: standardGroup
-        },
-        {
-            id: "river",
-            value: "random_river",
-            displayValue: "River",
-            group: standardGroup
-        },
-        {
-            divider: true
-        },
-        {
-            value: "clear_board",
-            displayValue: "Clear Board",
-            group: rangeMenuActionGroup,
-            action: 'clearBoard',
-            clearBoard: function(e) {
-                flopYoMama.knownCardsView.deleteBoard();
-                flopYoMama.knownCards.trigger('finalize');
-            },
-            selectable: false
-        }
-    ]);
-    randomMenu.set("id", "random_menu");
-
-    var randomModelView = new MenuView({
-        model: randomMenu,
-        id: "random_menu"
-    });
-    randomModelView.render();
-    $("#rand_ctrl").after(randomModelView.el);
-    //loggingModelView.render();
-
-    $('body').on('click touchstart', '#rand', function() {
-        var aCards = fGetRandomCards(7);
-
-        if (randomMenu._collection.get("hand").get("active")) {
-            flopYoMama.knownCardsView.setBoardCard(aCards.slice(0, 2), 0);
-        }
-
-        if (randomMenu._collection.get("flop").get("active")) {
-            flopYoMama.knownCardsView.setBoardCard(aCards.slice(2, 5), 2);
-        }
-
-        if (randomMenu._collection.get("turn").get("active")) {
-            flopYoMama.knownCardsView.setBoardCard(aCards.slice(5, 6), 5);
-        }
-
-        if (randomMenu._collection.get("river").get("active")) {
-            flopYoMama.knownCardsView.setBoardCard(aCards.slice(6, 7), 6);
-        }
-
-        flopYoMama.knownCards.trigger('finalize');
-
-    });
-});*/
-
-},{"../Core/AWView":10,"./MenuItemGroup":29,"./MenuListModel":32,"./MenuView":33}],31:[function(require,module,exports){
+},{"../Core/AWView":10,"./MenuItemGroup":30,"./MenuListModel":33,"./MenuView":34}],32:[function(require,module,exports){
 var MenuItem = require('./MenuItem');
 var AWCollection = require("../Core/AWCollection");
 var MenuList = AWCollection.extend({
@@ -4419,7 +4435,7 @@ var MenuList = AWCollection.extend({
 });
 
 module.exports = MenuList;
-},{"../Core/AWCollection":7,"./MenuItem":28}],32:[function(require,module,exports){
+},{"../Core/AWCollection":7,"./MenuItem":29}],33:[function(require,module,exports){
 "strict mode";
 var MenuList = require('./MenuList');
 var AWCollectionModel = require('../Core/AWCollectionModel');
@@ -4431,18 +4447,16 @@ var MenuListModel = AWCollectionModel.extend({
 
 module.exports = MenuListModel;
 
-},{"../Core/AWCollectionModel":8,"./MenuList":31}],33:[function(require,module,exports){
+},{"../Core/AWCollectionModel":8,"./MenuList":32}],34:[function(require,module,exports){
 
 var AWView = require('../Core/AWView');
 var MenuItemView = require('./MenuItemView');
+var _ = require('underscore');
+
 var MenuView = AWView.extend({
     initialize: function() {
         this.compiledTemplate = Mustache.compile(this.template); //this could be in awview base
-        //var elTest = $(Mustache.render('#{{.}}',this.idPrefix() + this.id()));
-        //if (_.isElement(elTest[0])) {
-        //	this.el = elTest[0];
-        //	this.$el = elTest;
-        //} // could also be in base
+
         var that = this;
         that.views = []; ///CAN'T FIGURE OUT WHY THIS IS BEING PERSISTED FROM BASE
         this.model._collection.forEach(function(mod) {
@@ -4499,7 +4513,8 @@ var MenuView = AWView.extend({
 });
 
 module.exports = MenuView;
-},{"../Core/AWView":10,"./MenuItemView":30}],34:[function(require,module,exports){
+
+},{"../Core/AWView":10,"./MenuItemView":31,"underscore":67}],35:[function(require,module,exports){
 var AWModel = require('../Core/AWModel');
 var nsConvert = require('../Core/Convert');
 var nsMath = require('../Core/Math');
@@ -4677,7 +4692,7 @@ var Pair = AWModel.extend({
 
 module.exports = Pair;
 
-},{"../Core/AWModel":9,"../Core/Convert":11,"../Core/Math":13}],35:[function(require,module,exports){
+},{"../Core/AWModel":9,"../Core/Convert":11,"../Core/Math":13}],36:[function(require,module,exports){
 
 var AWCollection = require('../Core/AWCollection');
 var Pair = require('./Pair');
@@ -4689,7 +4704,7 @@ var PairList = AWCollection.extend({
 
 module.exports = PairList;
 
-},{"../Core/AWCollection":7,"./Pair":34}],36:[function(require,module,exports){
+},{"../Core/AWCollection":7,"./Pair":35}],37:[function(require,module,exports){
 
 var PairList = require('./PairList');
 var AWCollectionModel = require('../Core/AWCollectionModel');
@@ -4699,7 +4714,7 @@ var PairListModel = AWCollectionModel.extend({
 });
 module.exports = PairListModel;
 
-},{"../Core/AWCollectionModel":8,"./PairList":35}],37:[function(require,module,exports){
+},{"../Core/AWCollectionModel":8,"./PairList":36}],38:[function(require,module,exports){
 
 var Backbone = require('backbone');
 
@@ -4743,7 +4758,7 @@ var PairView = Backbone.View.extend({
 
 module.exports = PairView;
 
-},{"backbone":63}],38:[function(require,module,exports){
+},{"backbone":64}],39:[function(require,module,exports){
 
 
 (function(g){
@@ -4819,7 +4834,7 @@ module.exports = PairView;
 
 
 
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 var AWModel = require('../Core/AWModel');
 
 var FixedRange = AWModel.extend({
@@ -4901,7 +4916,7 @@ FixedRange.fromCurrent = function(slider, rangeTable) {
     return range;
 };
 module.exports = FixedRange;
-},{"../Core/AWModel":9}],40:[function(require,module,exports){
+},{"../Core/AWModel":9}],41:[function(require,module,exports){
 var AWView = require('../Core/AWView');
 //item view for the fixed range editor
 FixedRangeEditorItemView = AWView.extend({
@@ -5102,7 +5117,7 @@ FixedRangeEditorView = AWView.extend({
         '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6"><strong>Custom</strong></div>' +
         '</div>'
 });
-},{"../Core/AWView":10}],41:[function(require,module,exports){
+},{"../Core/AWView":10}],42:[function(require,module,exports){
 var _=require('underscore');
 var AWCollection = require('../Core/AWCollection');
 var FixedRange = require('./FixedRange');
@@ -5274,7 +5289,7 @@ FixedRangeList.default = {
 };
 
 module.exports = FixedRangeList;
-},{"../Core/AWCollection":7,"./FixedRange":39,"underscore":66}],42:[function(require,module,exports){
+},{"../Core/AWCollection":7,"./FixedRange":40,"underscore":67}],43:[function(require,module,exports){
 var AWView = require('../Core/AWView');
 var FixedRangeList = require('./FixedRangeList');
 var FixedRangeView = require('./FixedRangeView');
@@ -5323,7 +5338,7 @@ $(document).ready(function() {
 });
 */
 
-},{"../Core/AWView":10,"./FixedRangeList":41,"./FixedRangeView":43}],43:[function(require,module,exports){
+},{"../Core/AWView":10,"./FixedRangeList":42,"./FixedRangeView":44}],44:[function(require,module,exports){
 var AWView = require('../Core/AWView');
 //view of ranges for clicking loading
 var FixedRangeView = AWView.extend({
@@ -5356,7 +5371,7 @@ var FixedRangeView = AWView.extend({
 });
 
 module.exports = FixedRangeView;
-},{"../Core/AWView":10}],44:[function(require,module,exports){
+},{"../Core/AWView":10}],45:[function(require,module,exports){
 
 var AWModel = require('../Core/AWModel');
 var Pair = require('../Pair/Pair');
@@ -5397,7 +5412,7 @@ var RangeItem = AWModel.extend({
 
 module.exports = RangeItem;
 
-},{"../Core/AWModel":9,"../Pair/Pair":34}],45:[function(require,module,exports){
+},{"../Core/AWModel":9,"../Pair/Pair":35}],46:[function(require,module,exports){
 var AWCollection = require('../Core/AWCollection');
 var RangeItem = require('./RangeItem');
 
@@ -5412,7 +5427,7 @@ var RangeItemList = AWCollection.extend({
 });*/
 
 module.exports = RangeItemList;
-},{"../Core/AWCollection":7,"./RangeItem":44}],46:[function(require,module,exports){
+},{"../Core/AWCollection":7,"./RangeItem":45}],47:[function(require,module,exports){
 var AWView = require('../Core/AWView');
 var _ = require('underscore');
 
@@ -5478,12 +5493,14 @@ var RangeItemView = AWView.extend({
 
 module.exports = RangeItemView;
 
-},{"../Core/AWView":10,"underscore":66}],47:[function(require,module,exports){
+},{"../Core/AWView":10,"underscore":67}],48:[function(require,module,exports){
 var $ = require('jquery');
 var Pair = require('../Pair/Pair');
 var sklanskyRanges = require('./RangeScaleSklansky');
 var procentualRanges = require('./RangeScaleProcentual'); 
 var poker = require('../Constants/Poker');
+var nsFilter = require('../Filter/Filter');
+var nsUtil = require('../Core/Util');
 
 var nsRange = {};
 
@@ -5539,7 +5556,7 @@ nsRange.fKillCurrentWorkers = function() {
 };
 
 
-nsRange.fGetAllUnknownCombinationsThreaded = function() {
+nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards) {
     $('.no_results').remove();
     var MAX_WORKERS = 4;
     var workerDoneCount = 0;
@@ -5553,9 +5570,9 @@ nsRange.fGetAllUnknownCombinationsThreaded = function() {
 
     var aoStartingHands = nsRange.fGetStartingHandsFromRangeGrid();
 
-    var aKnownCards = flopYoMama.knownCards.allKnown(true);
-    var aUnknownCards = flopYoMama.knownCards.allUnknown(true);
-    var aFixedBoardCards = flopYoMama.knownCards.get('board').map(function(m) {
+    var aKnownCards = knownCards.allKnown(true);
+    var aUnknownCards = knownCards.allUnknown(true);
+    var aFixedBoardCards = knownCards.get('board').map(function(m) {
         return m.attributes;
     });
     var numberOfOpenBoardHandPlaces = 7 - aKnownCards.length;
@@ -5578,7 +5595,8 @@ nsRange.fGetAllUnknownCombinationsThreaded = function() {
             var test2 = state.toString();
 
         }
-        var worker = new Worker('JS/' + sWorkerName);
+        var worker = new Worker('JS/Worker/' + sWorkerName);
+
         nsRange.aCurrentWorkers.push(worker);
 
         worker.addEventListener('message', function(e) {
@@ -5722,7 +5740,7 @@ nsRange.fGetAllUnknownCombinationsThreaded = function() {
     }
 };
 
-nsRange.fGetTextures = function() {
+nsRange.fGetTextures = function(knownCards) {
     if (typeof(Worker) === "undefined") {
         alert('Browser must support webworkers!');
         return;
@@ -5730,15 +5748,15 @@ nsRange.fGetTextures = function() {
     $('.no_results').remove();
     //aoStartingHands,aKnownCards,aFixedBoardCards
     var aoStartingHands = nsRange.fGetStartingHandsFromRangeGrid();
-    var aKnownCards = flopYoMama.knownCards.allKnown(true);
-    var aFixedBoardCards = flopYoMama.knownCards.get('board').map(function(m) {
+    var aKnownCards = knownCards.allKnown(true);
+    var aFixedBoardCards = knownCards.get('board').map(function(m) {
         return m.attributes;
     });
     var oFilter = nsFilter.fActiveFilter(null, true);
 
     var fStartWorker = function() {
         var sWorkerName = 'WorkerTextures.js';
-        var worker = new Worker('JS/' + sWorkerName); //don't know why I specify path like this from html root	
+        var worker = new Worker('JS/Worker/' + sWorkerName); //don't know why I specify path like this from html root	
         worker.addEventListener('message', function(e) {
             if (e.data.type === 'console')
                 nsUtil.fLog(e.data.msg);
@@ -5800,7 +5818,7 @@ nsRange.fGetStartingHandsFromRangeGrid = function(bAll) {
 
 module.exports = nsRange;
 
-},{"../Constants/Poker":5,"../Pair/Pair":34,"./RangeScaleProcentual":48,"./RangeScaleSklansky":49,"jquery":64}],48:[function(require,module,exports){
+},{"../Constants/Poker":5,"../Core/Util":16,"../Filter/Filter":18,"../Pair/Pair":35,"./RangeScaleProcentual":49,"./RangeScaleSklansky":50,"jquery":65}],49:[function(require,module,exports){
 
 var range = {};
 range.aStatData = [];
@@ -6652,7 +6670,7 @@ range.aStatData.push({
 
 module.exports = range;
 
-},{}],49:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 /*SLANSKY RANGES http://en.wikipedia.org/wiki/Texas_hold_%27em_starting_hands*/
 
 var sklanskyRanges = [];
@@ -6674,7 +6692,7 @@ sklanskyRanges[8] = ["J7s", "96s", "85s", "74s", "42s", "32s", "A9o", "K9o", "Q9
 
 module.exports = sklanskyRanges;
 
-},{}],50:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 var RangeItemList = require('./RangeItemList');
 var _ = require('underscore');
 var nsUtil = require('../Core/Util');
@@ -6813,7 +6831,7 @@ var RangeTable = RangeItemList.extend({
 
 module.exports = RangeTable;
 
-},{"../Core/Util":16,"./RangeItemList":45,"underscore":66}],51:[function(require,module,exports){
+},{"../Core/Util":16,"./RangeItemList":46,"underscore":67}],52:[function(require,module,exports){
 
 var AWView = require('../Core/AWView');
 var RangeItemView = require('./RangeItemView');
@@ -6984,7 +7002,7 @@ var RangeTableView = AWView.extend({
 
 module.exports = RangeTableView;
 
-},{"../Core/AWView":10,"./RangeItemView":46,"underscore":66}],52:[function(require,module,exports){
+},{"../Core/AWView":10,"./RangeItemView":47,"underscore":67}],53:[function(require,module,exports){
 var Backbone = require('backbone');
 var nsUI = require('../Core/Ui');
 
@@ -7018,7 +7036,7 @@ var RangeTypeSelectView = Backbone.View.extend({
 
 module.exports = RangeTypeSelectView;
 
-},{"../Core/Ui":15,"backbone":63}],53:[function(require,module,exports){
+},{"../Core/Ui":15,"backbone":64}],54:[function(require,module,exports){
 
 
 
@@ -7131,7 +7149,7 @@ var getExactPreflopOdds = function(heroCard1, heroCard2, badGuyCard1, badGuyCard
 
 
 
-},{}],54:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 
 var SettingsModel = require('./Settings');
 var SettingsView = require('./SettingsView');
@@ -7144,7 +7162,7 @@ $(function() {
     });
     sv.render();
 });
-},{"./Settings":57,"./SettingsView":58,"jquery":64}],55:[function(require,module,exports){
+},{"./Settings":58,"./SettingsView":59,"jquery":65}],56:[function(require,module,exports){
 "use strict"
 var AWView = require('../Core/AWView');
 var LinkEditorView = AWView.extend({
@@ -7200,7 +7218,7 @@ var LinkEditorView = AWView.extend({
 
 module.exports = LinkEditorView;
 
-},{"../Core/AWView":10}],56:[function(require,module,exports){
+},{"../Core/AWView":10}],57:[function(require,module,exports){
 nsPrefs = {};
 
 nsPrefs.nsConst = {};
@@ -7227,7 +7245,7 @@ nsPrefs.nsConst.BAR_GRAPHS = 0;
 nsPrefs.nsConst.PIE_GRAPHS = 1;
 
 nsPrefs.oGraphType = new nsPrefs.Preference(nsPrefs.nsConst.PIE_GRAPHS, 'Pie charts are yummy.');
-},{}],57:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 "use strict"
 var AWModel = require('../Core/AWModel');
 var nsUtil = require('../Core/Util');
@@ -7260,7 +7278,7 @@ var SettingsModel = AWModel.extend({
 });
 module.exports = SettingsModel;
 
-},{"../Core/AWModel":9,"../Core/Util":16}],58:[function(require,module,exports){
+},{"../Core/AWModel":9,"../Core/Util":16}],59:[function(require,module,exports){
 var Backbone = require('backbone');
 
 var SettingsView = Backbone.View.extend({
@@ -7331,7 +7349,7 @@ var SettingsView = Backbone.View.extend({
 });
 
 module.exports = SettingsView;
-},{"backbone":63}],59:[function(require,module,exports){
+},{"backbone":64}],60:[function(require,module,exports){
 var nsRange = require('../Range/RangeLibrary');
 var nsUtil = require('../Core/Util');
 var Backbone = require('backbone');
@@ -7406,7 +7424,7 @@ var Slider = Backbone.Model.extend({
 
 module.exports = Slider;
 
-},{"../Core/Util":16,"../Range/RangeLibrary":47,"backbone":63,"underscore":66}],60:[function(require,module,exports){
+},{"../Core/Util":16,"../Range/RangeLibrary":48,"backbone":64,"underscore":67}],61:[function(require,module,exports){
 var Backbone = require('backbone');
 var noUiSlider = require('nouislider');
 
@@ -7429,29 +7447,19 @@ var SliderView = Backbone.View.extend({
             tooltips: false
         }); 
         
+        //todo add something like debounce
         slider.on('update', function(values) {
             that.model.set({
                 value: values[0] 
             });
         });        
-/*
-        this.$el.slider({
-            change: function(e, ui) {
-                that.model.trigger('finalize', ui.value);
-            },
-            slide: function(event, ui) {
-            },
-            max: that.model.get("max"),
-            min: that.model.get("min"),
-            value: that.model.get("value")
-        });
-*/
+
+        slider.on('end', function(values) {
+            that.model.trigger('finalize', values[0]);
+        });        
+
         this.listenTo(this.model, "change:value", this.render);
         this.on('update', this.update);
-
-        /*this.handle = $('.range_slider_bg').parent().find('a')[0];
-        this.handleParent = $(this.handle).parent()[0];
-        this.bg = $('.range_slider_bg')[0];*/
     },
     handle: null,
     handleParent: null,
@@ -7462,21 +7470,19 @@ var SliderView = Backbone.View.extend({
         this.bg.style.right = valToSet; //('right',valToSet);*/
         var value = this.model.get('value');
         $("#range_slider_val").html(value + '%');
-        $('.range_slider_bg').css('width', 100.0 * value / this.model.get('max') + '%');
+    
     },
     update: function(value) { //changing the slider programatically
         if (typeof value == "undefined")
             value = this.model.get("value");
         //nsUtil.fLog('manual SET trigger with value ' +this.model.get('value'));
-        this.$el.slider({
-            "value": value
-        });
+        this.slider.set(value);    
     }
 });
 
 module.exports = SliderView;
 
-},{"backbone":63,"nouislider":65}],61:[function(require,module,exports){
+},{"backbone":64,"nouislider":66}],62:[function(require,module,exports){
 
 var nsWorker = {};
 
@@ -7800,7 +7806,7 @@ nsWorker.getFlushSuitAndNumber = function(board, oPair) {
     };
 };
 
-},{}],62:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 
 var nsWorkerTextures = {};
 
@@ -7925,7 +7931,7 @@ var fPostProgress = function(sMessage) {
         msg: sMessage
     });
 };
-},{}],63:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.3.3
 
@@ -9849,7 +9855,7 @@ var fPostProgress = function(sMessage) {
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":64,"underscore":66}],64:[function(require,module,exports){
+},{"jquery":65,"underscore":67}],65:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.2.1
  * https://jquery.com/
@@ -20104,7 +20110,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{}],65:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 /*! nouislider - 10.1.0 - 2017-07-28 17:11:18 */
 
 (function (factory) {
@@ -22417,7 +22423,7 @@ function closure ( target, options, originalOptions ){
 	};
 
 }));
-},{}],66:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -23967,4 +23973,4 @@ function closure ( target, options, originalOptions ){
   }
 }.call(this));
 
-},{}]},{},[38,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62]);
+},{}]},{},[39,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63]);

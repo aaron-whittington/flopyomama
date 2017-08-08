@@ -3,6 +3,8 @@ var Pair = require('../Pair/Pair');
 var sklanskyRanges = require('./RangeScaleSklansky');
 var procentualRanges = require('./RangeScaleProcentual'); 
 var poker = require('../Constants/Poker');
+var nsFilter = require('../Filter/Filter');
+var nsUtil = require('../Core/Util');
 
 var nsRange = {};
 
@@ -58,7 +60,7 @@ nsRange.fKillCurrentWorkers = function() {
 };
 
 
-nsRange.fGetAllUnknownCombinationsThreaded = function() {
+nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards) {
     $('.no_results').remove();
     var MAX_WORKERS = 4;
     var workerDoneCount = 0;
@@ -72,9 +74,9 @@ nsRange.fGetAllUnknownCombinationsThreaded = function() {
 
     var aoStartingHands = nsRange.fGetStartingHandsFromRangeGrid();
 
-    var aKnownCards = flopYoMama.knownCards.allKnown(true);
-    var aUnknownCards = flopYoMama.knownCards.allUnknown(true);
-    var aFixedBoardCards = flopYoMama.knownCards.get('board').map(function(m) {
+    var aKnownCards = knownCards.allKnown(true);
+    var aUnknownCards = knownCards.allUnknown(true);
+    var aFixedBoardCards = knownCards.get('board').map(function(m) {
         return m.attributes;
     });
     var numberOfOpenBoardHandPlaces = 7 - aKnownCards.length;
@@ -97,7 +99,8 @@ nsRange.fGetAllUnknownCombinationsThreaded = function() {
             var test2 = state.toString();
 
         }
-        var worker = new Worker('JS/' + sWorkerName);
+        var worker = new Worker('JS/Worker/' + sWorkerName);
+
         nsRange.aCurrentWorkers.push(worker);
 
         worker.addEventListener('message', function(e) {
@@ -241,7 +244,7 @@ nsRange.fGetAllUnknownCombinationsThreaded = function() {
     }
 };
 
-nsRange.fGetTextures = function() {
+nsRange.fGetTextures = function(knownCards) {
     if (typeof(Worker) === "undefined") {
         alert('Browser must support webworkers!');
         return;
@@ -249,15 +252,15 @@ nsRange.fGetTextures = function() {
     $('.no_results').remove();
     //aoStartingHands,aKnownCards,aFixedBoardCards
     var aoStartingHands = nsRange.fGetStartingHandsFromRangeGrid();
-    var aKnownCards = flopYoMama.knownCards.allKnown(true);
-    var aFixedBoardCards = flopYoMama.knownCards.get('board').map(function(m) {
+    var aKnownCards = knownCards.allKnown(true);
+    var aFixedBoardCards = knownCards.get('board').map(function(m) {
         return m.attributes;
     });
     var oFilter = nsFilter.fActiveFilter(null, true);
 
     var fStartWorker = function() {
         var sWorkerName = 'WorkerTextures.js';
-        var worker = new Worker('JS/' + sWorkerName); //don't know why I specify path like this from html root	
+        var worker = new Worker('JS/Worker/' + sWorkerName); //don't know why I specify path like this from html root	
         worker.addEventListener('message', function(e) {
             if (e.data.type === 'console')
                 nsUtil.fLog(e.data.msg);

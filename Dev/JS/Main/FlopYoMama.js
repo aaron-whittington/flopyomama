@@ -1,4 +1,8 @@
 ﻿FlopYoMama = require('./FlopYoMamaModel');
+nsHtml = require('../Core/Html');
+nsUi = require('../Core/Ui');
+globalUi = require('../Constants/Ui');
+
 $(document).ready(function() {
     /**********************************************PROGRESS BARS***************************************************************/
 
@@ -120,7 +124,7 @@ $(document).ready(function() {
 
     $("#known_cards").popover({
         content: function() {
-            return nsHtml.fGetBoardSelectionTable();
+            return nsHtml.fGetBoardSelectionTable(flopYoMama.knownCards);
         },
         container: '#known_cards',
         placement: 'bottom',
@@ -159,7 +163,7 @@ $(document).ready(function() {
             $(this).removeClass('disabled selected');
         } else { //if it's not selected, select it and added to the board, mark it as selected and disabled
             var sReplaced = flopYoMama.knownCardsView.setBoardCard($(this).html());
-            if (sReplaced !== EMPTY_CARD_STRING) { //we replaced a card so disable it in the board
+            if (sReplaced !== globalUi.EMPTY_CARD_STRING) { //we replaced a card so disable it in the board
                 $('#board_selection_table .card').each(function() {
                     if ($(this).html() === sReplaced) {
                         $(this).removeClass('disabled selected');
@@ -211,9 +215,8 @@ $(document).ready(function() {
     }, 1);
 });
 
-var flopYoMama = {};
 $(function() {
     $('#content').removeClass('preload');
-    flopYoMama = new FlopYoMama(); 
-    flopYoMama.setUp();
+    window.flopYoMama = new FlopYoMama(); 
+    window.flopYoMama.setUp();
 });

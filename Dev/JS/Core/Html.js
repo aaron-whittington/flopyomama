@@ -1,18 +1,21 @@
 ﻿
+var nsUtil = require('./Util');
+var nsConvert = require('./Convert');
+
 var nsHtml = {};
 
-nsHtml.fGetBoardSelectionTable = function() {
+nsHtml.fGetBoardSelectionTable = function(knownCards) {
     var sReturn = "<div id='board_selection_table'>";
-    var aCards = flopYoMama.allCards;
+    var aCards = knownCards.allUnknown();
 
     for (var suit = 4; suit > 0; suit--) {
         sReturn += "<div style='white-space: nowrap;'>";
-        aCards.each(function(c) {
+        aCards.forEach(function(c) {
             if (c.get('suit') != suit) {
                 return;
             }
 
-            var found = flopYoMama.knownCards.allKnown().where({
+            var found = knownCards.allKnown().where({
                 'suit': c.get('suit'),
                 'rank': c.get('rank')
             }).length > 0;
@@ -25,8 +28,8 @@ nsHtml.fGetBoardSelectionTable = function() {
 };
 
 //this is inefficient if we've just got a little change
-nsHtml.fRedrawBoardSelectionTable = function() {
-    $('#board_selection_table').parent().html(nsHtml.fGetBoardSelectionTable);
+nsHtml.fRedrawBoardSelectionTable = function(knownCards) {
+    $('#board_selection_table').parent().html(nsHtml.fGetBoardSelectionTable(knownCards));
 };
 
 nsHtml.fWrapCard = function(id, bDisabled, bSelected) {

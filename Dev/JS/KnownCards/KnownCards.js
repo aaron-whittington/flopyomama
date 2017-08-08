@@ -21,19 +21,20 @@ var KnownCards = AWModel.extend({
         } else {
             return cl;
         }
-
     },
     allUnknown: function(bToAtts) {
         var allKnown = this.allKnown();
         return this.get('deck').getDifference(allKnown, bToAtts);
     },
     initialize: function() {
+        var that = this;
         //was nsUI.fAfterBoardChnage
         this.on('finalize', function() {
-            nsHtml.fRedrawBoardSelectionTable();
+            nsHtml.fRedrawBoardSelectionTable(that);
             this.evaluateKnownCards();
             this.saveBoardState();
-            flopYoMama.updateRoute();
+            //TODO fix routing
+            //flopYoMama.updateRoute();
         });
 
         //manually set the hand and the board ... change to manual  
@@ -56,13 +57,12 @@ var KnownCards = AWModel.extend({
 
     }, 
     evaluateKnownCards: function() {
-        var knownCards = this;
-        var aCards = knownCards.allKnown(true);
+        var aCards = this.allKnown(true);
 
-        var bBoardState = knownCards.getBoardState();
+        var bBoardState = this.getBoardState();
 
         if (bBoardState.bFlop) {
-            nsRange.fGetTextures();
+            nsRange.fGetTextures(this);
         } else {
               //todo this should be in the range view
             $('#textures').html(''); //delete the range textures
@@ -70,7 +70,7 @@ var KnownCards = AWModel.extend({
 
         if (bBoardState.bFlop && bBoardState.bHand && nsPrefs.oAutomaticSearch.fGet()) {
 
-             nsRange.fGetAllUnknownCombinationsThreaded();
+             nsRange.fGetAllUnknownCombinationsThreaded(this);
         } else {
                nsUI.fDeleteLongStatistics();
         }
