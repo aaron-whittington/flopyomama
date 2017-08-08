@@ -3024,6 +3024,7 @@ module.exports = nsDrawingHand;
 
 var oHand = {};
 
+//TODO, I don't know why I make this silly object
 oHand = {
     rank: 0,
     high: -1,
@@ -3037,6 +3038,7 @@ oHand = {
     drawinghands: []
 };
 
+//TODO move to constants
 oHand.HIGH_CARD = 0;
 oHand.PAIR = 1;
 oHand.TWO_PAIR = 2;
@@ -5492,16 +5494,16 @@ var RangeItemView = AWView.extend({
 module.exports = RangeItemView;
 
 },{"../Core/AWView":10,"underscore":67}],48:[function(require,module,exports){
-var $ = require('jquery');
-var Pair = require('../Pair/Pair');
-var sklanskyRanges = require('./RangeScaleSklansky');
-var procentualRanges = require('./RangeScaleProcentual'); 
-var poker = require('../Constants/Poker');
-var nsFilter = require('../Filter/Filter');
-var nsUtil = require('../Core/Util');
-var work = require('webworkify');
+$ = require('jquery');
+Pair = require('../Pair/Pair');
+sklanskyRanges = require('./RangeScaleSklansky');
+procentualRanges = require('./RangeScaleProcentual'); 
+poker = require('../Constants/Poker');
+nsFilter = require('../Filter/Filter');
+nsUtil = require('../Core/Util');
+work = require('webworkify');
 
-var nsRange = {};
+nsRange = {};
 
 nsRange.getSlanskyFromPercent = function(fPercent) {
     var aReturn = [];
@@ -5556,7 +5558,7 @@ nsRange.fKillCurrentWorkers = function() {
 
 
 nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards) {
-    return;
+
     $('.no_results').remove();
     var MAX_WORKERS = 4;
     var workerDoneCount = 0;
@@ -5707,7 +5709,7 @@ nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards) {
 
                 }
             }
-            //nsUtil.fLog('message received: ' + e.data);
+            nsUtil.fLog('message received: ' + JSON.stringify(e.data));
         }, false);
 
         worker.postMessage({
@@ -7513,7 +7515,7 @@ module.exports = function(self) {
     nsWorker.fCalculateBoards = function(aoStartingHands, aKnownCards, aUnknownCards, aFixedBoardCards, numberOfOpenBoardHandPlaces, oFilter) {
 
         var startTime = new Date().getTime();
-        var totalCombinations = nsMath.combine(aUnknownCards.length, numberOfOpenBoardHandPlaces);
+        var totalCombinations = nsMath.numberOfCombinations(aUnknownCards.length, numberOfOpenBoardHandPlaces);
         var numberDone = 0;
 
         var oNsHand = nsHand;
@@ -7657,7 +7659,7 @@ module.exports = function(self) {
             var currentPercent = numberDone / approxTotalComb;
 
             if (numberDone % 500 === 0) //only post 1500 rounds
-                self.fPostProgress({
+                fPostProgress({
                     iCountWon: iCountWon,
                     iCountLost: iCountLost,
                     iCountDraw: iCountDraw,
@@ -7671,7 +7673,7 @@ module.exports = function(self) {
         var consoleStringReport = "";
         fPostConsole("operation took " + (endTime - startTime) / 1000.0 + 's');
         fPostConsole("approximation of total " + approxTotalComb + ' real total ' + numberDone);
-        self.fPostDone({
+        fPostDone({
             iCountWon: iCountWon,
             iCountLost: iCountLost,
             iCountDraw: iCountDraw,

@@ -28,7 +28,7 @@ module.exports = function(self) {
     nsWorker.fCalculateBoards = function(aoStartingHands, aKnownCards, aUnknownCards, aFixedBoardCards, numberOfOpenBoardHandPlaces, oFilter) {
 
         var startTime = new Date().getTime();
-        var totalCombinations = nsMath.combine(aUnknownCards.length, numberOfOpenBoardHandPlaces);
+        var totalCombinations = nsMath.numberOfCombinations(aUnknownCards.length, numberOfOpenBoardHandPlaces);
         var numberDone = 0;
 
         var oNsHand = nsHand;
@@ -172,7 +172,7 @@ module.exports = function(self) {
             var currentPercent = numberDone / approxTotalComb;
 
             if (numberDone % 500 === 0) //only post 1500 rounds
-                self.fPostProgress({
+                fPostProgress({
                     iCountWon: iCountWon,
                     iCountLost: iCountLost,
                     iCountDraw: iCountDraw,
@@ -186,7 +186,7 @@ module.exports = function(self) {
         var consoleStringReport = "";
         fPostConsole("operation took " + (endTime - startTime) / 1000.0 + 's');
         fPostConsole("approximation of total " + approxTotalComb + ' real total ' + numberDone);
-        self.fPostDone({
+        fPostDone({
             iCountWon: iCountWon,
             iCountLost: iCountLost,
             iCountDraw: iCountDraw,

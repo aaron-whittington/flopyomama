@@ -1,13 +1,13 @@
-﻿var $ = require('jquery');
-var Pair = require('../Pair/Pair');
-var sklanskyRanges = require('./RangeScaleSklansky');
-var procentualRanges = require('./RangeScaleProcentual'); 
-var poker = require('../Constants/Poker');
-var nsFilter = require('../Filter/Filter');
-var nsUtil = require('../Core/Util');
-var work = require('webworkify');
+﻿$ = require('jquery');
+Pair = require('../Pair/Pair');
+sklanskyRanges = require('./RangeScaleSklansky');
+procentualRanges = require('./RangeScaleProcentual'); 
+poker = require('../Constants/Poker');
+nsFilter = require('../Filter/Filter');
+nsUtil = require('../Core/Util');
+work = require('webworkify');
 
-var nsRange = {};
+nsRange = {};
 
 nsRange.getSlanskyFromPercent = function(fPercent) {
     var aReturn = [];
@@ -62,7 +62,7 @@ nsRange.fKillCurrentWorkers = function() {
 
 
 nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards) {
-    return;
+
     $('.no_results').remove();
     var MAX_WORKERS = 4;
     var workerDoneCount = 0;
@@ -213,7 +213,7 @@ nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards) {
 
                 }
             }
-            //nsUtil.fLog('message received: ' + e.data);
+            nsUtil.fLog('message received: ' + JSON.stringify(e.data));
         }, false);
 
         worker.postMessage({
