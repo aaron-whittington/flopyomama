@@ -5,6 +5,7 @@ var procentualRanges = require('./RangeScaleProcentual');
 var poker = require('../Constants/Poker');
 var nsFilter = require('../Filter/Filter');
 var nsUtil = require('../Core/Util');
+var work = require('webworkify');
 
 var nsRange = {};
 
@@ -61,6 +62,7 @@ nsRange.fKillCurrentWorkers = function() {
 
 
 nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards) {
+    return;
     $('.no_results').remove();
     var MAX_WORKERS = 4;
     var workerDoneCount = 0;
@@ -92,14 +94,13 @@ nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards) {
 
     var fStartWorker = function(aSplitStartingHands) {
 
-        var sWorkerName = 'Worker.js';
         var state = window.history.state;
         if (state !== null) {
             var test = state.valueOf();
             var test2 = state.toString();
 
         }
-        var worker = new Worker('JS/Worker/' + sWorkerName);
+        var worker = new work(require('../Worker/Worker'));
 
         nsRange.aCurrentWorkers.push(worker);
 
@@ -259,8 +260,9 @@ nsRange.fGetTextures = function(knownCards) {
     var oFilter = nsFilter.fActiveFilter(null, true);
 
     var fStartWorker = function() {
-        var sWorkerName = 'WorkerTextures.js';
-        var worker = new Worker('JS/Worker/' + sWorkerName); //don't know why I specify path like this from html root	
+
+        var worker = new work(require('../Worker/WorkerTextures'));
+
         worker.addEventListener('message', function(e) {
             if (e.data.type === 'console')
                 nsUtil.fLog(e.data.msg);
@@ -277,7 +279,7 @@ nsRange.fGetTextures = function(knownCards) {
                     nsHtml.fDrawTexturePie(oResult);
                 }
             }
-            //nsUtil.fLog('message received: ' + e.data);
+            nsUtil.fLog('message received from texture worker: ' + JSON.stringify(e.data));
         }, false);
 
         worker.postMessage({

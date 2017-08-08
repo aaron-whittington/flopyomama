@@ -626,7 +626,7 @@ var nsHtml = {};
 
 nsHtml.fGetBoardSelectionTable = function(knownCards) {
     var sReturn = "<div id='board_selection_table'>";
-    var aCards = knownCards.allUnknown();
+    var aCards = knownCards.get('deck').models;
 
     for (var suit = 4; suit > 0; suit--) {
         sReturn += "<div style='white-space: nowrap;'>";
@@ -639,6 +639,7 @@ nsHtml.fGetBoardSelectionTable = function(knownCards) {
                 'suit': c.get('suit'),
                 'rank': c.get('rank')
             }).length > 0;
+
             sReturn += nsHtml.fWrapCard(c.attributes, found, found);
         });
         sReturn += "</div>";
@@ -2780,12 +2781,14 @@ nsFilterHtml.fRemoveFilterButton = function() {
 
 module.exports = nsFilterHtml;
 },{"../Core/Util":16,"./Filter":18}],20:[function(require,module,exports){
-
+var nsHand = require('./NSHand');
+var oHand = require('./Hand');
 var nsDrawingHand = {};
 
 /*drawing hands*/
 nsDrawingHand.bIgnoreBackdoorDraws = true;
 
+//TODO put these in constants folder
 nsDrawingHand.BACKDOOR_STRAIGHT_DRAW = 0;
 nsDrawingHand.BACKDOOR_FLUSH_DRAW = 1;
 nsDrawingHand.GUTSHOT_STRAIGHT_DRAW = 2;
@@ -2798,12 +2801,7 @@ nsDrawingHand.fDrawingHandToShortString = function(oDrawingHand) {
     return sLong.substring(0, iDraw - 1);
 }
 
-//nsHand.oHandStringCache = {};
 nsDrawingHand.fDrawingHandToString = function(oDrawingHand) {
-    //actually made stuff slower var cache = nsHand.oHandStringCache[hand];
-    //if (typeof cache !== 'undefined')
-    //	return cache;
-
     var rankString = "";
     switch (oDrawingHand.rank) {
         case nsDrawingHand.BACKDOOR_STRAIGHT_DRAW:
@@ -3021,7 +3019,7 @@ nsDrawingHand.fFindBestStraightDraw = function(aCards) {
 
 module.exports = nsDrawingHand;
 
-},{}],21:[function(require,module,exports){
+},{"./Hand":21,"./NSHand":22}],21:[function(require,module,exports){
 
 
 var oHand = {};
@@ -3498,8 +3496,7 @@ var KnownCards = AWModel.extend({
             nsHtml.fRedrawBoardSelectionTable(that);
             this.evaluateKnownCards();
             this.saveBoardState();
-            //TODO fix routing
-            //flopYoMama.updateRoute();
+            window.flopYoMama.updateRoute();
         });
 
         //manually set the hand and the board ... change to manual  
@@ -4012,7 +4009,6 @@ $(document).ready(function() {
         },
         container: '#known_cards',
         placement: 'bottom',
-        /*was 'auto bottom' ... new version of bootstrap broke it*/
         trigger: 'manual',
         html: true
     });
@@ -4220,6 +4216,8 @@ MenuListModel = require('./MenuListModel');
 MenuView = require('./MenuView');
 nsConvert = require('../Core/Convert');
 
+//TODO remove these extra document readies, rename the files to CreateInstance, 
+//and then instantiate from the flopYoMama class.
 $(function() {
     var standardGroup = new MenuItemGroup();
     var rangeMenuActionGroup = new MenuItemGroup('clearboard', false);
@@ -5501,6 +5499,7 @@ var procentualRanges = require('./RangeScaleProcentual');
 var poker = require('../Constants/Poker');
 var nsFilter = require('../Filter/Filter');
 var nsUtil = require('../Core/Util');
+var work = require('webworkify');
 
 var nsRange = {};
 
@@ -5557,6 +5556,7 @@ nsRange.fKillCurrentWorkers = function() {
 
 
 nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards) {
+    return;
     $('.no_results').remove();
     var MAX_WORKERS = 4;
     var workerDoneCount = 0;
@@ -5588,14 +5588,13 @@ nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards) {
 
     var fStartWorker = function(aSplitStartingHands) {
 
-        var sWorkerName = 'Worker.js';
         var state = window.history.state;
         if (state !== null) {
             var test = state.valueOf();
             var test2 = state.toString();
 
         }
-        var worker = new Worker('JS/Worker/' + sWorkerName);
+        var worker = new work(require('../Worker/Worker'));
 
         nsRange.aCurrentWorkers.push(worker);
 
@@ -5755,8 +5754,9 @@ nsRange.fGetTextures = function(knownCards) {
     var oFilter = nsFilter.fActiveFilter(null, true);
 
     var fStartWorker = function() {
-        var sWorkerName = 'WorkerTextures.js';
-        var worker = new Worker('JS/Worker/' + sWorkerName); //don't know why I specify path like this from html root	
+
+        var worker = new work(require('../Worker/WorkerTextures'));
+
         worker.addEventListener('message', function(e) {
             if (e.data.type === 'console')
                 nsUtil.fLog(e.data.msg);
@@ -5773,7 +5773,7 @@ nsRange.fGetTextures = function(knownCards) {
                     nsHtml.fDrawTexturePie(oResult);
                 }
             }
-            //nsUtil.fLog('message received: ' + e.data);
+            nsUtil.fLog('message received from texture worker: ' + JSON.stringify(e.data));
         }, false);
 
         worker.postMessage({
@@ -5818,7 +5818,7 @@ nsRange.fGetStartingHandsFromRangeGrid = function(bAll) {
 
 module.exports = nsRange;
 
-},{"../Constants/Poker":5,"../Core/Util":16,"../Filter/Filter":18,"../Pair/Pair":35,"./RangeScaleProcentual":49,"./RangeScaleSklansky":50,"jquery":65}],49:[function(require,module,exports){
+},{"../Constants/Poker":5,"../Core/Util":16,"../Filter/Filter":18,"../Pair/Pair":35,"../Worker/Worker":62,"../Worker/WorkerTextures":63,"./RangeScaleProcentual":49,"./RangeScaleSklansky":50,"jquery":65,"webworkify":68}],49:[function(require,module,exports){
 
 var range = {};
 range.aStatData = [];
@@ -7484,454 +7484,461 @@ module.exports = SliderView;
 
 },{"backbone":64,"nouislider":66}],62:[function(require,module,exports){
 
-var nsWorker = {};
+var _ = require('underscore');
+var nsMath = require('../Core/Math');
+var nsHand = require('../Hand/NSHand');
+var nsConvert = require('../Core/Convert');
 
-self.addEventListener('message', function(e) {
-    var data = e.data;
-    switch (data.cmd) {
-        case 'start':
-            //self.postMessage({'command recieved start');
-            importScripts("../Lib/underscore/underscore-min.js", '../Core/Math.js', '../Core/Hand.js', '../Core/Convert.js');
+module.exports = function(self) {
+    var nsWorker = {};
+    self.addEventListener('message', function(e) {
+        var data = e.data;
+        switch (data.cmd) {
+            case 'start':
+                //self.postMessage({'command recieved start');
+                //importScripts("../../Lib/underscore/underscore-min.js", '../../Core/Math.js', '../../Core/Hand.js', '../../Core/Convert.js');
 
 
-            nsWorker.fCalculateBoards(data.aoStartingHands, data.aKnownCards, data.aUnknownCards, data.aFixedBoardCards, data.numberOfOpenBoardHandPlaces, data.oFilter);
-            break;
-        case 'stop':
-            self.close(); // Terminates the worker.
-            break;
-        default:
-            self.postMessage('Unknown command: ' + data.msg);
-    }
-}, false);
+                nsWorker.fCalculateBoards(data.aoStartingHands, data.aKnownCards, data.aUnknownCards, data.aFixedBoardCards, data.numberOfOpenBoardHandPlaces, data.oFilter);
+                break;
+            case 'stop':
+                self.close(); // Terminates the worker.
+                break;
+            default:
+                self.postMessage('Unknown command: ' + data.msg);
+        }
+    }, false);
 
-//aoStartingHands = array of CardPair objects (like AAs)
-nsWorker.fCalculateBoards = function(aoStartingHands, aKnownCards, aUnknownCards, aFixedBoardCards, numberOfOpenBoardHandPlaces, oFilter) {
+    //aoStartingHands = array of CardPair objects (like AAs)
+    nsWorker.fCalculateBoards = function(aoStartingHands, aKnownCards, aUnknownCards, aFixedBoardCards, numberOfOpenBoardHandPlaces, oFilter) {
 
-    self.fPostConsole("STARTING HANDS: " + JSON.stringify(aoStartingHands));
-    self.fPostConsole("KNOWN CARDS: " + JSON.stringify(aKnownCards));
-    self.fPostConsole("UNKNOWN CARDS: " + JSON.stringify(aUnknownCards));
-    self.fPostConsole("FIXED BOARD CARDS: " + JSON.stringify(aFixedBoardCards));
-    self.fPostConsole("NUMBER OF OPEN BOARD PLACES " + JSON.stringify(numberOfOpenBoardHandPlaces));
+        var startTime = new Date().getTime();
+        var totalCombinations = nsMath.combine(aUnknownCards.length, numberOfOpenBoardHandPlaces);
+        var numberDone = 0;
 
-    var startTime = new Date().getTime();
-    var totalCombinations = fNumberOfCombinations(aUnknownCards.length, numberOfOpenBoardHandPlaces);
-    var numberDone = 0;
+        var oNsHand = nsHand;
+        //calculate length of operation
+        var allStartingPairs = [];
+        var startLength = aoStartingHands.length;
+        var totalCombinationsMultiplier = 0;
+        var oPair, i;
 
-    var oNsHand = nsHand;
-    //calculate length of operation
-    var allStartingPairs = [];
-    var startLength = aoStartingHands.length;
-    var totalCombinationsMultiplier = 0;
-    var oPair, i;
+        for (i = 0; i < startLength; i++) {
+            oPair = aoStartingHands[i].oPair;
+            var actualPairs = aoStartingHands[i].aPair; //now we have an array of villain's starting hands
+            allStartingPairs.push(actualPairs);
+            totalCombinationsMultiplier += actualPairs.length;
+        }
 
-    for (i = 0; i < startLength; i++) {
-        oPair = aoStartingHands[i].oPair;
-        var actualPairs = aoStartingHands[i].aPair; //now we have an array of villain's starting hands
-        allStartingPairs.push(actualPairs);
-        totalCombinationsMultiplier += actualPairs.length;
-    }
+        var approxTotalComb = totalCombinations * totalCombinationsMultiplier / 1.14; //from empirical testing 1.139
 
-    var approxTotalComb = totalCombinations * totalCombinationsMultiplier / 1.14; //from empirical testing 1.139
+        //var combinatoricsStartTime= new Date().getTime(); COMBINATORICS FAST
+        var aBoards = nsMath.combine(aUnknownCards, numberOfOpenBoardHandPlaces);
 
-    //var combinatoricsStartTime= new Date().getTime(); COMBINATORICS FAST
-    var aBoards = nsMath.combine(aUnknownCards, numberOfOpenBoardHandPlaces);
+        if (aBoards.length === 0) { //board is full but we want to go once through the loop anyway {
+            aBoards[0] = [];
+        }
 
-    if (aBoards.length === 0) { //board is full but we want to go once through the loop anyway {
-        aBoards[0] = [];
-    }
+        var iCountWon = 0,
+            iCountLost = 0,
+            iCountDraw = 0;
 
-    var iCountWon = 0,
-        iCountLost = 0,
-        iCountDraw = 0;
+        var oHandStatDic = {};
+        var oVillainStaticDic = {};
 
-    var oHandStatDic = {};
-    var oVillainStaticDic = {};
+        var oResultsCache = {}; //results cache
 
-    var oResultsCache = {}; //results cache
+        var boardsLength = aBoards.length;
 
-    var boardsLength = aBoards.length;
+        //self.fPostConsole('board length ' + boardsLength);
+        for (var iBoard = boardsLength - 1; iBoard >= 0; iBoard--) {
+            //now loop through each opponent hand for each board
+            var aCurrentKnown = aKnownCards;
+            aCurrentKnown = aCurrentKnown.concat(aBoards[iBoard]);
 
-    //self.fPostConsole('board length ' + boardsLength);
-    for (var iBoard = boardsLength - 1; iBoard >= 0; iBoard--) {
-        //now loop through each opponent hand for each board
-        var aCurrentKnown = aKnownCards;
-        aCurrentKnown = aCurrentKnown.concat(aBoards[iBoard]);
+            //instead of this, loop through the pair objects themselves
+            //if the pair has a flush possibility with the given board, loop through all boards
+            //if the pair has no flush possibility with the given board, check it once against hero
+            //then multiply the results time the number of pairs in the pair type (minus the number which contain dead cards)
+            var oHeroHand = oNsHand.fGetBestHand(aCurrentKnown);
 
-        //instead of this, loop through the pair objects themselves
-        //if the pair has a flush possibility with the given board, loop through all boards
-        //if the pair has no flush possibility with the given board, check it once against hero
-        //then multiply the results time the number of pairs in the pair type (minus the number which contain dead cards)
-        var oHeroHand = oNsHand.fGetBestHand(aCurrentKnown);
+            var realBoard = aFixedBoardCards.concat(aBoards[iBoard]); //board after concating speculative board 
+            var aVillainHand, oVillainHand, iWon;
 
-        var realBoard = aFixedBoardCards.concat(aBoards[iBoard]); //board after concating speculative board 
-        var aVillainHand, oVillainHand, iWon;
+            var iWonMagnitude, sPair; //numbe of won lost or drawn combinations
 
-        var iWonMagnitude, sPair; //numbe of won lost or drawn combinations
+            var startingHandLengths = aoStartingHands.length;
 
-        var startingHandLengths = aoStartingHands.length;
+            var boardFlushPossibility;
 
-        var boardFlushPossibility;
+            for (var iVillainPair = startingHandLengths - 1; iVillainPair >= 0; iVillainPair--) {
+                //get the villain pair
+                oPair = aoStartingHands[iVillainPair].oPair;
+                sPair = aoStartingHands[iVillainPair].sPair;
 
-        for (var iVillainPair = startingHandLengths - 1; iVillainPair >= 0; iVillainPair--) {
-            //get the villain pair
-            oPair = aoStartingHands[iVillainPair].oPair;
-            sPair = aoStartingHands[iVillainPair].sPair;
+                var oPairArray = nsConvert.fFilterCardPairArray(aoStartingHands[iVillainPair].aPair, aCurrentKnown, oFilter[sPair]);
 
-            var oPairArray = fFilterCardPairArray(aoStartingHands[iVillainPair].aPair, aCurrentKnown, oFilter[sPair]);
+                boardFlushPossibility = nsWorker.getFlushSuitAndNumber(realBoard, oPair);
 
-            boardFlushPossibility = nsWorker.getFlushSuitAndNumber(realBoard, oPair);
+                //split oPairArray into those which can hit flush and those which cannot
+                var oPairCanHitFlush = [];
+                var oPairCannotHitFlush = [];
+                var oPairLength = oPairArray.length;
+                for (i = 0; i < oPairLength; i++) {
+                    var pair = oPairArray[i];
+                    var numberOfSuit = 0;
+                    if (pair[0].suit === boardFlushPossibility.flushSuit)
+                        numberOfSuit++;
+                    if (pair[1].suit === boardFlushPossibility.flushSuit)
+                        numberOfSuit++;
 
-            //split oPairArray into those which can hit flush and those which cannot
-            var oPairCanHitFlush = [];
-            var oPairCannotHitFlush = [];
-            var oPairLength = oPairArray.length;
-            for (i = 0; i < oPairLength; i++) {
-                var pair = oPairArray[i];
-                var numberOfSuit = 0;
-                if (pair[0].suit === boardFlushPossibility.flushSuit)
-                    numberOfSuit++;
-                if (pair[1].suit === boardFlushPossibility.flushSuit)
-                    numberOfSuit++;
+                    if (numberOfSuit + boardFlushPossibility.numberFound >= 5) //flush there
+                        oPairCanHitFlush.push(pair);
+                    else
+                        oPairCannotHitFlush.push(pair); //for test only pair can hit flush
+                }
 
-                if (numberOfSuit + boardFlushPossibility.numberFound >= 5) //flush there
-                    oPairCanHitFlush.push(pair);
-                else
-                    oPairCannotHitFlush.push(pair); //for test only pair can hit flush
+                iWonMagnitude = 0;
+
+                var iWinCountLocal = 0,
+                    iDrawCountLocal = 0,
+                    iLossCountLocal = 0;
+
+                if (oPairCannotHitFlush.length > 0) { //now we don't have to look for flushes, checking the first pair of this suffices
+
+                    //standardize all 7 cards
+                    iWonMagnitude = oPairCannotHitFlush.length;
+
+                    aVillainHand = [];
+                    aVillainHand = oPairCannotHitFlush[0].concat(aFixedBoardCards).concat(aBoards[iBoard]);
+
+                    oVillainHand = oNsHand.fGetBestHand(aVillainHand);
+                    if (typeof oVillainHand === "undefined")
+                        fLogCards(aVillainHand, 'Something went wrong here 135');
+
+                    iWon = oNsHand.fCompareHand(oHeroHand, oVillainHand) * -1;
+                    iWinCountLocal = iWon > 0 ? iWonMagnitude : iWinCountLocal;
+                    iDrawCountLocal = iWon === 0 ? iWonMagnitude : iDrawCountLocal;
+                    iLossCountLocal = iWon < 0 ? iWonMagnitude : iLossCountLocal;
+
+                    iCountWon += iWinCountLocal;
+                    iCountDraw += iDrawCountLocal;
+                    iCountLost += iLossCountLocal;
+                    numberDone += iWonMagnitude;
+
+                    fAddToRecordDic(oVillainStaticDic, oNsHand.fHandToString(oVillainHand), -1 * iWon, iWonMagnitude);
+                    fAddToRecordDic(oHandStatDic, oNsHand.fHandToString(oHeroHand), iWon, iWonMagnitude, true);
+
+
+                } //now loop through those which do hit flush
+
+                for (i = 0; i < oPairCanHitFlush.length; i++) {
+                    //evaluate villain hand
+
+                    aVillainHand = [];
+                    aVillainHand = oPairCanHitFlush[i].concat(aFixedBoardCards).concat(aBoards[iBoard]);
+                    oVillainHand = oNsHand.fGetBestHand(aVillainHand);
+
+                    iWon = oNsHand.fCompareHand(oHeroHand, oVillainHand) * -1;
+                    iWinCountLocal = iWon > 0 ? ++iWinCountLocal : iWinCountLocal;
+                    iDrawCountLocal = iWon === 0 ? ++iDrawCountLocal : iDrawCountLocal;
+                    iLossCountLocal = iWon < 0 ? ++iLossCountLocal : iLossCountLocal;
+
+                    iCountWon = iWon > 0 ? ++iCountWon : iCountWon;
+                    iCountDraw = iWon === 0 ? ++iCountDraw : iCountDraw;
+                    iCountLost = iWon < 0 ? ++iCountLost : iCountLost;
+                    numberDone++;
+
+                    fAddToRecordDic(oVillainStaticDic, oNsHand.fHandToString(oVillainHand), -1 * iWon, 1);
+                    fAddToRecordDic(oHandStatDic, oNsHand.fHandToString(oHeroHand), iWon, 1, true);
+
+                }
             }
+            var currentPercent = numberDone / approxTotalComb;
 
-            iWonMagnitude = 0;
+            if (numberDone % 500 === 0) //only post 1500 rounds
+                self.fPostProgress({
+                    iCountWon: iCountWon,
+                    iCountLost: iCountLost,
+                    iCountDraw: iCountDraw,
+                    total: numberDone,
+                    currentPercent: currentPercent
+                });
 
-            var iWinCountLocal = 0,
-                iDrawCountLocal = 0,
-                iLossCountLocal = 0;
+        }
 
-            if (oPairCannotHitFlush.length > 0) { //now we don't have to look for flushes, checking the first pair of this suffices
+        var endTime = new Date().getTime();
+        var consoleStringReport = "";
+        fPostConsole("operation took " + (endTime - startTime) / 1000.0 + 's');
+        fPostConsole("approximation of total " + approxTotalComb + ' real total ' + numberDone);
+        self.fPostDone({
+            iCountWon: iCountWon,
+            iCountLost: iCountLost,
+            iCountDraw: iCountDraw,
+            total: numberDone,
+            oHeroStat: oHandStatDic,
+            oVillainStat: oVillainStaticDic
+        });
+    };
 
-                //standardize all 7 cards
-                iWonMagnitude = oPairCannotHitFlush.length;
+    var fLogCards = function(aCards, message) {
+        if (!message)
+            message = 0;
+        var consoleMessage = message + ' logged hand';
+        for (var i = 0; i < aCards.length; i++) {
+            consoleMessage = consoleMessage + ' ' + nsConvert.rankNumberToChard(aCards[i].rank) + nsConvert.suitToDisplayChar(aCards[i].suit) + ' ';
+        }
+        fPostConsole(consoleMessage);
+    };
 
-                aVillainHand = [];
-                aVillainHand = oPairCannotHitFlush[0].concat(aFixedBoardCards).concat(aBoards[iBoard]);
+    var fCardsToKey = function(aCards) {
+        var sReturn = 'k_';
+        for (var i = 0; i < aCards.length; i++) {
+            sReturn = sReturn + nsConvert.rankNumberToChard(aCards[i].rank) + aCards[i].suit;
+        }
+        return sReturn;
+    };
 
-                oVillainHand = oNsHand.fGetBestHand(aVillainHand);
-                if (typeof oVillainHand === "undefined")
-                    fLogCards(aVillainHand, 'Something went wrong here 135');
+    var fLogPairs = function(aPairs, message) {
+        if (!message)
+            message = 0;
+        var consoleMessage = message + ' logged hand';
+        for (var i = 0; i < aPairs.length; i++) {
+            consoleMessage = consoleMessage + ' ' + nsConvert.rankNumberToChard(aPairs[i][0].rank) +
+                nsConvert.suitToDisplayChar(aPairs[i][0].suit) + ' ' +
+                nsConvert.rankNumberToChard(aPairs[i][1].rank) + nsConvert.suitToDisplayChar(aPairs[i][1].suit);
+        }
+        fPostConsole(consoleMessage);
+    };
 
-                iWon = oNsHand.fCompareHand(oHeroHand, oVillainHand) * -1;
-                iWinCountLocal = iWon > 0 ? iWonMagnitude : iWinCountLocal;
-                iDrawCountLocal = iWon === 0 ? iWonMagnitude : iDrawCountLocal;
-                iLossCountLocal = iWon < 0 ? iWonMagnitude : iLossCountLocal;
+    var fAddToRecordDic = function(oHandStatDic, sHandString, iWon, magnitude, bHero) {
+        if (typeof(oHandStatDic[sHandString]) === 'undefined') {
+            oHandStatDic[sHandString] = {};
+            oHandStatDic[sHandString].wonCount = 0;
+            oHandStatDic[sHandString].drawCount = 0;
+            oHandStatDic[sHandString].lossCount = 0;
+        }
+        //if(isNaN(magnitude) || isNaN(iWon) || typeof(sHandString) === 'undefined' || ! isNaN(parseInt(sHandString)))
+        //	fPostConsole('SOMETHING WENT WRONG');
+        //oHandStatDic[fHandToString(oHeroHand)].count++;
+        if (iWon > 0)
+            oHandStatDic[sHandString].wonCount += magnitude;
+        else if (iWon === 0)
+            oHandStatDic[sHandString].drawCount += magnitude;
+        else
+            oHandStatDic[sHandString].lossCount += magnitude;
 
-                iCountWon += iWinCountLocal;
-                iCountDraw += iDrawCountLocal;
-                iCountLost += iLossCountLocal;
-                numberDone += iWonMagnitude;
+    };
 
-                fAddToRecordDic(oVillainStaticDic, oNsHand.fHandToString(oVillainHand), -1 * iWon, iWonMagnitude);
-                fAddToRecordDic(oHandStatDic, oNsHand.fHandToString(oHeroHand), iWon, iWonMagnitude, true);
+    var fGetStartingHandsFromRangeArray = function(allStartingPairs, aKnownHands) {
+        var filteredStartingPairs = [];
+        var startLength = allStartingPairs.length;
+        var oPair, actualPairs;
+        for (var i = 0; i < startLength; i++) {
+            oPair = new Pair(pairString);
+            actualPairs = oPair.toArray(aKnownHands);
+            //this is multidimensional array
+            filteredStartingPairs = filteredStartingPairs.concat(actualPairs);
+        }
+        return filteredStartingPairs;
+    };
 
 
-            } //now loop through those which do hit flush
+    var fPostConsole = function(sMessage) {
+        self.postMessage({
+            type: 'console',
+            msg: sMessage
+        });
+    };
 
-            for (i = 0; i < oPairCanHitFlush.length; i++) {
-                //evaluate villain hand
+    var fPostDone = function(oData) {
+        self.postMessage({
+            type: 'done',
+            msg: oData
+        });
+        // self.close(); // Terminates the worker. BREAKS FIREFOX
+    };
 
-                aVillainHand = [];
-                aVillainHand = oPairCanHitFlush[i].concat(aFixedBoardCards).concat(aBoards[iBoard]);
-                oVillainHand = oNsHand.fGetBestHand(aVillainHand);
+    var fPostProgress = function(sMessage) {
+        self.postMessage({
+            type: 'progress',
+            msg: sMessage
+        });
+    };
 
-                iWon = oNsHand.fCompareHand(oHeroHand, oVillainHand) * -1;
-                iWinCountLocal = iWon > 0 ? ++iWinCountLocal : iWinCountLocal;
-                iDrawCountLocal = iWon === 0 ? ++iDrawCountLocal : iDrawCountLocal;
-                iLossCountLocal = iWon < 0 ? ++iLossCountLocal : iLossCountLocal;
+    //return array [num clubs, diamnds, hearts, spaids 
+    nsWorker.getSuitNumbers = function(board) {
+        //count the max number of one suit on the board
+        var aSuitNumbers = [0, 0, 0, 0]; //num of clubs, num of diamonds, num of hearts, num of spaids
+        //now we have to get the real board instead of the board without the known cards
+        var boardLength = board.length;
 
-                iCountWon = iWon > 0 ? ++iCountWon : iCountWon;
-                iCountDraw = iWon === 0 ? ++iCountDraw : iCountDraw;
-                iCountLost = iWon < 0 ? ++iCountLost : iCountLost;
-                numberDone++;
+        for (i = 0; i < boardLength; i++) {
+            aSuitNumbers[board[i].suit - 1]++;
+        }
 
-                fAddToRecordDic(oVillainStaticDic, oNsHand.fHandToString(oVillainHand), -1 * iWon, 1);
-                fAddToRecordDic(oHandStatDic, oNsHand.fHandToString(oHeroHand), iWon, 1, true);
+        return aSuitNumbers;
+    };
 
+    //check flush possibilities
+    nsWorker.getFlushSuitAndNumber = function(board, oPair) {
+        var aSuitNumbers = nsWorker.getSuitNumbers(board);
+
+        var minForFlush = 4;
+
+        if (oPair.suited)
+            minForFlush = 3;
+
+        //find the flush suit
+        var flushSuit = -1;
+        var foundHowManyOfSuit = 0;
+        for (i = 3; i >= 0; i--) {
+            if (aSuitNumbers[i] >= minForFlush) {
+                flushSuit = i + 1;
+                foundHowManyOfSuit = aSuitNumbers[i];
             }
         }
-        var currentPercent = numberDone / approxTotalComb;
 
-        if (numberDone % 500 === 0) //only post 1500 rounds
-            self.fPostProgress({
-                iCountWon: iCountWon,
-                iCountLost: iCountLost,
-                iCountDraw: iCountDraw,
-                total: numberDone,
-                currentPercent: currentPercent
-            });
-
-    }
-
-    var endTime = new Date().getTime();
-    var consoleStringReport = "";
-    fPostConsole("operation took " + (endTime - startTime) / 1000.0 + 's');
-    fPostConsole("approximation of total " + approxTotalComb + ' real total ' + numberDone);
-    self.fPostDone({
-        iCountWon: iCountWon,
-        iCountLost: iCountLost,
-        iCountDraw: iCountDraw,
-        total: numberDone,
-        oHeroStat: oHandStatDic,
-        oVillainStat: oVillainStaticDic
-    });
-};
-
-var fLogCards = function(aCards, message) {
-    if (!message)
-        message = 0;
-    var consoleMessage = message + ' logged hand';
-    for (var i = 0; i < aCards.length; i++) {
-        consoleMessage = consoleMessage + ' ' + nsConvert.rankNumberToChard(aCards[i].rank) + nsConvert.suitToDisplayChar(aCards[i].suit) + ' ';
-    }
-    fPostConsole(consoleMessage);
-};
-
-var fCardsToKey = function(aCards) {
-    var sReturn = 'k_';
-    for (var i = 0; i < aCards.length; i++) {
-        sReturn = sReturn + nsConvert.rankNumberToChard(aCards[i].rank) + aCards[i].suit;
-    }
-    return sReturn;
-};
-
-var fLogPairs = function(aPairs, message) {
-    if (!message)
-        message = 0;
-    var consoleMessage = message + ' logged hand';
-    for (var i = 0; i < aPairs.length; i++) {
-        consoleMessage = consoleMessage + ' ' + nsConvert.rankNumberToChard(aPairs[i][0].rank) +
-            nsConvert.suitToDisplayChar(aPairs[i][0].suit) + ' ' +
-            nsConvert.rankNumberToChard(aPairs[i][1].rank) + nsConvert.suitToDisplayChar(aPairs[i][1].suit);
-    }
-    fPostConsole(consoleMessage);
-};
-
-var fAddToRecordDic = function(oHandStatDic, sHandString, iWon, magnitude, bHero) {
-    if (typeof(oHandStatDic[sHandString]) === 'undefined') {
-        oHandStatDic[sHandString] = {};
-        oHandStatDic[sHandString].wonCount = 0;
-        oHandStatDic[sHandString].drawCount = 0;
-        oHandStatDic[sHandString].lossCount = 0;
-    }
-    //if(isNaN(magnitude) || isNaN(iWon) || typeof(sHandString) === 'undefined' || ! isNaN(parseInt(sHandString)))
-    //	fPostConsole('SOMETHING WENT WRONG');
-    //oHandStatDic[fHandToString(oHeroHand)].count++;
-    if (iWon > 0)
-        oHandStatDic[sHandString].wonCount += magnitude;
-    else if (iWon === 0)
-        oHandStatDic[sHandString].drawCount += magnitude;
-    else
-        oHandStatDic[sHandString].lossCount += magnitude;
-
-};
-
-var fGetStartingHandsFromRangeArray = function(allStartingPairs, aKnownHands) {
-    var filteredStartingPairs = [];
-    var startLength = allStartingPairs.length;
-    var oPair, actualPairs;
-    for (var i = 0; i < startLength; i++) {
-        oPair = new Pair(pairString);
-        actualPairs = oPair.toArray(aKnownHands);
-        //this is multidimensional array
-        filteredStartingPairs = filteredStartingPairs.concat(actualPairs);
-    }
-    return filteredStartingPairs;
-};
-
-
-var fPostConsole = function(sMessage) {
-    self.postMessage({
-        type: 'console',
-        msg: sMessage
-    });
-};
-
-var fPostDone = function(oData) {
-    self.postMessage({
-        type: 'done',
-        msg: oData
-    });
-    // self.close(); // Terminates the worker. BREAKS FIREFOX
-};
-
-var fPostProgress = function(sMessage) {
-    self.postMessage({
-        type: 'progress',
-        msg: sMessage
-    });
-};
-
-//return array [num clubs, diamnds, hearts, spaids 
-nsWorker.getSuitNumbers = function(board) {
-    //count the max number of one suit on the board
-    var aSuitNumbers = [0, 0, 0, 0]; //num of clubs, num of diamonds, num of hearts, num of spaids
-    //now we have to get the real board instead of the board without the known cards
-    var boardLength = board.length;
-
-    for (i = 0; i < boardLength; i++) {
-        aSuitNumbers[board[i].suit - 1]++;
-    }
-
-    return aSuitNumbers;
-};
-
-//check flush possibilities
-nsWorker.getFlushSuitAndNumber = function(board, oPair) {
-    var aSuitNumbers = nsWorker.getSuitNumbers(board);
-
-    var minForFlush = 4;
-
-    if (oPair.suited)
-        minForFlush = 3;
-
-    //find the flush suit
-    var flushSuit = -1;
-    var foundHowManyOfSuit = 0;
-    for (i = 3; i >= 0; i--) {
-        if (aSuitNumbers[i] >= minForFlush) {
-            flushSuit = i + 1;
-            foundHowManyOfSuit = aSuitNumbers[i];
-        }
-    }
-
-    return {
-        flushSuit: flushSuit,
-        numberFound: foundHowManyOfSuit
+        return {
+            flushSuit: flushSuit,
+            numberFound: foundHowManyOfSuit
+        };
     };
 };
 
-},{}],63:[function(require,module,exports){
+},{"../Core/Convert":11,"../Core/Math":13,"../Hand/NSHand":22,"underscore":67}],63:[function(require,module,exports){
 
-var nsWorkerTextures = {};
+var _ = require('underscore');
+var nsMath = require('../Core/Math');
+var nsDrawingHand = require('../Hand/DrawingHand');
+var nsConvert = require('../Core/Convert');
+var nsFilter = require('../Filter/Filter');
+var nsUtil = require('../Core/Util');
 
-self.addEventListener('message', function(e) {
-    var data = e.data;
-    switch (data.cmd) {
-        case 'start':
+module.exports = function(self) {
 
-            importScripts("../Lib/underscore/underscore-min.js", 'Math.js', 'Hand.js', 'DrawingHand.js', 'Convert.js', 'Filter.js', 'Util.js');
+    var nsWorkerTextures = {};
 
-            //self.postMessage({'command recieved start');
-            try {
-                fPostConsole('STARTING TEXTURE WORKER');
-                nsWorkerTextures.fCalculateBoards(data.aoStartingHands, data.aKnownCards, data.aFixedBoardCards, data.oFilter);
-            } catch (error) {
-                fPostConsole('ERROR' + error.toString());
-            }
-
-            break;
-        case 'stop':
-            self.close(); // Terminates the worker.
-            break;
-        default:
-            self.postMessage('Unknown command: ' + data.msg);
-    }
-}, false);
-
-
-nsWorkerTextures.fCalculateBoards = function(aoStartingHands, aKnownCards, aFixedBoardCards, oFilter) {
-    var startTime = new Date().getTime();
-    var numberDone = 0;
-    var oVillainStaticDic = {};
-    var oPairLengthDic = {};
-    var oFilterRecord = [];
-    fPostConsole('TEST TEST TEST');
-    //fPostConsole('TEST filter' + JSON.stringify(oFilter));
-    var aCurrentKnown = aKnownCards;
-    var startingHandLengths = aoStartingHands.length;
-    for (var iVillainPair = startingHandLengths - 1; iVillainPair >= 0; iVillainPair--) {
-        //get the villain pair
-        var oPair = aoStartingHands[iVillainPair].oPair;
-        var sPair = aoStartingHands[iVillainPair].sPair;
-        oFilterRecord[sPair] = [];
-
-        var oPairArray = fFilterCardPairArray(aoStartingHands[iVillainPair].aPair, aCurrentKnown);
-
-        var iPairLength = oPairArray.length;
-
-        for (var i = 0; i < oPairArray.length; i++) {
-
-            var aVillainHand = [];
-            aVillainHand = oPairArray[i].concat(aFixedBoardCards);
-            var oVillainHand;
-            if (oFilter) {
-                //this should actually return the drawing hand, so i don't have to evaluate it again
-                var bHit = nsFilter.nsEvaluate.fEvaluateFilter(oFilter, aVillainHand);
-                if (!bHit) { //did not pass filter
-                    oFilterRecord[sPair].push(oPairArray[i]);
-                    continue;
+    self.addEventListener('message', function(e) {
+        var data = e.data;
+        switch (data.cmd) {
+            case 'start':
+                try {
+                    fPostConsole('STARTING TEXTURE WORKER');
+                    nsWorkerTextures.fCalculateBoards(data.aoStartingHands, data.aKnownCards, data.aFixedBoardCards, data.oFilter);
+                } catch (error) {
+                    fPostConsole('ERROR' + error.toString());
                 }
-                oVillainHand = nsFilter.nsEvaluate.oCurrentHand;
-            } else
-                oVillainHand = nsDrawingHand.fGetDrawingHands(aVillainHand);
 
-            var sVillainHand = nsDrawingHand.fHandToString(oVillainHand);
+                break;
+            case 'stop':
+                self.close(); // Terminates the worker.
+                break;
+            default:
+                self.postMessage('Unknown command: ' + data.msg);
+        }
+    }, false);
 
-            var aSplit = sVillainHand.split("-");
 
-            for (j = 0; j < aSplit.length; j++) {
-                aSplit[j] = aSplit[j].trim();
-                nsWorkerTextures.fAddToRecordDic(oVillainStaticDic, aSplit[j], sPair);
-                numberDone++;
+    nsWorkerTextures.fCalculateBoards = function(aoStartingHands, aKnownCards, aFixedBoardCards, oFilter) {
+        var startTime = new Date().getTime();
+        var numberDone = 0;
+        var oVillainStaticDic = {};
+        var oPairLengthDic = {};
+        var oFilterRecord = [];
+        fPostConsole('TEST TEST TEST');
+        //fPostConsole('TEST filter' + JSON.stringify(oFilter));
+        var aCurrentKnown = aKnownCards;
+        var startingHandLengths = aoStartingHands.length;
+        for (var iVillainPair = startingHandLengths - 1; iVillainPair >= 0; iVillainPair--) {
+            //get the villain pair
+            var oPair = aoStartingHands[iVillainPair].oPair;
+            var sPair = aoStartingHands[iVillainPair].sPair;
+            oFilterRecord[sPair] = [];
+
+            var oPairArray = nsConvert.fFilterCardPairArray(aoStartingHands[iVillainPair].aPair, aCurrentKnown);
+
+            var iPairLength = oPairArray.length;
+
+            for (var i = 0; i < oPairArray.length; i++) {
+
+                var aVillainHand = [];
+                aVillainHand = oPairArray[i].concat(aFixedBoardCards);
+                var oVillainHand;
+                if (oFilter) {
+                    //this should actually return the drawing hand, so i don't have to evaluate it again
+                    var bHit = nsFilter.nsEvaluate.fEvaluateFilter(oFilter, aVillainHand);
+                    if (!bHit) { //did not pass filter
+                        oFilterRecord[sPair].push(oPairArray[i]);
+                        continue;
+                    }
+                    oVillainHand = nsFilter.nsEvaluate.oCurrentHand;
+                } else
+                    oVillainHand = nsDrawingHand.fGetDrawingHands(aVillainHand);
+
+                var sVillainHand = nsDrawingHand.fHandToString(oVillainHand);
+
+                var aSplit = sVillainHand.split("-");
+
+                for (j = 0; j < aSplit.length; j++) {
+                    aSplit[j] = aSplit[j].trim();
+                    nsWorkerTextures.fAddToRecordDic(oVillainStaticDic, aSplit[j], sPair);
+                    numberDone++;
+                }
             }
+
+            oPairLengthDic[sPair] = iPairLength;
+        }
+        fPostDone({
+            oVillainStat: oVillainStaticDic,
+            count: numberDone,
+            oPairLengthDic: oPairLengthDic,
+            oFilterRecord: oFilterRecord
+        });
+    };
+
+    nsWorkerTextures.fAddToRecordDic = function(oVillainStatDic, sHandString, sPairString, iPairCount) {
+        if (typeof(oVillainStatDic[sHandString]) === 'undefined') {
+            oVillainStatDic[sHandString] = {
+                oPairRecord: {},
+                count: 0
+            };
         }
 
-        oPairLengthDic[sPair] = iPairLength;
-    }
-    self.fPostDone({
-        oVillainStat: oVillainStaticDic,
-        count: numberDone,
-        oPairLengthDic: oPairLengthDic,
-        oFilterRecord: oFilterRecord
-    });
+        if (typeof(oVillainStatDic[sHandString].oPairRecord[sPairString]) === 'undefined') {
+            oVillainStatDic[sHandString].oPairRecord[sPairString] = 1;
+        } else {
+            oVillainStatDic[sHandString].oPairRecord[sPairString]++; //track the pairs for each hand type	
+        }
+
+        oVillainStatDic[sHandString].count++;
+    };
+
+
+    var fPostConsole = function(sMessage) {
+        self.postMessage({
+            type: 'console',
+            msg: sMessage
+        });
+    };
+
+    var fPostDone = function(oData) {
+        self.postMessage({
+            type: 'done',
+            msg: oData
+        });
+        self.close(); // Terminates the worker. 
+    };
+
+    var fPostProgress = function(sMessage) {
+        self.postMessage({
+            type: 'progress',
+            msg: sMessage
+        });
+    };
 };
 
-nsWorkerTextures.fAddToRecordDic = function(oVillainStatDic, sHandString, sPairString, iPairCount) {
-    if (typeof(oVillainStatDic[sHandString]) === 'undefined') {
-        oVillainStatDic[sHandString] = {
-            oPairRecord: {},
-            count: 0
-        };
-    }
-
-    if (typeof(oVillainStatDic[sHandString].oPairRecord[sPairString]) === 'undefined') {
-        oVillainStatDic[sHandString].oPairRecord[sPairString] = 1;
-    } else {
-        oVillainStatDic[sHandString].oPairRecord[sPairString]++; //track the pairs for each hand type	
-    }
-
-    oVillainStatDic[sHandString].count++;
-};
-
-
-var fPostConsole = function(sMessage) {
-    self.postMessage({
-        type: 'console',
-        msg: sMessage
-    });
-};
-
-var fPostDone = function(oData) {
-    self.postMessage({
-        type: 'done',
-        msg: oData
-    });
-    self.close(); // Terminates the worker. 
-};
-
-var fPostProgress = function(sMessage) {
-    self.postMessage({
-        type: 'progress',
-        msg: sMessage
-    });
-};
-},{}],64:[function(require,module,exports){
+},{"../Core/Convert":11,"../Core/Math":13,"../Core/Util":16,"../Filter/Filter":18,"../Hand/DrawingHand":20,"underscore":67}],64:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.3.3
 
@@ -23972,5 +23979,88 @@ function closure ( target, options, originalOptions ){
     });
   }
 }.call(this));
+
+},{}],68:[function(require,module,exports){
+var bundleFn = arguments[3];
+var sources = arguments[4];
+var cache = arguments[5];
+
+var stringify = JSON.stringify;
+
+module.exports = function (fn, options) {
+    var wkey;
+    var cacheKeys = Object.keys(cache);
+
+    for (var i = 0, l = cacheKeys.length; i < l; i++) {
+        var key = cacheKeys[i];
+        var exp = cache[key].exports;
+        // Using babel as a transpiler to use esmodule, the export will always
+        // be an object with the default export as a property of it. To ensure
+        // the existing api and babel esmodule exports are both supported we
+        // check for both
+        if (exp === fn || exp && exp.default === fn) {
+            wkey = key;
+            break;
+        }
+    }
+
+    if (!wkey) {
+        wkey = Math.floor(Math.pow(16, 8) * Math.random()).toString(16);
+        var wcache = {};
+        for (var i = 0, l = cacheKeys.length; i < l; i++) {
+            var key = cacheKeys[i];
+            wcache[key] = key;
+        }
+        sources[wkey] = [
+            Function(['require','module','exports'], '(' + fn + ')(self)'),
+            wcache
+        ];
+    }
+    var skey = Math.floor(Math.pow(16, 8) * Math.random()).toString(16);
+
+    var scache = {}; scache[wkey] = wkey;
+    sources[skey] = [
+        Function(['require'], (
+            // try to call default if defined to also support babel esmodule
+            // exports
+            'var f = require(' + stringify(wkey) + ');' +
+            '(f.default ? f.default : f)(self);'
+        )),
+        scache
+    ];
+
+    var workerSources = {};
+    resolveSources(skey);
+
+    function resolveSources(key) {
+        workerSources[key] = true;
+
+        for (var depPath in sources[key][1]) {
+            var depKey = sources[key][1][depPath];
+            if (!workerSources[depKey]) {
+                resolveSources(depKey);
+            }
+        }
+    }
+
+    var src = '(' + bundleFn + ')({'
+        + Object.keys(workerSources).map(function (key) {
+            return stringify(key) + ':['
+                + sources[key][0]
+                + ',' + stringify(sources[key][1]) + ']'
+            ;
+        }).join(',')
+        + '},{},[' + stringify(skey) + '])'
+    ;
+
+    var URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+
+    var blob = new Blob([src], { type: 'text/javascript' });
+    if (options && options.bare) { return blob; }
+    var workerUrl = URL.createObjectURL(blob);
+    var worker = new Worker(workerUrl);
+    worker.objectURL = workerUrl;
+    return worker;
+};
 
 },{}]},{},[39,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63]);

@@ -128,7 +128,6 @@ $(document).ready(function() {
         },
         container: '#known_cards',
         placement: 'bottom',
-        /*was 'auto bottom' ... new version of bootstrap broke it*/
         trigger: 'manual',
         html: true
     });

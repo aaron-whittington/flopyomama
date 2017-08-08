@@ -15,7 +15,8 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-preprocess": "^4.1.0",
     "nouislider": "^10.1.0",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "webworkify": "^1.4.0"
   },
   "browserify": {
     "transform": [

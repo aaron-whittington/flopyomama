@@ -6,7 +6,7 @@ var nsHtml = {};
 
 nsHtml.fGetBoardSelectionTable = function(knownCards) {
     var sReturn = "<div id='board_selection_table'>";
-    var aCards = knownCards.allUnknown();
+    var aCards = knownCards.get('deck').models;
 
     for (var suit = 4; suit > 0; suit--) {
         sReturn += "<div style='white-space: nowrap;'>";
@@ -19,6 +19,7 @@ nsHtml.fGetBoardSelectionTable = function(knownCards) {
                 'suit': c.get('suit'),
                 'rank': c.get('rank')
             }).length > 0;
+
             sReturn += nsHtml.fWrapCard(c.attributes, found, found);
         });
         sReturn += "</div>";

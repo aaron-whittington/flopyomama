@@ -3,6 +3,8 @@ MenuListModel = require('./MenuListModel');
 MenuView = require('./MenuView');
 nsConvert = require('../Core/Convert');
 
+//TODO remove these extra document readies, rename the files to CreateInstance, 
+//and then instantiate from the flopYoMama class.
 $(function() {
     var standardGroup = new MenuItemGroup();
     var rangeMenuActionGroup = new MenuItemGroup('clearboard', false);

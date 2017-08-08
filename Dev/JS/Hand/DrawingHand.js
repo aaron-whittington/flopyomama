@@ -1,9 +1,11 @@
-﻿
+﻿var nsHand = require('./NSHand');
+var oHand = require('./Hand');
 var nsDrawingHand = {};
 
 /*drawing hands*/
 nsDrawingHand.bIgnoreBackdoorDraws = true;
 
+//TODO put these in constants folder
 nsDrawingHand.BACKDOOR_STRAIGHT_DRAW = 0;
 nsDrawingHand.BACKDOOR_FLUSH_DRAW = 1;
 nsDrawingHand.GUTSHOT_STRAIGHT_DRAW = 2;
@@ -16,12 +18,7 @@ nsDrawingHand.fDrawingHandToShortString = function(oDrawingHand) {
     return sLong.substring(0, iDraw - 1);
 }
 
-//nsHand.oHandStringCache = {};
 nsDrawingHand.fDrawingHandToString = function(oDrawingHand) {
-    //actually made stuff slower var cache = nsHand.oHandStringCache[hand];
-    //if (typeof cache !== 'undefined')
-    //	return cache;
-
     var rankString = "";
     switch (oDrawingHand.rank) {
         case nsDrawingHand.BACKDOOR_STRAIGHT_DRAW:

@@ -2,6 +2,7 @@
 
 var oHand = {};
 
+//TODO, I don't know why I make this silly object
 oHand = {
     rank: 0,
     high: -1,
@@ -15,6 +16,7 @@ oHand = {
     drawinghands: []
 };
 
+//TODO move to constants
 oHand.HIGH_CARD = 0;
 oHand.PAIR = 1;
 oHand.TWO_PAIR = 2;

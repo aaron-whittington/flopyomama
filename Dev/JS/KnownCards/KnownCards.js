@@ -33,8 +33,7 @@ var KnownCards = AWModel.extend({
             nsHtml.fRedrawBoardSelectionTable(that);
             this.evaluateKnownCards();
             this.saveBoardState();
-            //TODO fix routing
-            //flopYoMama.updateRoute();
+            window.flopYoMama.updateRoute();
         });
 
         //manually set the hand and the board ... change to manual  
