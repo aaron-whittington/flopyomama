@@ -7,21 +7,30 @@ var SliderView = Backbone.View.extend({
         
         var slider = noUiSlider.create(this.el, {
             start: that.model.get('value'),
+            connect: [true, false],
             range: {
                 min: that.model.get('min'),
                 max: that.model.get('max')
-            }
-
+            },/*
+            pips: { // Show a scale with the slider
+                mode: 'steps',
+                stepped: true,
+                density: 10 
+            },*/ 
+            tooltips: false
         }); 
+        
+        slider.on('update', function(values) {
+            that.model.set({
+                value: values[0] 
+            });
+        });        
 /*
         this.$el.slider({
             change: function(e, ui) {
                 that.model.trigger('finalize', ui.value);
             },
             slide: function(event, ui) {
-                that.model.set({
-                    value: ui.value
-                });
             },
             max: that.model.get("max"),
             min: that.model.get("min"),
@@ -31,10 +40,9 @@ var SliderView = Backbone.View.extend({
         this.listenTo(this.model, "change:value", this.render);
         this.on('update', this.update);
 
-
-        this.handle = $('.range_slider_bg').parent().find('a')[0];
+        /*this.handle = $('.range_slider_bg').parent().find('a')[0];
         this.handleParent = $(this.handle).parent()[0];
-        this.bg = $('.range_slider_bg')[0];
+        this.bg = $('.range_slider_bg')[0];*/
     },
     handle: null,
     handleParent: null,
