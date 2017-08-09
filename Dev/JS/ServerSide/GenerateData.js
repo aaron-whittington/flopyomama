@@ -70,11 +70,12 @@ var deckPermutations = function() {
             }
 
             var villainHands = nsMath.combine(remaining50Cards, 2);
-            
+             
             villainHands.forEach(function(villainHand, i) {
                 getExactPreflopOdds(heroCard1, heroCard2, villainHand[0], villainHand[1]);
                 counter++;
                 console.log('PERCENT DONE: ' + (100 * (counter / totalNumberOfCombinations)) );
+                console.log('PERCENT DONE FOR HERO PAIR: ' + 100 * (i/villainHands.length));
             }); 
         }
     );
