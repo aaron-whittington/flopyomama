@@ -33,7 +33,7 @@ var CardList = AWCollection.extend({
         return aoCards;
     }, 
     sort: function() {
-        nsCard.sortCardArray(this.models);
+        nsCard.sortCardArray(this.models, false);
     }
 });
 

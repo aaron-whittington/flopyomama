@@ -51,13 +51,14 @@ describe("NSCard", function() {
     describe('standardizeSuits', function() {
         var input, result;
         it('should standardize suits correctly, spades first', function() {
-            input = (new CardList('5D7C4S')).models; 
+            input = (new CardList('5D7C4SAH')).models; 
             result = nsCard.standardizeSuits(input);
  
-            expect(result.length).toEqual(3); 
+            expect(result.length).toEqual(4); 
             expect(result[0].toString()).toEqual('5S'); 
             expect(result[1].toString()).toEqual('7H'); 
             expect(result[2].toString()).toEqual('4D'); 
+            expect(result[3].toString()).toEqual('AC'); 
 
             input = (new CardList('ACKCQCJCTC')).models; 
             result = nsCard.standardizeSuits(input);
