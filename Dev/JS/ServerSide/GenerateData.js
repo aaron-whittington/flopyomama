@@ -103,7 +103,7 @@ var getExactPreflopOdds = function(heroCard1, heroCard2, badGuyCard1, badGuyCard
         return;
     };
 
-    sleep(10000); //give the system a break
+    sleep(5000); //give the system a break
     var toRemove = new CardList();
     toRemove.add(normalizedPreflop.getHeroCards());
     toRemove.add(normalizedPreflop.getVillainCards()); 
