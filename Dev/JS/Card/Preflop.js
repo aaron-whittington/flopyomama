@@ -67,7 +67,7 @@ Preflop = function (a1, a2, b1, b2) {
         if (diff !== 0) {return diff;}
 
         //then compare ranks of the second cards, if equal
-        diff = hand2[1].models.get('rank') - hand1.models[1].get('rank'); 
+        diff = hand2.models[1].get('rank') - hand1.models[1].get('rank'); 
         if (diff != 0) {return diff;}
 
         //rank was alike, for both cards, so now we compare suit of first card
