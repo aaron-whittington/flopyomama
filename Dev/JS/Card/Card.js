@@ -44,6 +44,13 @@ var Card = AWModel.extend({
     },
     toDisplayString: function() {
         return this.rankNumberToChar() + this.suitToDisplayChar();
+    }, 
+    toCompressedString: function() {
+        if(this.get('suit') == 4) {
+            return this.rankNumberToChar();
+        } else {
+            return this.toString();
+        }  
     }
 });
 

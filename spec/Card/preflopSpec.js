@@ -34,6 +34,6 @@ describe("Preflop", function() {
 		 var preflop = new Preflop(new Card('3H'), new Card('4D'), new Card('3S'), new Card('5C')) ;
          expect(preflop.getKey).toThrow('please normalize preflop');
          var result = preflop.getNormalizedPreflop().getKey();
-         expect(result).toEqual('5S-3H-4D-3C');
+         expect(result).toEqual('5-3H-4D-3C');
     });
 });

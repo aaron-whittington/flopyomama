@@ -95,7 +95,10 @@ var getExactPreflopOdds = function(heroCard1, heroCard2, badGuyCard1, badGuyCard
     //now check for key
     var key = normalizedPreflop.getKey();
     if(keyInEnormousObjectExists(key)) {
-        console.log('key already exists' + key);
+        console.log('key already exists: ' + key);
+        console.log('original hand was: ');
+        console.log(heroCard1.toString() + heroCard2.toString() +
+             ' vs ' + badGuyCard1.toString() + badGuyCard2.toString() );
         return;
     };
 
@@ -129,13 +132,20 @@ var getExactPreflopOdds = function(heroCard1, heroCard2, badGuyCard1, badGuyCard
         }
 
     }
-    var results = [wins/boards.length, draws/boards.length, losses/boards.length]; 
+    var results = [getResultNumber(wins,boards.length), getResultNumber(draws,boards.length)]; 
 
     setInEnormousObject(key, results);    
     console.log(key + ' DONE');
+
+
     var toWriteString = "o = " + JSON.stringify(o) + ";\n\n";
     toWriteString = toWriteString +  "module.exports = o;\n"; 
     fs.writeFileSync('../Card/PreflopData.js', toWriteString);
+};
+
+function getResultNumber(number, total) {
+    var percent = number / total;
+    return Math.round(percent * 100000);
 };
 
 deckPermutations();

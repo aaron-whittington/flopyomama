@@ -80,7 +80,7 @@ Preflop = function (a1, a2, b1, b2) {
         } 
 
         return heroCards.models.concat(villainCards.models).map(function(c){
-                return c.toString();
+                return c.toCompressedString();
             }).join('-'); 
     }
 }
