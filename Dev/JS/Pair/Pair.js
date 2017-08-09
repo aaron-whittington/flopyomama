@@ -116,6 +116,7 @@ var Pair = AWModel.extend({
         }
         //order the pairs
         aAllKinds.sort(function(aPair, bPair) {
+            //TODO use sort function in NSCard
             if (aPair[0].rank !== bPair[0].rank)
                 return bPair[0].rank - aPair[0].rank;
             else if (aPair[0].suit !== bPair[0].suit)

@@ -1,6 +1,6 @@
 describe("Deck", function() {
-/*
-	var Deck = require('../Dev/JS/Deck');
+
+	var Deck = require('../../Dev/JS/Card/Deck');
 	var deck;
 	beforeEach(function() {
 		deck = new Deck();
@@ -9,5 +9,5 @@ describe("Deck", function() {
 	it('should have the right number of cards', function() {
                 expect(deck.models.length).toEqual(52);
 	});
-*/
+
 });

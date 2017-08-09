@@ -3,6 +3,7 @@ var AWCollection = require('../Core/AWCollection');
 var AWCollectionModel = require('../Core/AWCollectionModel');
 var nsConvert = require('../Core/Convert');
 
+//todo, make card a normal object instead of the weird get and set thing
 var Card = AWModel.extend({
     className: 'Card',
     _stringToPrm: function(aArgs) {
@@ -25,7 +26,6 @@ var Card = AWModel.extend({
         };
     },
     initialize: function() {
-        var test = arguments;
     },
     rankNumberToChar: function() {
         var i = this.get('rank');

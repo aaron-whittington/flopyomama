@@ -1,5 +1,6 @@
 ﻿var Card = require('./Card');
 var AWCollection = require('../Core/AWCollection');
+var nsCard = require('./NSCard');
 
 var CardList = AWCollection.extend({
     className: 'CardList',
@@ -30,6 +31,9 @@ var CardList = AWCollection.extend({
             aoCards.push(new Card(prm[i]));
         }
         return aoCards;
+    }, 
+    sort: function() {
+        nsCard.sortCardArray(this.models);
     }
 });
 
