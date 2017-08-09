@@ -47,7 +47,7 @@ var setInEnormousObject = function(key, value) {
 var deckPermutations = function() {
     rangeTable = new RangeTable(); 
     var counter = 0;
-    var totalNumberOfCombinations = 16 * 16 * nsMath.numberOfCombinations(50,2);
+    var totalNumberOfCombinations = 16 * 16 * nsMath.numberOfCombinations(50,2); 
     rangeTable.tableLoop(function() {
     
         }, function(rangeItem) {
