@@ -6,6 +6,7 @@ var Preflop = require('../Card/Preflop');
 var nsHand = require('../Hand/NSHand');
 var o = require('../Card/PreflopData'); 
 fs = require('fs');
+sleep = require('system-sleep');
 var keyInEnormousObjectExists = function(key) {
     var aKey = key.split('-');
     var key1 = aKey[0];
@@ -102,6 +103,7 @@ var getExactPreflopOdds = function(heroCard1, heroCard2, badGuyCard1, badGuyCard
         return;
     };
 
+    sleep(10000); //give the system a break
     var toRemove = new CardList();
     toRemove.add(normalizedPreflop.getHeroCards());
     toRemove.add(normalizedPreflop.getVillainCards()); 
