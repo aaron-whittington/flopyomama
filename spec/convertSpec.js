@@ -5,7 +5,7 @@ describe("Convert", function() {
 
     xit('should have get random cards', function() {
         nsConvert.fGetRandomCards(3);
-                expect(deck.models.length).toEqual(52);
+        expect(deck.models.length).toEqual(52);
     });
         
     it('should convert strings to card objects', function() {

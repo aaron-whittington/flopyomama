@@ -71,5 +71,15 @@ describe("NSCard", function() {
             expect(result[4].toString()).toEqual('TS'); 
 
         });
+
+        it('should not modify original cards', function() {
+            input = (new CardList('5D7C4SAH')).models; 
+            result = nsCard.standardizeSuits(input);
+ 
+            expect(result.length).toEqual(4); 
+            expect(result[0].toString()).toEqual('5S'); 
+            expect(input[0].toString()).toEqual('5D'); 
+
+        });
     });
 });

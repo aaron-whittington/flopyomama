@@ -49,7 +49,6 @@ nsHand.fHandToString = function(hand) {
 
 /*gets the hand by order of ranking*/
 nsHand.fGetBestHand = function(aCards) {
-    var oNsHand = nsHand;
     if (aCards.length === 1) {
         return {
             rank: oHand.HIGH_CARD,
@@ -62,18 +61,17 @@ nsHand.fGetBestHand = function(aCards) {
     aCards.sort(nsHand.fCompareCard); //sort the cards for evaluating set types 
 
     //get straight flush or the best straight or null, if sf then stop here... if we find a straight, there can be no 4 of a kind or fullhouse, so we can skip
-    var oBestStraight = oNsHand.fFindBestStraight(aCards); 
+    var oBestStraight = nsHand.fFindBestStraight(aCards); 
     if (oBestStraight !== null && oBestStraight.rank === oHand.STRAIGHT_FLUSH)
         return oBestStraight;
 
     //
-    var oBestSetHand = oNsHand.fFindBestSet(aCards); //always returns a hand even if not a made hand
+    var oBestSetHand = nsHand.fFindBestSet(aCards); //always returns a hand even if not a made hand
     if (oBestSetHand.rank >= oHand.FULL_HOUSE)
         return oBestSetHand;
 
-    //TODO did we forget full houses ? 
+    var oBestFlushHand = nsHand.fFindBestFlush(aCards);
 
-    var oBestFlushHand = oNsHand.fFindBestFlush(aCards);
     if (oBestFlushHand !== null)
         return oBestFlushHand;
 
@@ -91,6 +89,7 @@ nsHand.fBigIntFirst = function(a, b) {
 nsHand.fCompareHand = function(handA, handB) {
     if (handA.rank !== handB.rank)
         return handB.rank - handA.rank;
+
     //same rank
     if (handA.high !== handB.high)
         return handB.high - handA.high;
@@ -131,13 +130,14 @@ nsHand.fFindBestFlush = function(aCards) {
 
     if (flushes.length > 0) {
         flushes.sort(nsHand.fCompareFlushes);
+        //console.log(JSON.stringify(flushes[0]) + ' SHOULD BEAT ' +  JSON.stringify(flushes[1]));
         var returnHand = {};
         returnHand.rank = oHand.FLUSH;
-        returnHand.high = flushes[0][4].rank;
+        returnHand.high = flushes[0][0].rank;
         returnHand.low = returnHand.high;
         returnHand.kickers = [];
         for (i = 0; i < 5; i++)
-            returnHand.kickers.push(flushes[0][i].rank); //little hack...for comparing flushes we can treat the hand as kickers
+            returnHand.kickers.push(flushes[0][i].rank); //little hack...for comparing flushes we can treat the hand as kickers 
         return returnHand;
     }
     return null;

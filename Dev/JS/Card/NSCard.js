@@ -13,6 +13,13 @@ nsCard =  {
     }, 
     standardizeSuits: function(cardArray, preserveOriginal = true) {
         var cardClone = preserveOriginal ? cardArray.slice() : cardArray;  
+        //physically clone all cards
+        //TODO, get rid of this stuff and make Card objects immutable (non Backbone objects)
+        if(preserveOriginal)
+            cardClone = cardClone.map(function(c) {
+               return c.clone();
+            });
+ 
         var suitsFound = [];
         var targetSuits = [4,3,2,1];
         var i;
