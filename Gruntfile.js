@@ -28,6 +28,18 @@ module.exports = function(grunt) {
         },
         all : ['./Dev/JS/*.js']
     },
+    ts: {
+        default : {
+		    src: ["./Dev/TS/*.ts"],
+		    outDir: "./Dev/TS/Generated"
+        }
+    },
+    browserify: {
+        default : {        
+            src :  ["./Dev/JS/*.js", "./Dev/JS/**/*.js"],
+            dest:  "./Dev/Generated/browserified.js",
+        }
+    },
 	uglify: {
 		RELEASE: {
 			options: {
@@ -54,34 +66,11 @@ module.exports = function(grunt) {
 			},
 			files: [{
 				expand: true,
-				cwd: './Dev/JS',
-				src: '*.js',
-				dest: './Release/JS'
+				cwd: './Dev/Generated',
+				src: 'browserified.js',
+				dest: './Release/Generated'
 			}]
 		},
-	/*	FUTURE: {
-			options: {
-				mangle: {
-					toplevel: true
-				},
-				compress: {
-					drop_console: true,
-					sequences: true,
-					dead_code: true,
-					conditionals: true,
-					booleans: true,
-					unused: true,
-					if_return: true,
-					join_vars: true,
-					screw_ie8: true
-				}
-			},
-			files: [{
-				src: ['./Dev/JS/*.js', 
-					  './Dev/Lib/jquery-ui/js/jquery-ui-1.10.3.custom.min.js'],
-				dest: './Release/JS/Future.js'
-			}]
-		} */
 	},
 	preprocess: {
 		options: {
@@ -132,10 +121,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-preprocess');
+  grunt.loadNpmTasks('grunt-ts');
+  grunt.loadNpmTasks('grunt-browserify');
 
   grunt.registerTask('watch-all', ['watch']);
   grunt.registerTask('jshint-all', ['jshint']);
 
-  grunt.registerTask('build-release',['uglify', 'preprocess', 'less']);   
-  grunt.registerTask('build-dev', [ 'preprocess', 'less'] );
+  grunt.registerTask('build-dev', [ 'preprocess', 'less', 'browserify'] );
+  grunt.registerTask('build-release',['build-dev', 'uglify', 'preprocess', 'less']);   
 };

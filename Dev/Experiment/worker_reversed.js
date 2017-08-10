@@ -1,5 +1,5 @@
 ﻿
-importScripts('Maths.js', 'Hand.js','Convert.js');
+importScripts('../Math.js', 'Hand.js','Convert.js');
 
 var MAX_RUNTIME = 25.0; //never run longer than x seconds
 
