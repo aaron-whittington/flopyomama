@@ -4,7 +4,8 @@ var Card = require('../Card/Card');
 var nsMath = require('../Core/Math');
 var Preflop = require('../Card/Preflop');
 var nsHand = require('../Hand/NSHand');
-var o = require('../Card/PreflopData'); 
+var o = {};//require('../Card/PreflopData'); 
+
 fs = require('fs');
 sleep = require('system-sleep');
 var keyInEnormousObjectExists = function(key) {
@@ -76,6 +77,7 @@ var deckPermutations = function() {
                 counter++;
                 console.log('PERCENT DONE: ' + (100 * (counter / totalNumberOfCombinations)) );
                 console.log('PERCENT DONE FOR HERO PAIR: ' + 100 * (i/villainHands.length));
+                //fuck bug: A-AH-AH-5
             }); 
         }
     );
@@ -104,12 +106,20 @@ var getExactPreflopOdds = function(heroCard1, heroCard2, badGuyCard1, badGuyCard
         return;
     };
 
-    sleep(5000); //give the system a break
+    //sleep(5000); //give the system a break
     var toRemove = new CardList();
-    toRemove.add(normalizedPreflop.getHeroCards());
-    toRemove.add(normalizedPreflop.getVillainCards()); 
+    toRemove.add(normalizedPreflop.getHeroCards().models);
+    toRemove.add(normalizedPreflop.getVillainCards().models); 
+
+    if(toRemove.models.length !== 4) {
+        throw 'aaron, wake up';
+    }
 
     var remaining = deck.getDifference(toRemove, true);
+    if(remaining.length !== 48) {
+        throw 'aaron, wake up again';
+    }
+
     var boards = nsMath.combine(remaining, 5);
 
     console.log("Get exact odds for key: " + key);
@@ -135,10 +145,12 @@ var getExactPreflopOdds = function(heroCard1, heroCard2, badGuyCard1, badGuyCard
         }
 
     }
-    var results = [getResultNumber(wins,boards.length), getResultNumber(draws,boards.length)]; 
+    var results = [getResultNumber(wins,boards.length),
+         getResultNumber(draws,boards.length),
+         getResultNumber(losses, boards.length)]; //losses for debugging 
 
     setInEnormousObject(key, results);    
-    console.log(key + ' DONE');
+    console.log(key + ' DONE. Results: ' + JSON.stringify(results));
 
 
     var toWriteString = "o = " + JSON.stringify(o) + ";\n\n";

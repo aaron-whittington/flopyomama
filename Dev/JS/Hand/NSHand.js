@@ -61,13 +61,17 @@ nsHand.fGetBestHand = function(aCards) {
 
     aCards.sort(nsHand.fCompareCard); //sort the cards for evaluating set types 
 
-    var oBestStraight = oNsHand.fFindBestStraight(aCards); //get's straight flush or the best straight or null, if sf then stop here... if we find a straight, there can be no 4 of a kind or fullhouse, so we can skip
+    //get straight flush or the best straight or null, if sf then stop here... if we find a straight, there can be no 4 of a kind or fullhouse, so we can skip
+    var oBestStraight = oNsHand.fFindBestStraight(aCards); 
     if (oBestStraight !== null && oBestStraight.rank === oHand.STRAIGHT_FLUSH)
         return oBestStraight;
 
+    //
     var oBestSetHand = oNsHand.fFindBestSet(aCards); //always returns a hand even if not a made hand
     if (oBestSetHand.rank >= oHand.FULL_HOUSE)
         return oBestSetHand;
+
+    //TODO did we forget full houses ? 
 
     var oBestFlushHand = oNsHand.fFindBestFlush(aCards);
     if (oBestFlushHand !== null)
@@ -158,9 +162,6 @@ nsHand.fFindBestStraight = function(aCards) {
                 if (memberInStraight === 0)
                     findRank = 14;
             }
-            //nsUtil.fLog("lowrank " + iLowRank + " memberinstraight " + memberInStraight + " findrank " +findRank)
-            //aces low lowRank = 1, member =0, findRank = 14
-            //next round lowRank = 2 member =1, findRank =3 ??
 
             var aMembersOfRank = nsHand.fFindAllCardsWithRank(aCards, findRank);
 
@@ -179,7 +180,6 @@ nsHand.fFindBestStraight = function(aCards) {
         if (aStraightRecord.length === 5)
             aFoundStraights.push(aStraightRecord);
     }
-
 
     //convert ordered arrays of cards to straight hands
     var aFoundHands = [];
@@ -262,7 +262,7 @@ nsHand.fFindAllCardsWithRank = function(aCards, rank) {
 
 nsHand.fFindBestSet = function(aCards) {
     var aSets = [],
-        oReturnHand, i;
+        oReturnHand, i, j;
     for (i = 14; i >= 2; i--) {
         var timesFound = 0;
         var foundRank = [];
@@ -278,7 +278,7 @@ nsHand.fFindBestSet = function(aCards) {
         if (timesFound >= 2)
             aSets.push({
                 same: foundRank,
-                kickers: notFoundRank
+                kickers: notFoundRank 
             });
     }
 
@@ -314,8 +314,7 @@ nsHand.fFindBestSet = function(aCards) {
                 oReturnHand.kickers = []; // no kickers with FH
                 return oReturnHand;
                 //return full house with aSets[0] and aSets[1]
-            } else // set of 3
-            {
+            } else { //3 of a kind
                 oReturnHand = {};
                 oReturnHand.rank = oHand.THREE_OF_A_KIND;
                 oReturnHand.high = bestOfAll.same[0];
@@ -385,7 +384,8 @@ nsHand.fCompareSimpleSet = function(aSet, bSet) {
 
 nsHand.fFindHighCards = function(aCards) {
     var highRank = [],
-        cardsLength = aCards.length;
+        cardsLength = aCards.length,
+        i, j;
     for (i = 0; i < cardsLength; i++)
         highRank[i] = -1;
     for (i = 0; i < cardsLength; i++) {
