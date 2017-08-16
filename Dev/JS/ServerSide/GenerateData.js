@@ -118,7 +118,7 @@ ns.getExactPreflopOdds = function(heroCard1, heroCard2, badGuyCard1, badGuyCard2
         return;
     };
 
-    sleep(10000); //give the system a break
+    //sleep(10000); 
     var toRemove = new CardList();
     toRemove.add(normalizedPreflop.getHeroCards().models);
     toRemove.add(normalizedPreflop.getVillainCards().models); 
