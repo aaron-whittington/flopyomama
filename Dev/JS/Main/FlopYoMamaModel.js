@@ -41,14 +41,15 @@ var FlopYoMama = AWModel.extend({
 
         /*router*/
         this.router = new TableRouter();
+
         //this triggers the routing once (with the values the user passed
         //to the url)
-
         Backbone.history.start({
             pushState: false
         });
-
-
+        
+        routerValues = this.router.getRouterValues();
+         
         /*known cards*/
         this.allCards = new Deck();
         this.knownCards = new KnownCards();
@@ -58,7 +59,7 @@ var FlopYoMama = AWModel.extend({
         this.knownCardsView.render();
 
         /*slider*/
-        routerValueSlider = this.router.getRouterValues().slider;
+        routerValueSlider = routerValues.slider;
 
         this.slider = new Slider({
             value: routerValueSlider
@@ -85,6 +86,8 @@ var FlopYoMama = AWModel.extend({
             that.rangeTable.clearCustom();
             that.sliderView.update();
         });
+
+        this.knownCards.loadFromRouter(routerValues);
 
         this.listenTo(this.rangeTable, 'finalize', this.finalizeHandler);
 

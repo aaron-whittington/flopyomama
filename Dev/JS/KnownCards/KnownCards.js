@@ -75,7 +75,7 @@ var KnownCards = AWModel.extend({
         }
 
     }, 
-    loadFromRouter: function() {
+    loadFromRouter: function(routerValues) {
         //initialize from router
         if (routerValues.hand || routerValues.board) {
             this.set('hand', new CardList(routerValues.hand));
