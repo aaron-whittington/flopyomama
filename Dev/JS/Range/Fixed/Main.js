@@ -2,7 +2,7 @@
 FixedRangeList = require('./FixedRangeList');
 FixedRangeListView = require('./FixedRangeListView');
 FixedRangeEditorView = require('./FixedRangeEditorView');
-$(document).ready(function() {
+module.exports = function() {
     var def = new FixedRangeList();
     var view = new FixedRangeListView({
         collection: def
@@ -22,4 +22,4 @@ $(document).ready(function() {
     $('#save_fixed_ranges').click(function() {
         editorView.trySave();
     });
-});
+};
