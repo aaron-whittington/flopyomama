@@ -108,21 +108,27 @@ var KnownCardsView = Backbone.View.extend({
         }
     },
     updateModel: function() {
-        var hand = new CardList($('#known_1').val() + $('#known_2').val());
-        //silent once, since we don't need to update until we do the board, too
-        this.model.get('hand').reset(hand.models, {
-            silent: true
-        });
+        try {
+            var hand = new CardList($('#known_1').val() + $('#known_2').val());
 
-        var board = new CardList($('#known_3').val() +
-            $('#known_4').val() +
-            $('#known_5').val() +
-            $('#known_6').val() +
-            $('#known_7').val());
+            //silent once, since we don't need to update until we do the board, too
+            this.model.get('hand').reset(hand.models, {
+                silent: true
+            });
 
-        this.model.get('board').reset(board.models, {
-            silent: true
-        });
+            var board = new CardList($('#known_3').val() +
+                $('#known_4').val() +
+                $('#known_5').val() +
+                $('#known_6').val() +
+                $('#known_7').val());
+
+            this.model.get('board').reset(board.models, {
+                silent: true
+            });
+        } catch(e) {
+            console.log('Board not valid ' + e);
+
+        } 
     },
     handleKeyPressKnown: function(keyCode, e) {
 
@@ -185,12 +191,12 @@ var KnownCardsView = Backbone.View.extend({
 
         var oCurrentCard = nsConvert.fConvertStringToCardObject(html);
         /*we allow typing of the same card*/
-        if (fIdenticalCards(oCard, oCurrentCard))
+        if (nsConvert.identicalCards(oCard, oCurrentCard))
             return true;
 
 
         for (var j = 0; j < aKnownCards.length; j++) {
-            if (fIdenticalCards(oCard, aKnownCards[j]))
+            if (nsConvert.identicalCards(oCard, aKnownCards[j]))
                 return false;
         }
         return true;

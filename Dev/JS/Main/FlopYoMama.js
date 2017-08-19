@@ -122,7 +122,7 @@ $(document).ready(function() {
 
     /**************************HAND FLOP BOARD************************/
 
-    /*$("#known_cards").popover({
+    $("#known_cards").popover({
         content: function() {
             return nsHtml.fGetBoardSelectionTable(flopYoMama.knownCards);
         },
@@ -130,20 +130,18 @@ $(document).ready(function() {
         placement: 'bottom',
         trigger: 'manual',
         html: true
-    });*/
+    });
 
     //toggle board selection table when we didn't hit a button
     $('#known_cards [id^=known]').click(function(e) {
-        /*
+        
         if (!$('#board_selection_table').is(':visible'))
             $("#known_cards").popover('show');
-        */
+        
     });
 
     $('body').on('click', '#board_selection_table .glyphicon-remove', function(e) { //only toggle cards when we didn't hit a button		
-        /*
         $("#known_cards").popover('hide');
-        */
     });
 
     /*

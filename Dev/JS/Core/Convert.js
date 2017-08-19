@@ -77,6 +77,10 @@ nsConvert.fFilterCardPairArray = function(pairArray, aKnown, aFilterPairs) {
     return returnArray;
 }
 
+nsConvert.identicalCards = function(a,b) {
+  	return (a.rank === b.rank && a.suit === b.suit);
+};
+
 //card char /int conversion
 _.extend(nsConvert, {
     rankCharToNumber: function(c) {
