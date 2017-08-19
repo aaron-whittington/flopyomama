@@ -1,5 +1,6 @@
 
 AWView = require('../../Core/AWView');
+FixedRangeEditorItemView = require('./FixedRangeEditorItemView');
 //collection view for the fixed-range editor
 FixedRangeEditorView = AWView.extend({
     initialize: function() {
