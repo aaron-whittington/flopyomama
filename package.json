@@ -33,7 +33,11 @@
       "browserify-shim"
     ]
   },
-  "browserify-shim": {},
+  "browserify-shim": {
+     "$" : "global:jQuery", 
+     "jQuery" : "global:jQuery",
+     "jquery" : "global:jQuery" 
+  },
   "dependencies": {
     "backbone": "^1.3.3",
     "grunt-ts": "^6.0.0-beta.16",
