@@ -6,12 +6,14 @@ nsCard =  {
         else 
             return card2.get('suit') - card1.get('suit');
     }, 
-    sortCardArray: function(cardArray, preserveOriginal = true) {
+    sortCardArray: function(cardArray, preserveOriginal) {
+        if (typeof preserveOriginal == 'undefined') preserveOriginal = true;
         var cardClone = preserveOriginal ? cardArray.slice() : cardArray;  
         cardClone.sort(nsCard.compareCards);
         return cardClone;
     }, 
-    standardizeSuits: function(cardArray, preserveOriginal = true) {
+    standardizeSuits: function(cardArray, preserveOriginal) {
+        if (typeof preserveOriginal == 'undefined') preserveOriginal = true;
         var cardClone = preserveOriginal ? cardArray.slice() : cardArray;  
         //physically clone all cards
         //TODO, get rid of this stuff and make Card objects immutable (non Backbone objects)
