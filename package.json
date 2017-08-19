@@ -7,7 +7,8 @@
     "test": "jasmine",
     "coverage": "istanbul cover --include-all-sources --print 'both' --root './Dev/JS'  jasmine",
     "browserify": "browserify ./Dev/JS/Main/FlopYoMama.js -d -o ./Dev/Generated/browserified.js",
-    "tree": "browserify-tree Dev/JS/Main/FlopYoMama.js"
+    "tree": "browserify-tree Dev/JS/Main/FlopYoMama.js",
+    "server" : "http-server -p 8001  & open http://127.0.0.1:8001/Dev/FlopYoMama.html"
   },
   "devDependencies": {
     "backbone": "^1.3.3",
