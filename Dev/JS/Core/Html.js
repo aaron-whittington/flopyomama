@@ -266,10 +266,7 @@ nsHtml.fGetPieChartColors = function(i) {
     };
 
     while (counter < i) {
-
-
         $('#palette .btn').not('.btn-default').not('.btn-link').not('.btn-primary').each(colorer);
-
         round++;
     }
 

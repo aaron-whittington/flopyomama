@@ -16,6 +16,7 @@ var _ = require('underscore');
 var menuMain = require('../Menu/Main');
 var fixedRangeMain = require('../Range/Fixed/Main');
 var filterMain = require('../Filter/Main');
+var settingsMain = require('../Settings/Main');
 
 var FlopYoMama = AWModel.extend({
     updateRoute: function() {
@@ -63,7 +64,9 @@ var FlopYoMama = AWModel.extend({
         
         /* Filter Main */
         filterMain();
-
+        
+        /* Settings Main */
+        settingsMain();
         /*known cards*/
         this.allCards = new Deck();
         this.knownCards = new KnownCards();
