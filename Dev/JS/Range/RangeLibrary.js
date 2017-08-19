@@ -6,6 +6,7 @@ poker = require('../Constants/Poker');
 nsFilter = require('../Filter/Filter');
 nsUtil = require('../Core/Util');
 work = require('webworkify');
+nsPrefs = require('../Settings/Preferences');
 
 nsRange = {};
 

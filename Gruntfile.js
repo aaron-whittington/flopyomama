@@ -34,12 +34,6 @@ module.exports = function(grunt) {
 		    outDir: "./Dev/TS/Generated"
         }
     },
-    browserify: {
-        default : {        
-            src :  ["./Dev/JS/*.js", "./Dev/JS/**/*.js", "!./Dev/JS/ServerSide/*"],
-            dest:  "./Dev/Generated/browserified.js",
-        }
-    },
 	uglify: {
 		RELEASE: {
 			options: {
@@ -122,11 +116,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-preprocess');
   grunt.loadNpmTasks('grunt-ts');
-  grunt.loadNpmTasks('grunt-browserify');
 
   grunt.registerTask('watch-all', ['watch']);
   grunt.registerTask('jshint-all', ['jshint']);
 
-  grunt.registerTask('build-dev', [ 'preprocess', 'less', 'browserify'] );
+  grunt.registerTask('build-dev', [ 'preprocess', 'less'] );
   grunt.registerTask('build-release',['build-dev', 'uglify', 'preprocess', 'less']);   
 };

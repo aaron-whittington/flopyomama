@@ -5,6 +5,7 @@ var Deck = require('../Card/Deck');
 var nsUI = require('../Core/Ui');
 var nsUtil = require('../Core/Util');
 var nsRange = require('../Range/RangeLibrary');
+var nsPrefs = require('../Settings/Preferences');
 
 var KnownCards = AWModel.extend({
     defaults: {

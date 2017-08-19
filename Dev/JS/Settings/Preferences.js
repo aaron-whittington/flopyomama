@@ -24,3 +24,5 @@ nsPrefs.nsConst.BAR_GRAPHS = 0;
 nsPrefs.nsConst.PIE_GRAPHS = 1;
 
 nsPrefs.oGraphType = new nsPrefs.Preference(nsPrefs.nsConst.PIE_GRAPHS, 'Pie charts are yummy.');
+
+module.exports = nsPrefs;

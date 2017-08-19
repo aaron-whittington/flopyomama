@@ -13,6 +13,7 @@ var AWModel = require('../Core/AWModel');
 var TableRouter = require('../Core/Route');
 var Backbone = require('backbone');
 var _ = require('underscore');
+var menu = require('../Menu/Main');
 
 var FlopYoMama = AWModel.extend({
     updateRoute: function() {
@@ -39,6 +40,8 @@ var FlopYoMama = AWModel.extend({
     setUp: function() {
         var that = this;
 
+    
+
         /*router*/
         this.router = new TableRouter();
 
@@ -49,7 +52,11 @@ var FlopYoMama = AWModel.extend({
         });
         
         routerValues = this.router.getRouterValues();
-         
+
+        /* Menu */
+        menu();        
+
+
         /*known cards*/
         this.allCards = new Deck();
         this.knownCards = new KnownCards();
