@@ -1,14 +1,11 @@
-var nsFilter = require('../Filter/Filter');
-var nsFilterHtml = require('../Filter/FilterHtml');
+var nsFilter = require('./Filter');
+var nsFilterHtml = require('./FilterHtml');
 var nsUtil = require('../Core/Util');
 
-$(function() {
-
+module.exports = function() {
     nsFilter.fInit();
     nsFilterHtml.fReBuildFilterMenu();
-
-    //filter settings before slider, because slider triggers eval
-
+    
     var localFilterSettings = nsUtil.fGetLocalStorage("filter_settings");
     if (localFilterSettings !== null && localFilterSettings !== '') {
         nsUI.fToggleCheckableMenu($('#' + localFilterSettings), true);
@@ -148,4 +145,4 @@ $(function() {
             });
         }, 1);
     });
-});
+};

@@ -15,6 +15,7 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 var menuMain = require('../Menu/Main');
 var fixedRangeMain = require('../Range/Fixed/Main');
+var filterMain = require('../Filter/Main');
 
 var FlopYoMama = AWModel.extend({
     updateRoute: function() {
@@ -59,6 +60,9 @@ var FlopYoMama = AWModel.extend({
 
         /* Fixed Range */
         fixedRangeMain();
+        
+        /* Filter Main */
+        filterMain();
 
         /*known cards*/
         this.allCards = new Deck();

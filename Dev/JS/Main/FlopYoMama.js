@@ -17,7 +17,7 @@ $(document).ready(function() {
         $(this).children('div').removeClass('progress-bar-success').css('width', '0%');
         //$(this).children('div').css('width','0%');
     });
-/*
+
     $('#win_percent_bar div').popover({
 
         content: function() {
@@ -38,7 +38,7 @@ $(document).ready(function() {
         trigger: 'hover',
         html: true
     });
-*/
+
     $('#win_percent_bar').bind('start', function() { //resets the progress bar to 0 without css transitions
         nsUI.fDeleteLongStatistics();
     });
