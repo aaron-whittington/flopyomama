@@ -1,103 +1,15 @@
 var nsUtil = require('../Core/Util');
 var nsDrawingHand = require('../Hand/DrawingHand')
+var nsStandardFilters = require('./Standard')
+var nsFilterHtml = require('./FilterHtml');
 
 var nsFilter = {};
 nsFilter.bEdited = false;
 nsFilter.sOriginalJSON = '';
 nsFilter.sEditedJSON = '';
 
-/*standard empty filters*/
-nsFilter.nsStandard = {};
-nsFilter.nsStandard.oGroup = {
-    "sub_filter_type": "class_group",
-    "group_log_op": "log_op_or"
-};
-nsFilter.nsStandard.oMadeHand = {
-    "sub_filter_type": "class_made_hand",
-    "comparator_op": "at_least",
-    "made_hand_op": "made_hand_0"
-};
-nsFilter.nsStandard.oDrawingHand = {
-    "sub_filter_type": "class_drawing_hand",
-    "comparator_op": "at_least",
-    "drawing_hand_op": "drawing_hand_3"
-};
 
-/*standard filters*/
-nsFilter.nsStandardFilters = {};
-nsFilter.nsStandardFilters['filter_strong_hand'] = {
-    "oValues": {
-        "sub_filter_type": "class_group",
-        "group_log_op": "log_op_or"
-    },
-    "sub": [{
-            "oValues": {
-                "sub_filter_type": "class_made_hand",
-                "comparator_op": "at_least",
-                "made_hand_op": "made_hand_2"
-            }
-        },
-        {
-            "oValues": {
-                "sub_filter_type": "class_drawing_hand",
-                "comparator_op": "at_least",
-                "drawing_hand_op": "drawing_hand_3"
-            }
-        }
-    ],
-    "name": 'Strong Hand'
-};
 
-nsFilter.nsStandardFilters['filter_junk'] = {
-    "oValues": {
-        "sub_filter_type": "class_group",
-        "group_log_op": "log_op_and"
-    },
-    "sub": [{
-            "oValues": {
-                "sub_filter_type": "class_made_hand",
-                "comparator_op": "at_most",
-                "made_hand_op": "made_hand_0"
-            }
-        },
-        {
-            "oValues": {
-                "sub_filter_type": "class_drawing_hand",
-                "comparator_op": "at_most",
-                "drawing_hand_op": "drawing_hand_2"
-            }
-        }
-    ],
-    "name": 'Junk'
-};
-
-nsFilter.nsStandardFilters['filter_bluffy'] = {
-    "oValues": {
-        "sub_filter_type": "class_group",
-        "group_log_op": "log_op_or"
-    },
-    "sub": [{
-        "oValues": {
-            "sub_filter_type": "class_filter",
-            "sub_filter_op": "filter_strong_hand"
-        }
-    }, {
-        "oValues": {
-            "sub_filter_type": "class_filter",
-            "sub_filter_op": "filter_junk"
-        }
-    }],
-    'name': 'Bluffy'
-};
-
-nsFilter.nsStandardFilters['filter_monster'] = {
-    "oValues": {
-        "sub_filter_type": "class_made_hand",
-        "comparator_op": "at_least",
-        "made_hand_op": "made_hand_3"
-    },
-    'name': 'Monster'
-}
 
 nsFilter.sFilterNamesKey = 'filters_saved';
 
@@ -155,7 +67,7 @@ nsFilter.fActiveFilter = function(sName, bUnpack) {
     var oFilter = nsUtil.fGetLocalStorage(sName);
 
     if (!oFilter) //get it from the standard names if not
-        oFilter = nsFilter.nsStandardFilters[sName];
+        oFilter = nsStandardFilters[sName];
 
     if (!oFilter) {
         return;

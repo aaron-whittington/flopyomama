@@ -1,7 +1,8 @@
 
-var nsFilter = require('./Filter');
+var nsStandardFilters = require('./Standard');
 var nsUtil = require('../Core/Util');
 var nsDrawingHand = require('../Hand/DrawingHand');
+var nsHand = require('../Hand/NSHand');
 var nsFilterHtml = {};
 
 nsFilterHtml.fGetFilterUI = function() {
@@ -14,7 +15,7 @@ nsFilterHtml.fGetFilterUI = function() {
     return sHtml;
 };
 
-nsFilterHtml.fReBuildFilterMenu = function() {
+nsFilterHtml.fReBuildFilterMenu = function(nsFilter) {
     //first delete existing
     $('#filter_config_menu li.filter').remove();
     var sHtml = '';
@@ -82,7 +83,7 @@ nsFilterHtml.fWrapSubFilterGroup = function(sGroupGroup) {
     return sHtml;
 };
 
-nsFilterHtml.fFilterHtmlFromSelect = function(sVal) {
+nsFilterHtml.fFilterHtmlFromSelect = function(sVal, nsFilter) {
     var sHtml = '<div id="filter_loaded" class="well">';
 
     var oSettings = nsFilter.fActiveFilter(sVal);
@@ -91,7 +92,7 @@ nsFilterHtml.fFilterHtmlFromSelect = function(sVal) {
         sHtml += nsFilterHtml.fLoadFilterFromObject(oSettings);
 
     } else { //new
-        sHtml += nsFilterHtml.fWrapSubFilterButtonGroup(nsFilterHtml.fSubFilterButtonGroup(nsFilter.nsStandard.oGroup));
+        sHtml += nsFilterHtml.fWrapSubFilterButtonGroup(nsFilterHtml.fSubFilterButtonGroup(nsStandardFilters.meta.group));
     }
     sHtml += '</div>';
     return sHtml;
@@ -103,7 +104,7 @@ nsFilterHtml.fLoadNew = function() {
 };
 
 
-nsFilterHtml.fUpdateUI = function() {
+nsFilterHtml.fUpdateUI = function(nsFilter) {
     var sString = 'Select filter';
     var bReturn = true;
     if (nsFilter.sOriginalJSON !== nsFilter.sEditedJSON) {

@@ -4,7 +4,7 @@ var nsUtil = require('../Core/Util');
 
 module.exports = function() {
     nsFilter.fInit();
-    nsFilterHtml.fReBuildFilterMenu();
+    nsFilterHtml.fReBuildFilterMenu(nsFilter);
     
     var localFilterSettings = nsUtil.fGetLocalStorage("filter_settings");
     if (localFilterSettings !== null && localFilterSettings !== '') {
@@ -13,7 +13,7 @@ module.exports = function() {
     }
 
     $('#filter_editor').bind('hide.bs.modal', function() {
-        if (nsFilterHtml.fUpdateUI()) {
+        if (nsFilterHtml.fUpdateUI(nsFilter)) {
             if (confirm('You have unsaved changes. Do you wish to discard them?'))
                 return true;
             else return false;
@@ -24,7 +24,7 @@ module.exports = function() {
         if (confirm('Discard changes?')) {
             nsFilter.sEditedJSON = nsFilter.sOriginalJSON;
             nsFilterHtml.fLoadFilterFromObject(nsFilter.sOriginalJSON);
-            nsFilterHtml.fUpdateUI();
+            nsFilterHtml.fUpdateUI(nsFilter);
         }
     });
 
@@ -32,7 +32,7 @@ module.exports = function() {
         //todo add name
         if (confirm('Really delete this filter?')) {
             nsFilter.fDeleteFilter();
-            nsFilterHtml.fReBuildFilterMenu();
+            nsFilterHtml.fReBuildFilterMenu(nsFilter);
             nsFilter.fClearFilter();
             $('#filter_editor').trigger('show.bs.modal');
         }
@@ -40,9 +40,9 @@ module.exports = function() {
 
     $('#save_filter').click(function() {
         nsFilter.fSaveFilter();
-        nsFilterHtml.fReBuildFilterMenu();
+        nsFilterHtml.fReBuildFilterMenu(nsFilter);
         nsFilter.sEditedJSON = nsFilter.sOriginalJSON;
-        nsFilterHtml.fUpdateUI();
+        nsFilterHtml.fUpdateUI(nsFilter);
     });
 
     //new subfilter clicks	
@@ -50,7 +50,7 @@ module.exports = function() {
         var thisRow = $(this).parents('.filter_ctrl_row');
         nsFilterHtml.fAddSubRow(thisRow);
         nsFilter.fSetEditedJson();
-        nsFilterHtml.fUpdateUI();
+        nsFilterHtml.fUpdateUI(nsFilter);
     });
 
     //delete subfilter clicks
@@ -70,7 +70,7 @@ module.exports = function() {
         }
 
         nsFilter.fSetEditedJson();
-        nsFilterHtml.fUpdateUI();
+        nsFilterHtml.fUpdateUI(nsFilter);
     });
 
     //dropdown menu clicks
@@ -107,7 +107,7 @@ module.exports = function() {
                 labelButton.html(displayVal);
             }
             nsFilter.fSetEditedJson();
-            nsFilterHtml.fUpdateUI();
+            nsFilterHtml.fUpdateUI(nsFilter);
         }
     });
 
@@ -119,11 +119,11 @@ module.exports = function() {
             nsUI.fAddEventsToCombobox('sel_filter');
 
             $('#sel_filter').keypress(function() {
-                nsFilterHtml.fUpdateUI();
+                nsFilterHtml.fUpdateUI(nsFilter);
             });
             nsFilter.sEditedJSON = '';
             nsFilter.sOriginalJSON = '';
-            nsFilterHtml.fUpdateUI();
+            nsFilterHtml.fUpdateUI(nsFilter);
             $('#sel_filter').bind('validated', function() {
                 if (nsFilter.sOriginalJSON !== nsFilter.sEditedJSON)
                     return;
@@ -136,7 +136,7 @@ module.exports = function() {
                 else
                     filterId = '';
 
-                sInnerHtml = nsFilterHtml.fFilterHtmlFromSelect(filterId);
+                sInnerHtml = nsFilterHtml.fFilterHtmlFromSelect(filterId, nsFilter);
                 $('#filter_editor .modal-body').append(sInnerHtml);
 
                 var original = nsFilter.fCurrentToJSON();
