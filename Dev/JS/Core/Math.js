@@ -71,4 +71,8 @@ nsMath.shuffle = function(aArray, iMaxSub) {
     return returnArray;
 };
 
+nsMath.randomIntBetween = function(min, max) {
+    return Math.floor(Math.random() * (max + 1 - min)) + min; 
+}
+
 module.exports = nsMath;
