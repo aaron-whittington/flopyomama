@@ -60,20 +60,19 @@ var KnownCards = AWModel.extend({
         var aCards = this.allKnown(true);
 
         var bBoardState = this.getBoardState();
+        
+        var getAllCombinations = bBoardState.bFlop && bBoardState.bHand && nsPrefs.oAutomaticSearch.fGet();
+        if(!getAllCombinations) {
+            nsUI.fDeleteLongStatistics();
+        }
 
         if (bBoardState.bFlop) {
-            nsRange.fGetTextures(this);
+            nsRange.fGetTextures(this, getAllCombinations);
         } else {
               //todo this should be in the range view
-            $('#textures').html(''); //delete the range textures
+            $('#textures').html('Enter a flop to see board textures.'); //delete the range textures
         }
 
-        if (bBoardState.bFlop && bBoardState.bHand && nsPrefs.oAutomaticSearch.fGet()) {
-
-             nsRange.fGetAllUnknownCombinationsThreaded(this);
-        } else {
-               nsUI.fDeleteLongStatistics();
-        }
 
     }, 
     loadFromRouter: function(routerValues) {

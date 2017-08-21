@@ -23,11 +23,10 @@ module.exports = function(self) {
     //aoStartingHands = array of CardPair objects (like AAs)
     nsWorker.fCalculateBoards = function(aoStartingHands, aKnownCards, aUnknownCards, aFixedBoardCards, numberOfOpenBoardHandPlaces, oFilter) {
 
-        console.log('FILTER: ' + JSON.stringify(oFilter));
-        
-       //  var bHit = nsFilter.nsEvaluate.fEvaluateFilter(oFilter, aVillainHand);
-       
-       var startTime = new Date().getTime();
+        console.log('WORKERJS FILTER: ' + JSON.stringify(oFilter));
+
+        //var bHit = nsFilter.nsEvaluate.fEvaluateFilter(oFilter, aVillainHand);
+        var startTime = new Date().getTime();
         var totalCombinations = nsMath.numberOfCombinations(aUnknownCards.length, numberOfOpenBoardHandPlaces);
         var numberDone = 0;
 
@@ -119,8 +118,9 @@ module.exports = function(self) {
                 var iWinCountLocal = 0,
                     iDrawCountLocal = 0,
                     iLossCountLocal = 0;
-
-                if (oPairCannotHitFlush.length > 0) { //now we don't have to look for flushes, checking the first pair of this suffices
+                
+                //now we don't have to look for flushes, so checking the first pair of this suffices
+                if (oPairCannotHitFlush.length > 0) { 
 
                     //standardize all 7 cards
                     iWonMagnitude = oPairCannotHitFlush.length;

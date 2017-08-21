@@ -30,7 +30,6 @@ module.exports = function(self) {
         }
     }, false);
 
-
     nsWorkerTextures.fCalculateBoards = function(aoStartingHands, aKnownCards, aFixedBoardCards, oFilter) {
         var startTime = new Date().getTime();
         var numberDone = 0;
@@ -44,9 +43,7 @@ module.exports = function(self) {
             //get the villain pair
             var oPair = aoStartingHands[iVillainPair].oPair;
             var sPair = aoStartingHands[iVillainPair].sPair;
-            if (sPair == null) {
-                throw 'pair was null';
-            }
+
             oFilterRecord[sPair] = [];
 
             var oPairArray = nsConvert.fFilterCardPairArray(aoStartingHands[iVillainPair].aPair, aCurrentKnown);
