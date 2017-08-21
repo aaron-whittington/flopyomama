@@ -122,14 +122,20 @@
 			</div>
 			<div id="inner-stats">
 				<ul class="nav nav-tabs">
-					<li class='active'><a href="#textures" title="Villain's current status." data-toggle="tab"><strong>Textures</strong></a></li>
-					<li><a href="#hero_stat" title="Hero's results after all cards are played." data-toggle="tab"><strong>Hero</strong></a></li>
-					<li><a href="#villain_stat" title="Villain's results after all cards are played." data-toggle="tab"><strong>Villain</strong></a></li>
+					<li class='active'><a href="#textures" title="How opponent's range hits the board." data-toggle="tab">Textures</a></li>
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">Odds
+						<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="#villain_stat" data-toggle="tab">Range (Opponent)</a></li>
+							<li><a href="#hero_stat" data-toggle="tab">Hand (Hero)</a></li>
+						</ul>
+					 </li>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="textures"></div>
-					<div class="tab-pane" id="hero_stat"></div>
 					<div class="tab-pane" id="villain_stat"></div>
+					<div class="tab-pane" id="hero_stat"></div>
 				</div>
 			</div>
 		</div>

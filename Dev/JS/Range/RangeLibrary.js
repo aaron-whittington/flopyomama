@@ -214,7 +214,6 @@ nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards) {
 
                 }
             }
-            nsUtil.fLog('message received: ' + JSON.stringify(e.data));
         }, false);
 
         worker.postMessage({
@@ -252,7 +251,7 @@ nsRange.fGetTextures = function(knownCards) {
         return;
     }
     $('.no_results').remove();
-    //aoStartingHands,aKnownCards,aFixedBoardCards
+
     var aoStartingHands = nsRange.fGetStartingHandsFromRangeGrid();
     var aKnownCards = knownCards.allKnown(true);
     var aFixedBoardCards = knownCards.get('board').map(function(m) {
@@ -280,7 +279,6 @@ nsRange.fGetTextures = function(knownCards) {
                     nsHtml.fDrawTexturePie(oResult);
                 }
             }
-            nsUtil.fLog('message received from texture worker: ' + JSON.stringify(e.data));
         }, false);
 
         worker.postMessage({
