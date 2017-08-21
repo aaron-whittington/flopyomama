@@ -36,15 +36,17 @@ module.exports = function(self) {
         var numberDone = 0;
         var oVillainStaticDic = {};
         var oPairLengthDic = {};
-        var oFilterRecord = [];
-        fPostConsole('TEST TEST TEST');
-        //fPostConsole('TEST filter' + JSON.stringify(oFilter));
+        var oFilterRecord = {};
         var aCurrentKnown = aKnownCards;
+
         var startingHandLengths = aoStartingHands.length;
         for (var iVillainPair = startingHandLengths - 1; iVillainPair >= 0; iVillainPair--) {
             //get the villain pair
             var oPair = aoStartingHands[iVillainPair].oPair;
             var sPair = aoStartingHands[iVillainPair].sPair;
+            if (sPair == null) {
+                throw 'pair was null';
+            }
             oFilterRecord[sPair] = [];
 
             var oPairArray = nsConvert.fFilterCardPairArray(aoStartingHands[iVillainPair].aPair, aCurrentKnown);

@@ -93,9 +93,9 @@ nsFilter.fUnpack = function(oFilter) {
             var sub = returnVal.sub[i];
             returnVal.sub[i] = nsFilter.fUnpack(sub);
         }
-        return returnVal;
-    } else
-        return returnVal;
+    }
+
+    return returnVal;
 };
 /************************************************** JSON PACKAGING ****************************************************************************/
 
@@ -179,6 +179,7 @@ nsFilter.nsEvaluate.fEval = function(sName, varCards) {
 nsFilter.nsEvaluate.oCurrentHand = null;
 
 //returns true if the filter hits
+//varcards can be an array of cards, OR a Hand object
 nsFilter.nsEvaluate.fEvaluateFilter = function(oFilter, varCards) {
     //varCards can actually be an array or the finished object...
     var oHand = {};
@@ -210,12 +211,10 @@ nsFilter.nsEvaluate.fEvaluateFilter = function(oFilter, varCards) {
             break;
         default:
             returnVal = false; //should throw exception here
-            console.error('filter failed');
+            throw 'Filter failed!';
             break;
     }
 
-
-    //nsUtil.fLog('hand rank is ' + oHand.rank + ' and return value ' + returnVal )
     return returnVal;
 };
 
@@ -261,8 +260,6 @@ nsFilter.nsEvaluate.fEvaluateMadeHand = function(oValues, oHand) {
         else
             return false;
     }
-
-    //should never get here
 };
 
 nsFilter.nsEvaluate.fEvaluateDrawingHand = function(oValues, oHand) {

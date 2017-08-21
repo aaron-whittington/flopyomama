@@ -10,10 +10,6 @@ module.exports = function(self) {
         var data = e.data;
         switch (data.cmd) {
             case 'start':
-                //self.postMessage({'command recieved start');
-                //importScripts("../../Lib/underscore/underscore-min.js", '../../Core/Math.js', '../../Core/Hand.js', '../../Core/Convert.js');
-
-
                 nsWorker.fCalculateBoards(data.aoStartingHands, data.aKnownCards, data.aUnknownCards, data.aFixedBoardCards, data.numberOfOpenBoardHandPlaces, data.oFilter);
                 break;
             case 'stop':
@@ -27,7 +23,11 @@ module.exports = function(self) {
     //aoStartingHands = array of CardPair objects (like AAs)
     nsWorker.fCalculateBoards = function(aoStartingHands, aKnownCards, aUnknownCards, aFixedBoardCards, numberOfOpenBoardHandPlaces, oFilter) {
 
-        var startTime = new Date().getTime();
+        console.log('FILTER: ' + JSON.stringify(oFilter));
+        
+       //  var bHit = nsFilter.nsEvaluate.fEvaluateFilter(oFilter, aVillainHand);
+       
+       var startTime = new Date().getTime();
         var totalCombinations = nsMath.numberOfCombinations(aUnknownCards.length, numberOfOpenBoardHandPlaces);
         var numberDone = 0;
 
@@ -90,6 +90,7 @@ module.exports = function(self) {
                 //get the villain pair
                 oPair = aoStartingHands[iVillainPair].oPair;
                 sPair = aoStartingHands[iVillainPair].sPair;
+                
 
                 var oPairArray = nsConvert.fFilterCardPairArray(aoStartingHands[iVillainPair].aPair, aCurrentKnown, oFilter[sPair]);
 

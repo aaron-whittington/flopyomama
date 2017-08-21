@@ -215,6 +215,8 @@ nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards) {
                 }
             }
         }, false);
+        
+        var oFilter = nsFilter.fActiveFilter(null, true);
 
         worker.postMessage({
             'cmd': 'start',
@@ -224,7 +226,7 @@ nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards) {
             aUnknownCards: aUnknownCards,
             numberOfOpenBoardHandPlaces: numberOfOpenBoardHandPlaces,
             aFixedBoardCards: aFixedBoardCards,
-            oFilter: nsFilter.oFilterRecord,
+            oFilter: oFilter,
             bMin: false
         });
     }; //end fStartWorker
@@ -257,6 +259,7 @@ nsRange.fGetTextures = function(knownCards) {
     var aFixedBoardCards = knownCards.get('board').map(function(m) {
         return m.attributes;
     });
+
     var oFilter = nsFilter.fActiveFilter(null, true);
 
     var fStartWorker = function() {
@@ -269,8 +272,11 @@ nsRange.fGetTextures = function(knownCards) {
             if (e.data.type === 'done') {
                 var oResult = e.data.msg;
                 var graphPref = nsPrefs.oGraphType.fGet();
+
                 nsFilter.fClearFilter();
                 nsFilter.fDrawFilterToBoard(oResult.oFilterRecord);
+                console.log('TEXTURE SENT BACK FILTER RECORD ' + JSON.stringify(oResult.oFilterRecord));
+
                 if (graphPref === nsPrefs.nsConst.BAR_GRAPHS) {
                     var sHtml = nsHtml.fGetTextureHtml(oResult);
                     $('#textures').html(sHtml);
