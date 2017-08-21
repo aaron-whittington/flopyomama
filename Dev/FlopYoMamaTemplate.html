@@ -114,7 +114,7 @@
 			</div>	
 		</div>
 		<div id="results_col" class="col-lg-4 col-md-4 col-sm-10"> <!-- bug with col-sm-10-->
-			<h4>Odds</h4>
+			<h4>Results</h4>
 			<div id='win_percent_bar' class="progress">
 				<div class="progress-bar progress-bar-success" style="width: 0%"></div>
 				<div class="progress-bar" style="width: 0%"></div>
@@ -122,13 +122,13 @@
 			</div>
 			<div id="inner-stats">
 				<ul class="nav nav-tabs">
-					<li class='active'><a href="#textures" title="How opponent's range hits the board." data-toggle="tab">Textures</a></li>
+					<li class='active'><a href="#textures" title="Texture of range (opponent)." data-toggle="tab">Textures</a></li>
 					<li class="dropdown">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#">Odds
 						<span class="caret"></span></a>
 						<ul class="dropdown-menu">
 							<li><a href="#villain_stat" data-toggle="tab">Range (Opponent)</a></li>
-							<li><a href="#hero_stat" data-toggle="tab">Hand (Hero)</a></li>
+							<li><a href="#hero_stat" data-toggle="tab">Hand (Player)</a></li>
 						</ul>
 					 </li>
 				</ul>
@@ -145,8 +145,8 @@
 
 		</div>
 		<div class ="col-lg-6 col-md-6 col-sm-6">
-			<span id="range_slider_val" class="label"></span>
 			<div id="range_slider" title="Range slider"></div>
+			<span id="range_slider_val" class="label"></span>
 		</div>	
 		<div class ="col-lg-4 col-md-4 col-sm-3">
 			<div id='range_buttons' class="btn-group">

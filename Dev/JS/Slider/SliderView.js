@@ -45,7 +45,7 @@ var SliderView = Backbone.View.extend({
         var valToSet =  100.0 - parseFloat(handleLeft) + '%';
         this.bg.style.right = valToSet; //('right',valToSet);*/
         var value = this.model.get('value');
-        $("#range_slider_val").html(value + '%');
+        $("#range_slider_val").html('<strong>' + value + '%</strong> of starting hands selected.');
     
     },
     update: function(value) { //changing the slider programatically
