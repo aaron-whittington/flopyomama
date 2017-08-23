@@ -154,6 +154,18 @@
 					<span class="glyphicon glyphicon-remove"></span>
 				</button>		
 				<div class="btn-group dropup">
+					<button id="range_config"  type = "button" title="Range" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						<span class="glyphicon glyphicon-stats"></span>
+						<span class="caret"></span>
+					</button>	
+					<ul id='range_config_menu' class="ctrls dropdown-menu">
+						<li class="divider"></li>								
+						<li id="new_edit_range"> 
+						<a data-toggle="modal" href="#range_editor">New/Edit Ranges</a>
+						</li>
+					</ul>
+				</div>
+				<div class="btn-group dropup">
 					<button id="filter_config"  type = "button" title="Filter" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 						<span class="glyphicon glyphicon-filter"></span>
 						<span class="caret"></span>
@@ -177,10 +189,6 @@
 		</div>
 	</div>	
 	<div id="dev_menu" class="row">			
-		<button id="test_short" class = "test_button btn">Short Test</button>
-		<button id="test_long" class = "test_button btn">Long Test</button>
-		<button id="test_ultra" class = "test_button btn">Ultra Test</button>
-		<button id="start_calcs_now" class = "test_button btn">Start Calcs Now</button>
 		<div class="theme_select btn-group">
 			<button type = "button" title="Theme Select" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				<span class="glyphicon glyphicon-picture"></span>
