@@ -11,7 +11,7 @@ var FixedRangeView = AWView.extend({
     render: function() {
         var oData = this.renderData();
         var output = this.compiledTemplate(oData);
-        $('#new_fixed').before(output);
+        $('#range_config_menu .divider').before(output);
         this.setElement($(".fixed_range." + oData.id));
     },
     events: {

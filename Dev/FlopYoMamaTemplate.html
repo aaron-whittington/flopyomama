@@ -69,43 +69,7 @@
 
 	<div id='range_row' class="row">
 		<div id="range_col" class="col-lg-2 col-md-2 col-sm-3">
-			<div class="panel-group " id="range-panel">
-				<div class="panel panel-info">
-					<div class="panel-heading">
-						<h5 class="panel-title">
-							<a class="accordion-toggle" data-toggle="collapse" data-parent="#range-panel" href="#collapseOne">
-								Range
-							</a>
-						</h5>
-					</div>
-					<div id="collapseOne" class="panel-body collapse in">
-						<div class="panel-inner">				
-							<ul id="fixed_ranges" class="nav nav-pills nav-stacked"  >
-								<li id="new_fixed"><a data-toggle="modal" href="#fixed_range_editor">New/Edit<span class="glyphicon glyphicon-pencil"></span></a></li>	
-							</ul>
 
-						</div>
-					</div>
-				</div>
-				<div class="panel panel-info">
-					<div class="panel-heading">
-						<h5 class="panel-title">
-							<a class="accordion-toggle" data-toggle="collapse" data-parent="#range-panel" href="#range_scales">
-								Scale
-							</a>
-						</h5>
-					</div>
-					<div id="range_scales" class="panel-body collapse">
-						<div class="panel-inner">
-							<ul class="nav nav-pills nav-stacked"  >
-								<li id='sklansky' ><a>Sklansky</a></li>
-								<li id='statistical'><a>Statistical</a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-
-			</div>
 		</div>
 		<div id="op_range_col" class="col-lg-6 col-md-6 col-sm-9">
 			<div id="op_range">
@@ -154,14 +118,28 @@
 					<span class="glyphicon glyphicon-remove"></span>
 				</button>		
 				<div class="btn-group dropup">
-					<button id="range_config"  type = "button" title="Range" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+					<button id="range_config"  type = "button" title="Fixed Ranges" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 						<span class="glyphicon glyphicon-stats"></span>
 						<span class="caret"></span>
 					</button>	
 					<ul id='range_config_menu' class="ctrls dropdown-menu">
 						<li class="divider"></li>								
 						<li id="new_edit_range"> 
-						<a data-toggle="modal" href="#range_editor">New/Edit Ranges</a>
+						<a data-toggle="modal" href="#fixed_range_editor">New/Edit Ranges</a>
+						</li>
+					</ul>
+				</div>
+				<div class="btn-group dropup">
+					<button id="range_scale"  type = "button" title="Range Scale" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						<span class="glyphicon glyphicon-scale"></span>
+						<span class="caret"></span>
+					</button>	
+					<ul id='range_config_menu' class="ctrls dropdown-menu">
+						<li id="sklansky"> 
+							<a>Sklansky</a>
+						</li>
+						<li id="statistical"> 
+							<a>Statistical</a>
 						</li>
 					</ul>
 				</div>
@@ -295,7 +273,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Settings & Tools</h4>
+					<h4 class="modal-title">Settings &amp; Tools</h4>
 				</div>
 				<div class="modal-body">
 				</div>
