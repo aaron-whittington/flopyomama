@@ -70,7 +70,7 @@ var KnownCards = AWModel.extend({
             nsRange.fGetTextures(this, getAllCombinations);
         } else {
               //todo this should be in the range view
-            $('#textures').html('Enter a flop to see board textures.'); //delete the range textures
+            $('#textures').html(''); //delete the range textures
         }
 
 

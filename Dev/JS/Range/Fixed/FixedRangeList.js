@@ -84,6 +84,36 @@ FixedRangeList.default = {
             }
         ]
     },
+    "Does Not 3-bet": {
+        "name": "Does Not 3-bet",
+        "desc": "A range without typical 3-bet hands.",
+        "sliderVal": 19,
+        "sliderScale": "sklansky",
+        "custom": [{
+                "key": "AA",
+                "selected": false
+            },
+            {
+                "key": "KK",
+                "selected": false
+            },
+            {
+                "key": "AKs",
+                "selected": false
+            },
+            {
+                "key": "AKo",
+                "selected": false
+            },{
+                "key": "QQ",
+                "selected": false
+            },{
+                "key": "JJ",
+                "selected": false
+            }
+
+        ]
+    },
     "agrofish": {
         "name": "Agrofish",
         "desc": "A very agressive bad player",
