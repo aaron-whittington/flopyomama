@@ -3,6 +3,7 @@ var nsStandardFilters = require('./Standard');
 var nsUtil = require('../Core/Util');
 var nsDrawingHand = require('../Hand/DrawingHand');
 var nsHand = require('../Hand/NSHand');
+var metaFilters = require('./Meta');
 var nsFilterHtml = {};
 
 nsFilterHtml.fGetFilterUI = function() {
@@ -92,7 +93,7 @@ nsFilterHtml.fFilterHtmlFromSelect = function(sVal, nsFilter) {
         sHtml += nsFilterHtml.fLoadFilterFromObject(oSettings);
 
     } else { //new
-        sHtml += nsFilterHtml.fWrapSubFilterButtonGroup(nsFilterHtml.fSubFilterButtonGroup(nsStandardFilters.meta.group));
+        sHtml += nsFilterHtml.fWrapSubFilterButtonGroup(nsFilterHtml.fSubFilterButtonGroup(metaFilters.group));
     }
     sHtml += '</div>';
     return sHtml;

@@ -18,7 +18,7 @@ nsFilter.sFilterNamesKey = 'filters_saved';
 nsFilter.fInit = function() {
     var loc = nsUtil.fGetLocalStorage(nsFilter.sFilterNamesKey);
     if (loc == null || typeof(loc) == "undefined") {
-        loc = _.keys(nsFilter.nsStandardFilters);
+        loc = _.keys(nsStandardFilters);
         nsUtil.fSetLocalStorage(nsFilter.sFilterNamesKey, loc);
     }
 };
