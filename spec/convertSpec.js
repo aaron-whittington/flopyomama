@@ -19,7 +19,7 @@ describe("Convert", function() {
         expect(result).toEqual('K♠');
     });
 
-    it('should filter cards correctly', function() {
+    xit('should filter cards correctly', function() {
         //nsConvert.fFilterCardPairArray(pairArray, aUnknown, aFilterPairs);
     });
 

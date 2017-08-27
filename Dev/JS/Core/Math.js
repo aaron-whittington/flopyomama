@@ -2,11 +2,16 @@
 var nsMath= {};
 
 nsMath.combine = function(aN, k) {
+
     if (k === 0)
         return [];
+    
+    if(k > aN.length) {
+        throw "k cannot be greater than the length of the array";
+    }
 
-    var aDisplace = [];
-
+    var aDisplace = [], i;
+ 
     for (i = 0; i < k; i++)
         aDisplace[i] = 0;
 
@@ -24,7 +29,6 @@ nsMath.combine = function(aN, k) {
     fAddFoundArray();
 
     while (aDisplace[0] !== max) {
-        //print result
 
         //find first column less than max
         for (i = aDisplace.length - 1; i >= 0; i--) {
@@ -32,7 +36,8 @@ nsMath.combine = function(aN, k) {
 
                 var currentAdd = aDisplace[i] + 1;
                 aDisplace[i] = currentAdd;
-                for (j = i + 1; j < aDisplace.length; j++) aDisplace[j] = Math.min(currentAdd, aDisplace[j]);
+                for (j = i + 1; j < aDisplace.length; j++) 
+                    aDisplace[j] = Math.min(currentAdd, aDisplace[j]);
 
                 break;
             } //end iff
@@ -41,6 +46,79 @@ nsMath.combine = function(aN, k) {
     } //end while
     return returnArray;
 }; // end func
+
+nsMath.permute = function(aN, k) {
+    if (k === 0)
+        return [];
+    
+    if(k > aN.length) {
+        throw "k cannot be greater than the length of the array";
+    }
+    
+    //indices for first item example 0,1,2,3
+    var first = [];
+    for (var i = 0; i < k; i++)
+        first[i] = i;
+
+
+    function findNextFreeIndex(indexes, start) {
+        for (var i=start; i < aN.length; i++) {
+            if (indexes.indexOf(i) === -1) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    function getNext(last) {
+        //we push to next, then reverse it
+        var next = last.slice();
+        for(var depth = last.length -1; depth >= 0; depth--) {
+
+             //max already achieved in this column
+            if(last[depth] === aN.length-1) {
+                if(depth === 0) {
+                    //done
+                    return false;
+                } 
+                //go to next column
+                continue;
+            } else {
+                //we increment the current column to an available value
+                var toSearch = next.slice(0,depth + 1);
+                var nextAvailable = findNextFreeIndex(toSearch, last[depth] + 1);
+                
+                if(nextAvailable == -1) {;
+                    continue;
+                }
+
+                next[depth] = nextAvailable;
+
+                //now set the remaining columns to lowest possible values
+                for(var j = depth + 1; j < last.length; j++) {
+                    next[j] = findNextFreeIndex(next.slice(0,j), 0);
+                } 
+                
+                return next;
+            } 
+        } 
+    }
+
+    var results = [first];
+    do  { 
+        first = getNext(first);
+        if (first === false) {
+            break;
+        } else {
+            results.push(first);
+        }
+    } while (true);
+
+    //now convert to actual objects
+    return results.map(function(aIndices){
+        return aIndices.map( function(i) { return aN[i]; });
+    })
+}
 
 nsMath.numberOfCombinations = function(n, k) {
     return nsMath.factorial(n) / (nsMath.factorial(k) * nsMath.factorial(n - k));
@@ -73,6 +151,16 @@ nsMath.shuffle = function(aArray, iMaxSub) {
 
 nsMath.randomIntBetween = function(min, max) {
     return Math.floor(Math.random() * (max + 1 - min)) + min; 
-}
+};
+
+//for reduce callbacks
+nsMath.sum = function(a, b) {
+    return a + b;
+};
+
+//for reduce callbacks
+nsMath.product = function(a, b) {
+    return a * b;
+};
 
 module.exports = nsMath;

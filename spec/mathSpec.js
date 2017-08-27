@@ -32,3 +32,29 @@ it('should shuffle correctly', function() {
 	expect(shuffled).toContain(3);
         expect(shuffled.length).toEqual(3);
 });
+
+it('should calculate permutations correctly', function() {
+        
+        var threeTakeTwo = nsMath.permute([1,2,3],2);
+
+        expect(threeTakeTwo).toEqual(
+                [[1,2],
+                [1,3],
+                [2,1],
+                [2,3],
+                [3,1],
+                [3,2]]
+        );
+
+        var threeTakeThree = nsMath.permute([1,2,3],3);
+
+        expect(threeTakeThree).toEqual(
+                [[1,2,3],
+                [1,3,2],
+                [2,1,3],
+                [2,3,1],
+                [3,1,2],
+                [3,2,1]]
+        );
+
+});
