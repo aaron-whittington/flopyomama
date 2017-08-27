@@ -80,7 +80,16 @@ ICM = function(chipCounts, prizeStructure) {
         }
 
         return results;
+    }
 
+    this.getEquity = function() {
+        var prizeChances = that.getPrizeChances();
+        return prizeChances.map(function(player) {
+
+            return player.reduce(function(sum, multiplier, index){
+                return sum + multiplier * that.prizeStructure[index]; 
+            }, 0);
+        });
     }
 };
 
