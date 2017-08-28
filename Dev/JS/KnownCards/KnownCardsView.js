@@ -18,13 +18,15 @@ var KnownCardsView = Backbone.View.extend({
             board = this.model.get('board').models,
             i,
             val;
-
+        console.log('render' + JSON.stringify(hand));
         for (i = 0; i < 2; i++) {
             val = hand.length > i ? hand[i].attributes : null;
-            if (val)
+            if (val) {
                 this.setBoardCard(val, i);
-            else
+                console.log('set board card' + JSON.stringify(val));
+            } else {
                 this.deleteBoard(i);
+            }
         }
 
         for (i = 0; i < 5; i++) {
@@ -40,9 +42,12 @@ var KnownCardsView = Backbone.View.extend({
         var oCard;
         /*nothing selected*/
         if (jqKnown.length < 1) {
+            console.log('setboard string returns false')
             return false;
         } else {
             jqKnown.val(s);
+
+            console.log('setboard string to s ' + s + ' id ' + jqKnown.attr('id'));
 
             jqKnown.removeClass("suit_C suit_D suit_H suit_S");
 
@@ -213,6 +218,7 @@ var KnownCardsView = Backbone.View.extend({
         return true;
     },
     deleteBoard: function() {
+        console.log('DELETE BOARD' + JSON.stringify(arguments));
         var that = this;
         var fDeleteSingleBoard = function(id) {
             if (nsUtil.fType(id) === 'number') {

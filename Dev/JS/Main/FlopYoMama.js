@@ -2,6 +2,7 @@
 nsHtml = require('../Core/Html');
 nsUI = require('../Core/Ui');
 globalUi = require('../Constants/Ui');
+Vue = require('vue');
 
 $(document).ready(function() {
     /**********************************************PROGRESS BARS***************************************************************/
@@ -220,4 +221,11 @@ $(function() {
     $('#content').removeClass('preload');
     window.flopYoMama = new FlopYoMama(); 
     window.flopYoMama.setUp();
+
+    var vm = new Vue({
+        el: '.vue_root',
+        data: {
+            boardCards: flopYoMama.knownCards.models
+        }
+    });
 });

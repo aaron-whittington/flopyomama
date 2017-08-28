@@ -13,6 +13,10 @@ var KnownCards = AWModel.extend({
         board: new CardList(),
         deck: new Deck()
     },
+    models: {
+        'hand' : [],
+        'board' : []
+    },
     allKnown: function(bToAtts) {
         var cl = new CardList(this.get('hand').models.concat(this.get('board').models));
         if (bToAtts) {
@@ -34,6 +38,7 @@ var KnownCards = AWModel.extend({
             nsHtml.fRedrawBoardSelectionTable(that);
             this.evaluateKnownCards();
             this.saveBoardState();
+            this.updateExposed();
             window.flopYoMama.updateRoute();
         });
 
@@ -53,8 +58,15 @@ var KnownCards = AWModel.extend({
 
         this.on('change', function() {
             this.saveBoardState();
+            this.updateExposed();
         });
 
+    },
+    updateExposed : function() {
+         this.models.hand = this.get('hand').models.map(function(m){
+             return m.attributes;
+         });
+         this.models.board = this.get('board').models.map(function(m) {return m.attributes});
     }, 
     evaluateKnownCards: function() {
         var aCards = this.allKnown(true);
@@ -69,11 +81,8 @@ var KnownCards = AWModel.extend({
         if (bBoardState.bFlop) {
             nsRange.fGetTextures(this, getAllCombinations);
         } else {
-              //todo this should be in the range view
-            $('#textures').html(''); //delete the range textures
+
         }
-
-
     }, 
     loadFromRouter: function(routerValues) {
         //initialize from router
@@ -85,7 +94,6 @@ var KnownCards = AWModel.extend({
     loadFromLocalSotrage: function() {
         var boardArray = nsUtil.fGetLocalStorage("board_array"),
             i;
-
         if (boardArray) {
 
             for (i = 0; i < 2; i++) {
