@@ -22,9 +22,6 @@ module.exports = function(self) {
 
     //aoStartingHands = array of CardPair objects (like AAs)
     nsWorker.fCalculateBoards = function(aoStartingHands, aKnownCards, aUnknownCards, aFixedBoardCards, numberOfOpenBoardHandPlaces, oFilter) {
-
-        console.log('WORKERJS FILTER: ' + JSON.stringify(oFilter));
-
         //var bHit = nsFilter.nsEvaluate.fEvaluateFilter(oFilter, aVillainHand);
         var startTime = new Date().getTime();
         var totalCombinations = nsMath.numberOfCombinations(aUnknownCards.length, numberOfOpenBoardHandPlaces);

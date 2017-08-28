@@ -173,41 +173,20 @@ nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards, oFilterRecord)
 
                 if (workerDoneCount === MAX_WORKERS) {
                     //$('#results_progress').trigger('done');
-                    $('#win_percent_bar').trigger('done');
                     var totalWonPer = oDoneRecord.iCountWon / oDoneRecord.total * 100.0;
                     var totalLossPer = oDoneRecord.iCountLost / oDoneRecord.total * 100.0;
                     var totalDrawPer = oDoneRecord.iCountDraw / oDoneRecord.total * 100.0;
-                    nsUtil.fLog('total win count: ' + oDoneRecord.iCountWon +
-                        ' total loss count: ' + oDoneRecord.iCountLost + ' total draw count: ' + i + oDoneRecord.iCountDraw);
-                    nsUtil.fLog('total win %: ' + totalWonPer +
-                        ' total loss %: ' + totalLossPer + ' total draw %: ' +
-                        totalDrawPer);
 
 
                     if (oDoneRecord.total === 0) {
-                        var nothingFound = '<p class="no_results">All results filtered out.</p>';
-                        $('#hero_stat').html(nothingFound);
-                        $('#villain_stat').html(nothingFound);
-                        $('#textures').html(nothingFound); //should actually be done in the textures method
                         return;
                     }
 
-                    nsHtml.fSetMainStatBar(totalWonPer, totalDrawPer, totalLossPer);
-
                     var graphPref = nsPrefs.oGraphType.fGet();
                     if (graphPref === nsPrefs.nsConst.BAR_GRAPHS) {
-                        var heroStatHtml = ""; //"<row><h4>Hero Results</h4></row>";
-                        heroStatHtml += nsHtml.fGetResultStatHtml(oHeroStat, oDoneRecord);
 
-                        var villainStatHtml = ""; //"</row><h4>Villain Results</h4></row>"; //todo fix boilerplate code
-                        villainStatHtml += nsHtml.fGetResultStatHtml(oVillainStat, oDoneRecord);
-
-                        $('#hero_stat').html(heroStatHtml);
-                        $('#villain_stat').html(villainStatHtml);
-                        nsHtml.fInitResultPopovers();
                     } else if (graphPref === nsPrefs.nsConst.PIE_GRAPHS) {
-                        nsHtml.fDrawResultsStatPie(oHeroStat, oDoneRecord, 'hero_stat');
-                        nsHtml.fDrawResultsStatPie(oVillainStat, oDoneRecord, 'villain_stat');
+
                     }
 
 
@@ -228,8 +207,6 @@ nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards, oFilterRecord)
         });
     }; //end fStartWorker
 
-    $('#win_percent_bar').trigger('start');
-
     var startHandL = aoStartingHands.length;
     var handsPerWorker = Math.floor(startHandL / MAX_WORKERS) + 1;
 
@@ -239,8 +216,6 @@ nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards, oFilterRecord)
         var end = start + handsPerWorker;
         var aHandWorkerRange = aoStartingHands.slice(start, end);
         fStartWorker(aHandWorkerRange);
-
-        nsUtil.fLog('worker start hand start index ' + start + " end index " + end);
     }
 };
 
@@ -249,8 +224,6 @@ nsRange.fGetTextures = function(knownCards, getAllUnknown) {
         alert('Browser must support webworkers!');
         return;
     }
-
-    $('.no_results').remove();
 
     var aoStartingHands = nsRange.fGetStartingHandsFromRangeGrid();
     var aKnownCards = knownCards.allKnown(true);
@@ -275,11 +248,9 @@ nsRange.fGetTextures = function(knownCards, getAllUnknown) {
                 nsFilter.fDrawFilterToBoard(oResult.oFilterRecord);
 
                 if (graphPref === nsPrefs.nsConst.BAR_GRAPHS) {
-                    var sHtml = nsHtml.fGetTextureHtml(oResult);
-                    $('#textures').html(sHtml);
-                    nsHtml.fSetupTextureHover(oResult);
+
                 } else if (graphPref === nsPrefs.nsConst.PIE_GRAPHS) {
-                    nsHtml.fDrawTexturePie(oResult);
+
                 }
 
                 if(getAllUnknown) {
