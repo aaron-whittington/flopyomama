@@ -1,3 +1,5 @@
+Player = require('./Player');
+
 player = {
     getPositionList : function(playerCount) {
          var blinds = ['SB', 'BB']

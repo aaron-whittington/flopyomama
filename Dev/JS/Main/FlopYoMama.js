@@ -3,6 +3,7 @@ nsHtml = require('../Core/Html');
 nsUI = require('../Core/Ui');
 globalUi = require('../Constants/Ui');
 Vue = require('vue');
+RoundHand = require('../../Vue/Round/Hand.vue');
 
 $(document).ready(function() {
     /**********************************************PROGRESS BARS***************************************************************/
@@ -225,7 +226,7 @@ $(function() {
     var vm = new Vue({
         el: '.vue_root',
         data: {
-            boardCards: flopYoMama.knownCards.models
+            cards: flopYoMama.knownCards.models
         }
     });
 });

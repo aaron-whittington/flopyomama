@@ -5,4 +5,4 @@ Player = function(position = 0, chips = DEFAULT_CHIP_COUNT, isHero = false) {
     this.isHero = false;
 }
 
-module.exports = player;
+module.exports = Player;
