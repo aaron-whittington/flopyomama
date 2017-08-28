@@ -91,7 +91,6 @@ ns.deckPermutations = function() {
     );
 
     console.log('DONE !!!');
-    console.log(JSON.stringify(o));
 
 } 
 
