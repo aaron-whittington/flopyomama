@@ -196,9 +196,9 @@ nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards, oFilterRecord,
 
                 if (workerDoneCount === MAX_WORKERS) {
                     //$('#results_progress').trigger('done');
-                    var totalWonPer = oDoneRecord.iCountWon / oDoneRecord.total * 100.0;
-                    var totalLossPer = oDoneRecord.iCountLost / oDoneRecord.total * 100.0;
-                    var totalDrawPer = oDoneRecord.iCountDraw / oDoneRecord.total * 100.0;
+                    var totalWonPer = oDoneRecord.iCountWon / oDoneRecord.total; 
+                    var totalLossPer = oDoneRecord.iCountLost / oDoneRecord.total;
+                    var totalDrawPer = oDoneRecord.iCountDraw / oDoneRecord.total;
 
                     //get leg key 
                     var key = nsConvert.streetConstantToString(leg);
