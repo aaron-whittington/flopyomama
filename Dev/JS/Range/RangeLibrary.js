@@ -7,6 +7,7 @@ nsFilter = require('../Filter/Filter');
 nsUtil = require('../Core/Util');
 work = require('webworkify');
 nsPrefs = require('../Settings/Preferences');
+nsConvert = require('../Core/Convert');
 
 nsRange = {};
 
@@ -61,11 +62,34 @@ nsRange.fKillCurrentWorkers = function() {
     nsRange.aCurrentWorkers = [];
 };
 
+nsRange.calculateDataForLegs = function(knownCards) {
+    //not sure i need this
+    nsRange.fKillCurrentWorkers();
+    var legRecord = knownCards.getBoardState();
 
-nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards, oFilterRecord) {
+    if(legRecord.bHand) {
+        //special case, get average for player hand, persaved odds 
+    }
+
+    if(legRecord.bFlop) {
+        nsRange.fGetTextures(knownCards, true, poker.FLOP);
+    }
+
+    if(legRecord.bTurn) {
+        nsRange.fGetTextures(knownCards, true, poker.TURN);
+    }
+
+    if(legRecord.bRiver) {
+        //TODO: here textures actually contain win rate, so this is inefficient
+        nsRange.fGetTextures(knownCards, true, poker.RIVER);
+    }
+} 
+
+nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards, oFilterRecord, leg) {
 
     $('.no_results').remove();
-    var MAX_WORKERS = 4;
+    //changed from 4, because we now have multiple workers anyway
+    var MAX_WORKERS = 1;
     var workerDoneCount = 0;
     var lastUpdatePercent = 0;
     if (typeof(Worker) === "undefined") {
@@ -73,15 +97,12 @@ nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards, oFilterRecord)
         return;
     }
 
-    nsRange.fKillCurrentWorkers();
-
     var aoStartingHands = nsRange.fGetStartingHandsFromRangeGrid();
 
-    var aKnownCards = knownCards.allKnown(true);
-    var aUnknownCards = knownCards.allUnknown(true);
-    var aFixedBoardCards = knownCards.get('board').map(function(m) {
-        return m.attributes;
-    });
+    var aKnownCards = knownCards.allKnown(true, leg);
+    var aUnknownCards = knownCards.allUnknown(true, leg);
+    var aFixedBoardCards = aKnownCards.slice(2);
+    
     var numberOfOpenBoardHandPlaces = 7 - aKnownCards.length;
 
     var oDoneRecord = {
@@ -96,32 +117,34 @@ nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards, oFilterRecord)
     var fStartWorker = function(aSplitStartingHands) {
 
         var state = window.history.state;
-        if (state !== null) {
-            var test = state.valueOf();
-            var test2 = state.toString();
 
-        }
         var worker = new work(require('../Worker/Worker'));
 
         nsRange.aCurrentWorkers.push(worker);
+        
+        worker.postMessage({
+            'cmd': 'start',
+            'msg': '',
+            aoStartingHands: aSplitStartingHands,
+            aKnownCards: aKnownCards,
+            aUnknownCards: aUnknownCards,
+            numberOfOpenBoardHandPlaces: numberOfOpenBoardHandPlaces,
+            aFixedBoardCards: aFixedBoardCards,
+            oFilter: oFilterRecord,
+            bMin: false
+        });
 
         worker.addEventListener('message', function(e) {
             if (e.data.type === 'progress') {
-                //$('#results_progress>div').css("width",e.data.msg + "%"); 
+               
                 lastUpdatePercent = e.data.msg;
-                //{iCountWon: iCountWon, iCountLost:iCountLost, iCountDraw:iCountDraw,total:numberDone})
+                
                 totalWonPer = e.data.msg.iCountWon / e.data.msg.total * 100.0 * e.data.msg.currentPercent; //here we'd have to divide by total number
                 totalDrawPer = e.data.msg.iCountDraw / e.data.msg.total * 100.0 * e.data.msg.currentPercent;
                 totalLossPer = e.data.msg.iCountLost / e.data.msg.total * 100.0 * e.data.msg.currentPercent;
-                $('#win_percent_bar div').each(function(i) {
-                    if (i === 0)
-                        $(this).css('width', totalWonPer + '%');
-                    if (i === 1)
-                        $(this).css('width', totalDrawPer + '%');
-                    if (i === 2)
-                        $(this).css('width', totalLossPer + '%');
-
-                });
+                
+                //here we used to set the progress bar, now we may set partial data
+                //in other places
             }
 
             if (e.data.type === 'console')
@@ -177,34 +200,15 @@ nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards, oFilterRecord)
                     var totalLossPer = oDoneRecord.iCountLost / oDoneRecord.total * 100.0;
                     var totalDrawPer = oDoneRecord.iCountDraw / oDoneRecord.total * 100.0;
 
-
+                    //get leg key 
+                    var key = nsConvert.streetConstantToString(leg);
+                    knownCards.models.streets[key].setWinLossDraw(totalWonPer, totalLossPer, totalDrawPer);
                     if (oDoneRecord.total === 0) {
                         return;
                     }
-
-                    var graphPref = nsPrefs.oGraphType.fGet();
-                    if (graphPref === nsPrefs.nsConst.BAR_GRAPHS) {
-
-                    } else if (graphPref === nsPrefs.nsConst.PIE_GRAPHS) {
-
-                    }
-
-
                 }
             }
         }, false);
-        
-        worker.postMessage({
-            'cmd': 'start',
-            'msg': '',
-            aoStartingHands: aSplitStartingHands,
-            aKnownCards: aKnownCards,
-            aUnknownCards: aUnknownCards,
-            numberOfOpenBoardHandPlaces: numberOfOpenBoardHandPlaces,
-            aFixedBoardCards: aFixedBoardCards,
-            oFilter: oFilterRecord,
-            bMin: false
-        });
     }; //end fStartWorker
 
     var startHandL = aoStartingHands.length;
@@ -219,17 +223,15 @@ nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards, oFilterRecord)
     }
 };
 
-nsRange.fGetTextures = function(knownCards, getAllUnknown) {
+nsRange.fGetTextures = function(knownCards, getAllUnknown, leg) {
     if (typeof(Worker) === "undefined") {
         alert('Browser must support webworkers!');
         return;
     }
 
     var aoStartingHands = nsRange.fGetStartingHandsFromRangeGrid();
-    var aKnownCards = knownCards.allKnown(true);
-    var aFixedBoardCards = knownCards.get('board').map(function(m) {
-        return m.attributes;
-    });
+    var aKnownCards = knownCards.allKnown(true, leg);
+    var aFixedBoardCards = aKnownCards.slice(2); 
 
     var oFilter = nsFilter.fActiveFilter(null, true);
 
@@ -242,19 +244,16 @@ nsRange.fGetTextures = function(knownCards, getAllUnknown) {
                 nsUtil.fLog(e.data.msg);
             if (e.data.type === 'done') {
                 var oResult = e.data.msg;
-                var graphPref = nsPrefs.oGraphType.fGet();
 
                 nsFilter.fClearFilter();
                 nsFilter.fDrawFilterToBoard(oResult.oFilterRecord);
 
-                if (graphPref === nsPrefs.nsConst.BAR_GRAPHS) {
+                var key = nsConvert.streetConstantToString(leg);
 
-                } else if (graphPref === nsPrefs.nsConst.PIE_GRAPHS) {
-
-                }
-
+                knownCards.models.streets[key].setTextures(oResult);
+                
                 if(getAllUnknown) {
-                    nsRange.fGetAllUnknownCombinationsThreaded(knownCards, oResult.oFilterRecord);
+                    nsRange.fGetAllUnknownCombinationsThreaded(knownCards, oResult.oFilterRecord, leg);
                 }
             }
         }, false);

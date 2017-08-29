@@ -1,7 +1,7 @@
 <script>
-VueChartJs = require('vue-chartjs');
+import VueChartJs from 'vue-chartjs';
 
-Vue.component('overview-line', {
+export default Vue.component('win-loss-draw-bar', {
   extends: VueChartJs.Bar,
   mixins: [VueChartJs.VueCharts.mixins.reactiveData],
   props: ['streets', 'showColumns', 'stacked'],

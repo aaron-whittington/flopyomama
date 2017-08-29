@@ -1,5 +1,6 @@
 ﻿ /*takes AAo und generates AcAd,AsAh ...and so on*/
 var _ = require('underscore');
+var poker = require('../Constants/Poker');
 var nsConvert = {};
 
 /*TODO: remove reference to global knownCards object*/
@@ -80,6 +81,21 @@ nsConvert.fFilterCardPairArray = function(pairArray, aKnown, aFilterPairs) {
 nsConvert.identicalCards = function(a,b) {
   	return (a.rank === b.rank && a.suit === b.suit);
 };
+
+nsConvert.streetConstantToString = function(c) {
+    switch(c) {
+        case poker.PREFLOP:
+            return 'preflop';
+        case poker.FLOP:
+            return 'flop';
+        case poker.TURN:
+            return 'turn'
+        case poker.RIVER:
+            return 'river'
+        default:
+            throw 'unexpected value ' + c + ' sent to function streetConstantToString';
+    }
+}
 
 //card char /int conversion
 _.extend(nsConvert, {

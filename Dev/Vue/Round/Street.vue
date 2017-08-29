@@ -1,6 +1,6 @@
 <template>
  <li> 
-    {{street.label}}
+    {{street.getLabel()}}
     <ol type='A' v-if='street.actions.length > 0'>
        <li v-for='action in street.actions'>
           {{action.who}} {{action.verb}} {{action.amount}}

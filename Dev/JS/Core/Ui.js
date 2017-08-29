@@ -15,12 +15,6 @@ nsUI.fHandleKeyPress = function(keyCode, e, knownCardsView) {
     }
 };
 
-
-nsUI.fDeleteLongStatistics = function() {
-    $('#hero_stat, #villain_stat').html('');
-    nsUI.fSetWinPercentBarZero();
-};
-
 nsUI.fSetWinPercentBarZero = function() {
     var oldTransition = $('#win_percent_bar').children().first().css('transition');
     $(this).children().css('transition', 'none').css('-webkit-transition', 'none');

@@ -6,6 +6,8 @@ var nsUI = require('../Core/Ui');
 var nsUtil = require('../Core/Util');
 var nsRange = require('../Range/RangeLibrary');
 var nsPrefs = require('../Settings/Preferences');
+var Street = require('../Round/Street');
+var poker = require('../Constants/Poker');
 
 var KnownCards = AWModel.extend({
     defaults: {
@@ -14,11 +16,21 @@ var KnownCards = AWModel.extend({
         deck: new Deck()
     },
     models: {
-        'hand' : [],
-        'board' : []
+        streets: {
+            'preflop': null,
+            'flop': null,
+            'turn': null,
+            'river': null 
+        } 
     },
-    allKnown: function(bToAtts) {
+    allKnown: function(bToAtts, leg) {
         var cl = new CardList(this.get('hand').models.concat(this.get('board').models));
+        
+        //so if we pass 5, we only get preflop and flop
+        if(typeof(leg) != undefined) {
+            cl.models = cl.models.slice(0, leg);
+        }
+
         if (bToAtts) {
             return cl.map(function(m) {
                 return m.attributes;
@@ -27,8 +39,8 @@ var KnownCards = AWModel.extend({
             return cl;
         }
     },
-    allUnknown: function(bToAtts) {
-        var allKnown = this.allKnown();
+    allUnknown: function(bToAtts, leg) {
+        var allKnown = this.allKnown(false, leg);
         return this.get('deck').getDifference(allKnown, bToAtts);
     },
     initialize: function() {
@@ -63,26 +75,44 @@ var KnownCards = AWModel.extend({
 
     },
     updateExposed : function() {
-         this.models.hand = this.get('hand').models.map(function(m){
-             return m.attributes;
-         });
-         this.models.board = this.get('board').models.map(function(m) {return m.attributes});
+        var handCards = this.get('hand').models.map(function(m){
+            return m.attributes;
+        });
+
+        if(handCards.length == 2) {
+            this.models.streets['preflop'] = new Street(poker.PREFLOP, handCards); 
+        } else {
+            this.models.streets['preflop'] = null;
+        }
+         
+        var board = this.get('board').models.map(function(m) {return m.attributes});
+
+        var toAdd;
+        if (board.length > 2) {
+            toAdd = board.slice(0, 3);
+            this.models.streets['flop'] = new Street(poker.FLOP, toAdd);
+        } else {
+            this.models.streets['flop'] = null; 
+        }
+
+        if (board.length > 3) {
+            toAdd = board.slice(3, 4);
+            this.models.streets['turn'] = new Street(poker.TURN, toAdd);
+        } else {
+            this.models.streets['turn'] = null; 
+        }
+
+
+        if (board.length > 4) {
+            toAdd = board.slice(4);
+            this.models.streets['river'] = new Street(poker.RIVER, toAdd);
+        } else {
+            this.models.streets['river'] = null; 
+        }
     }, 
     evaluateKnownCards: function() {
-        var aCards = this.allKnown(true);
-
-        var bBoardState = this.getBoardState();
-        
-        var getAllCombinations = bBoardState.bFlop && bBoardState.bHand && nsPrefs.oAutomaticSearch.fGet();
-        if(!getAllCombinations) {
-            nsUI.fDeleteLongStatistics();
-        }
-
-        if (bBoardState.bFlop) {
-            nsRange.fGetTextures(this, getAllCombinations);
-        } else {
-
-        }
+        //should delete statistics
+        nsRange.calculateDataForLegs(this);
     }, 
     loadFromRouter: function(routerValues) {
         //initialize from router

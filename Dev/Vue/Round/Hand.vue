@@ -1,8 +1,8 @@
 <template>
  <section>
      <h4>Actions</h4>
-        <ol v-if="streets.length > 0">
-            <round-street v-for='street in streets' :street='street' ></round-street>
+        <ol v-if="streets.preflop != null" >
+            <round-street v-for='street in streets' v-if='street != null' :street='street' ></round-street>
         </ol>
         <i v-else>none</i>
      <!--<h4>
@@ -84,12 +84,11 @@ import Vue from 'vue'
 import Street from './Street.vue'
 import player from '../../JS/Player/NSPlayer'
 export default Vue.component('round-hand', {
-    props: ['cards'],
+    props: ['streets'],
     created: function() {
         this.players =  player.playerList(this.playerCount);
     },
     data () {
-        console.log('Cards ' + JSON.stringify(this.cards));
         //var cards = this.convertCardsTooStreet();  
         return {
             SB: 25,
@@ -106,77 +105,37 @@ export default Vue.component('round-hand', {
          }
     }, 
     computed: {
-        streets: function() {
-            var cards = this.cards;
-            var streets = [];
-            if(cards.hand.length == 2) {
-               streets.push(
-                {
-                    label: 'preflop',
-                    actions: []     
-                }
-            );
-         }
-
-         if(cards.board.length > 2) {
-            streets.push(
-                {
-                    label: 'flop',
-                    actions: []     
-                }
-            );
-         }
-
-         if(cards.board.length > 3) {
-            streets.push(
-                {
-                    label: 'turn',
-                    actions: []     
-                }
-            );
-         }
-         
-         if(cards.board.length > 4) {
-            streets.push(
-                {
-                    label: 'river',
-                    actions: []     
-                }
-            );
-         }
-         return streets;
-     },
-     positionList: function() {
-         var playerCount = this.playerCount;      
-         return player.getPositionList(playerCount);
-     },
-     hero: function() {
-        return this.players.find(function(p) {
-              return p.isHero == true;
-        });
-     },
-     heroPosition: {
-        get : function() {
-           var player = this.players.find(function(p) {
-              return p.isHero == true;
-           });
-           if (player) return player.position;
+         positionList: function() {
+             var playerCount = this.playerCount;      
+             return player.getPositionList(playerCount);
+         },
+        hero: function() {
+            return this.players.find(function(p) {
+                return p.isHero == true;
+            });
         },
-        set : function(val) {
-           var player = this.players.find(function(p) {
-                return p.position == val;
-           });
-          
-            if (player) {
-                this.players.forEach(function(p) {
-                    if(p.isHero) {
-                        p.isHero = false;
-                    }
-                });
-                player.isHero = true;
+        heroPosition: {
+            get : function() {
+            var player = this.players.find(function(p) {
+                return p.isHero == true;
+            });
+            if (player) return player.position;
+            },
+            set : function(val) {
+            var player = this.players.find(function(p) {
+                    return p.position == val;
+            });
+            
+                if (player) {
+                    this.players.forEach(function(p) {
+                        if(p.isHero) {
+                            p.isHero = false;
+                        }
+                    });
+                    player.isHero = true;
+                }
             }
-        }
-    },
+        },
         forcedBet : function() {
             return this.hand.sb + this.hand.bb + this.hand.ante * this.hand.playerCount;
         } 

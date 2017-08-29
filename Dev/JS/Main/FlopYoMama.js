@@ -41,10 +41,6 @@ $(document).ready(function() {
         html: true
     });
 
-    $('#win_percent_bar').bind('start', function() { //resets the progress bar to 0 without css transitions
-        nsUI.fDeleteLongStatistics();
-    });
-
     /**********************************RANGE GRID & SLIDER******************************************/
 
 
@@ -226,7 +222,7 @@ $(function() {
     var vm = new Vue({
         el: '.vue_root',
         data: {
-            cards: flopYoMama.knownCards.models
+            streets: flopYoMama.knownCards.models.streets
         }
     });
 });
