@@ -90,66 +90,18 @@ module.exports = function(self) {
 
                 var oPairArray = nsConvert.fFilterCardPairArray(aoStartingHands[iVillainPair].aPair, aCurrentKnown, oFilter[sPair]);
 
-                boardFlushPossibility = nsWorker.getFlushSuitAndNumber(realBoard, oPair);
-
-                //split oPairArray into those which can hit flush and those which cannot
-                var oPairCanHitFlush = [];
-                var oPairCannotHitFlush = [];
-                var oPairLength = oPairArray.length;
-                for (i = 0; i < oPairLength; i++) {
-                    var pair = oPairArray[i];
-                    var numberOfSuit = 0;
-                    if (pair[0].suit === boardFlushPossibility.flushSuit)
-                        numberOfSuit++;
-                    if (pair[1].suit === boardFlushPossibility.flushSuit)
-                        numberOfSuit++;
-
-                    if (numberOfSuit + boardFlushPossibility.numberFound >= 5) //flush there
-                        oPairCanHitFlush.push(pair);
-                    else
-                        oPairCannotHitFlush.push(pair); //for test only pair can hit flush
-                }
-
                 iWonMagnitude = 0;
 
                 var iWinCountLocal = 0,
                     iDrawCountLocal = 0,
                     iLossCountLocal = 0;
                 
-                //now we don't have to look for flushes, so checking the first pair of this suffices
-                if (oPairCannotHitFlush.length > 0) { 
 
-                    //standardize all 7 cards
-                    iWonMagnitude = oPairCannotHitFlush.length;
-
-                    aVillainHand = [];
-                    aVillainHand = oPairCannotHitFlush[0].concat(aFixedBoardCards).concat(aBoards[iBoard]);
-
-                    oVillainHand = oNsHand.fGetBestHand(aVillainHand);
-                    if (typeof oVillainHand === "undefined")
-                        fLogCards(aVillainHand, 'Something went wrong here 135');
-
-                    iWon = oNsHand.fCompareHand(oHeroHand, oVillainHand) * -1;
-                    iWinCountLocal = iWon > 0 ? iWonMagnitude : iWinCountLocal;
-                    iDrawCountLocal = iWon === 0 ? iWonMagnitude : iDrawCountLocal;
-                    iLossCountLocal = iWon < 0 ? iWonMagnitude : iLossCountLocal;
-
-                    iCountWon += iWinCountLocal;
-                    iCountDraw += iDrawCountLocal;
-                    iCountLost += iLossCountLocal;
-                    numberDone += iWonMagnitude;
-
-                    fAddToRecordDic(oVillainStaticDic, oNsHand.fHandToString(oVillainHand), -1 * iWon, iWonMagnitude);
-                    fAddToRecordDic(oHandStatDic, oNsHand.fHandToString(oHeroHand), iWon, iWonMagnitude, true);
-
-
-                } //now loop through those which do hit flush
-
-                for (i = 0; i < oPairCanHitFlush.length; i++) {
+                for (i = 0; i < oPairArray.length; i++) {
                     //evaluate villain hand
 
                     aVillainHand = [];
-                    aVillainHand = oPairCanHitFlush[i].concat(aFixedBoardCards).concat(aBoards[iBoard]);
+                    aVillainHand = oPairArray[i].concat(aFixedBoardCards).concat(aBoards[iBoard]);
                     oVillainHand = oNsHand.fGetBestHand(aVillainHand);
 
                     iWon = oNsHand.fCompareHand(oHeroHand, oVillainHand) * -1;

@@ -46,9 +46,6 @@ export default Vue.component('win-loss-draw-bar', {
              return a.winLossDraw.win * 100;
          });
 
-         
-         console.log("WINS: ", wins);
-      
         var draws = streetArray.map(function(a) {
              return a.winLossDraw.draw * 100;
          });
@@ -94,8 +91,8 @@ export default Vue.component('win-loss-draw-bar', {
   },
   mounted () {
     this.renderChart(this.chartData, {
-        responsive: false, //why not, maybe true? 
-        maintainAspectRatio: true,
+        responsive: true, //why not, maybe true? 
+        maintainAspectRatio: false,
         scales: {
             xAxes: [{               
                 categoryPercentage: 0.9,
@@ -125,7 +122,7 @@ export default Vue.component('win-loss-draw-bar', {
                 var labelText = dataset.label;
                 var yAxisId = dataset.yAxisID;
                 var labelEnding =  yAxisId == 'moneyAxis' ? '$' : '%';
-                return labelText + ' ' + tooltip.yLabel + labelEnding;
+                return labelText + ' ' + tooltip.yLabel.toFixed(2) + labelEnding;
               
             }
           }

@@ -65,13 +65,14 @@
 
 	</div>
    <!--Range Table-->
-	<div id='range_row' class="row vue_root">
+	<div id='range_row' class="row">
 		<div id="op_range_col" class="col-lg-6 col-md-6 col-sm-9">
 			<div id="op_range">
 
 
 			</div>	
 		</div>
+		<span class="vue_root">
 		<!--visualize-->
 		<div id="results_col" class="col-lg-4 col-md-4 col-sm-10"> 
 			<visualize :streets="streets"> <vizualize>
@@ -80,6 +81,7 @@
 		<div id="round_col" class="col-lg-2 col-md-2 col-sm-10"> 
 			<round-hand :streets="streets"> <round-hand>
 		</div>
+		</span>
 	</div>
 	<div id="bottom_row" class = "row">
 		<div class ="col-lg-6 col-md-6 col-sm-6">
