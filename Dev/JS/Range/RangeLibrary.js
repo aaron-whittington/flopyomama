@@ -8,6 +8,7 @@ nsUtil = require('../Core/Util');
 work = require('webworkify');
 nsPrefs = require('../Settings/Preferences');
 nsConvert = require('../Core/Convert');
+Preflop = require('../Card/Preflop');
 
 nsRange = {};
 
@@ -69,6 +70,7 @@ nsRange.calculateDataForLegs = function(knownCards) {
 
     if(legRecord.bHand) {
         //special case, get average for player hand, persaved odds 
+        nsRange.getPairStats(knownCards);
     }
 
     if(legRecord.bFlop) {
@@ -83,7 +85,34 @@ nsRange.calculateDataForLegs = function(knownCards) {
         //TODO: here textures actually contain win rate, so this is inefficient
         nsRange.fGetTextures(knownCards, true, poker.RIVER);
     }
-} 
+}; 
+
+nsRange.getPairStats = function(knownCards) {
+    var aoStartingHands = nsRange.fGetStartingHandsFromRangeGrid();
+   
+    var aHeroHand = knownCards.get('hand').map(function(m) {
+        return m.attributes;
+    });
+    //filter to only the ones
+    var oddsCount = 0;
+    var winSum = 0;
+    var lossSum = 0;
+    var drawSum = 0;
+    aoStartingHands.forEach(function(oStartingHand) {
+        var oPairArray = nsConvert.fFilterCardPairArray(oStartingHand.aPair, aHeroHand);
+        
+        oPairArray.forEach(function(pair) {
+            var preflop = new Preflop(aHeroHand[0], aHeroHand[1], pair[0], pair[1]);
+            var odds = preflop.getOdds();
+            winSum += odds.win;
+            lossSum += odds.loss;
+            drawSum += odds.draw;
+            oddsCount++;
+        });
+    }); 
+
+    knownCards.models.streets.preflop.setWinLossDraw(winSum / oddsCount, lossSum / oddsCount, drawSum / oddsCount);
+}; 
 
 nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards, oFilterRecord, leg) {
 
@@ -192,7 +221,6 @@ nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards, oFilterRecord,
                         return a + b;
                     });
                 });
-
 
                 if (workerDoneCount === MAX_WORKERS) {
                     //$('#results_progress').trigger('done');

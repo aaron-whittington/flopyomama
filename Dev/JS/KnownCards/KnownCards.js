@@ -48,9 +48,9 @@ var KnownCards = AWModel.extend({
         //was nsUI.fAfterBoardChnage
         this.on('finalize', function() {
             nsHtml.fRedrawBoardSelectionTable(that);
+            this.updateExposed();
             this.evaluateKnownCards();
             this.saveBoardState();
-            this.updateExposed();
             window.flopYoMama.updateRoute();
         });
 

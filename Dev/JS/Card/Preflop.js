@@ -59,6 +59,29 @@ Preflop = function (a1, a2, b1, b2) {
 
         return normalizedPreflop; 
     }
+
+    this.getOdds = function() {
+        var MULTIPLIER = 1000000.0;
+        var preflop = this.isNormalized ? this : this.getNormalizedPreflop();
+        var key = preflop.getKey().split('-');
+        var odds = window.preflopData[key[0]][key[1]][key[2]][key[3]];
+        if(typeof odds == "undefined") {
+            //TODO ... what happened? This should never happen, but it does
+            odds = window.preflopData[key[0]][key[1]][key[3]][key[2]];
+        }
+
+        odds = odds.map(function(o) {
+            return o / MULTIPLIER;
+        });
+        
+        var complement = 1.0 - (odds[0] + odds[1]);
+        var wins = preflop.wasReversedByNormalization ? complement : odds[0];
+        var losses = preflop.wasReversedByNormalization ? odds[0] : complement;
+        var draws = odds[1]; 
+
+        return { win: wins, loss: losses, draw: draws };
+
+    }
     
     var compareHands = function(hand1, hand2) {
         var diff;

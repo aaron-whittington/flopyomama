@@ -80,14 +80,11 @@ module.exports = function(self) {
 
             var startingHandLengths = aoStartingHands.length;
 
-            var boardFlushPossibility;
-
             for (var iVillainPair = startingHandLengths - 1; iVillainPair >= 0; iVillainPair--) {
                 //get the villain pair
                 oPair = aoStartingHands[iVillainPair].oPair;
                 sPair = aoStartingHands[iVillainPair].sPair;
                 
-
                 var oPairArray = nsConvert.fFilterCardPairArray(aoStartingHands[iVillainPair].aPair, aCurrentKnown, oFilter[sPair]);
 
                 iWonMagnitude = 0;
