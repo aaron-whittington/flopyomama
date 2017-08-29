@@ -28,7 +28,7 @@ module.exports = function(street, cards) {
     }
     
     this.getLabel = function() {
-        return nsConvert.streetConstantToString(this.street) +
-        ' ' + cards.map(nsConvert.fConvertCardObjectToString).join(' ');
+        return nsConvert.streetConstantToString(this.street); 
+        //+ ' ' + cards.map(nsConvert.fConvertCardObjectToString).join(' ');
     }
 }

@@ -5,7 +5,7 @@ import VueChart from 'vue-chartjs'
 export default Vue.component('win-loss-draw-bar', {
   extends: VueChart.Bar,
   mixins: [VueChart.mixins.reactiveData],
-  props: ['streets', 'showColumns', 'stacked'],
+  props: ['streets', 'showColumns', 'stacked', 'colors'],
   data: function(){
      var chartData = this.getChartDataFromStreets();
      return {
@@ -57,21 +57,21 @@ export default Vue.component('win-loss-draw-bar', {
         var datasets = [
             {
                 label: 'Win',
-                backgroundColor: 'rgba(0,250,0,0.5)',
+                backgroundColor: this.colors.win, 
                 borderColor: 'rgba(0,125,0,0.5)',
                 borderWidth: 1,
                 data: wins,
                // hidden: !this.showColumns.win,
             }, {
                 label: 'Loss',
-                backgroundColor: 'rgba(250,0,0,0.5)',
+                backgroundColor: this.colors.loss, 
                 borderColor: 'rgba(125,0,0,0.5)',
                 borderWidth: 1,  
                 data: losses,
                 //hidden: !this.showColumns.loss,  
             },  {
                 label: 'Draw',
-                backgroundColor: 'rgba(125,125,125,0.5)',
+                backgroundColor: this.colors.draw, 
                 borderColor: 'rgba(125,125,125,0.5)',
                 borderWidth: 1,  
                 data: draws,
