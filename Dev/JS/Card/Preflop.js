@@ -64,10 +64,23 @@ Preflop = function (a1, a2, b1, b2) {
         var MULTIPLIER = 1000000.0;
         var preflop = this.isNormalized ? this : this.getNormalizedPreflop();
         var key = preflop.getKey().split('-');
-        var odds = window.preflopData[key[0]][key[1]][key[2]][key[3]];
+        var odds;
+        try {
+            odds = window.preflopData[key[0]][key[1]][key[2]][key[3]];
+        } catch (e) {
+
+        }
         if(typeof odds == "undefined") {
             //TODO ... what happened? This should never happen, but it does
-            odds = window.preflopData[key[0]][key[1]][key[3]][key[2]];
+            try {
+                odds = window.preflopData[key[0]][key[1]][key[3]][key[2]];
+            } catch(e) {
+
+            }
+        }
+        
+        if(typeof odds == "undefined") {
+            throw 'this should never happen';
         }
 
         odds = odds.map(function(o) {
