@@ -58,22 +58,22 @@ export default Vue.component('win-loss-draw-bar', {
             {
                 label: 'Win',
                 backgroundColor: this.colors.win, 
-                borderColor: 'rgba(0,125,0,0.5)',
-                borderWidth: 1,
+                borderColor: this.colors.winBorder, 
+                borderWidth: 2,
                 data: wins,
                // hidden: !this.showColumns.win,
             }, {
                 label: 'Loss',
                 backgroundColor: this.colors.loss, 
-                borderColor: 'rgba(125,0,0,0.5)',
-                borderWidth: 1,  
+                borderColor: this.colors.lossBorder, 
+                borderWidth: 2,  
                 data: losses,
                 //hidden: !this.showColumns.loss,  
             },  {
                 label: 'Draw',
                 backgroundColor: this.colors.draw, 
-                borderColor: 'rgba(125,125,125,0.5)',
-                borderWidth: 1,  
+                borderColor: this.colors.drawBorder, 
+                borderWidth: 2,  
                 data: draws,
                 //hidden: !this.showColumns.draw,
             }
@@ -93,6 +93,11 @@ export default Vue.component('win-loss-draw-bar', {
     this.renderChart(this.chartData, {
         responsive: true, //why not, maybe true? 
         maintainAspectRatio: false,
+        onClick: function(arg1, arg2, arg3) {
+            console.log(arg1);
+            console.log(arg2);
+            console.log(arg3);
+        },
         scales: {
             xAxes: [{               
                 categoryPercentage: 0.9,
@@ -105,8 +110,7 @@ export default Vue.component('win-loss-draw-bar', {
                 gridLines: {
                   display: true
                 }, ticks: {
-                    min: 0,
-                    max: 100, 
+                    suggestedMax: 50,
                     callback: function(s) {
                        return Math.abs(s) + '%'; 
                    }

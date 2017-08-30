@@ -1,13 +1,25 @@
 <template>
  <section> 
      <h4>Visualize</h4>
-     <win-loss-draw-bar :streets="streets" :colors="colors"/> 
+     <div v-show="selectedStreet == 0">
+         <select v-model="barOrLine">
+             <option value="bar">Bar</option>
+             <option value="line">Line</option>
+         </select>    
+        <div v-if="barOrLine == 'line' && streets.flop != null" >
+            <win-loss-draw-line :streets="streets" :colors="colors"/>
+        </div>
+        <div v-else>
+            <win-loss-draw-bar :streets="streets" :colors="colors"/>
+        </div>
+     </div> 
  </section>
 </template>
 
 <script>
     import Vue from 'vue';
     import WinLossDrawBar from './WinLossDrawBar.vue';
+    import WinLossDrawLine from './WinLossDrawLine.vue';
     import tinycolor from 'tinycolor2';
 
     export default Vue.component('visualize', {
@@ -24,10 +36,15 @@
                 return color.toRgbString();
             });
             return {
+                barOrLine: 'line',
+                selectedStreet: 0, //overview
                 colors: {
                     win:  processed[1],
+                    winBorder: success,
                     loss: processed[2],
-                    draw: processed[3]
+                    lossBorder: danger,
+                    draw: processed[3],
+                    drawBorder: info
                 }
             }
         }
