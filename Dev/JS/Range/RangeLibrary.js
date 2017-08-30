@@ -71,20 +71,21 @@ nsRange.calculateDataForLegs = function(knownCards) {
     if(legRecord.bHand) {
         //special case, get average for player hand, persaved odds 
         nsRange.getPairStats(knownCards);
+        
+        if(legRecord.bFlop) {
+            nsRange.fGetTextures(knownCards, true, poker.FLOP);
+        }
+
+        if(legRecord.bTurn) {
+            nsRange.fGetTextures(knownCards, true, poker.TURN);
+        }
+
+        if(legRecord.bRiver) {
+            //TODO: here textures actually mirror the win rate, so this is inefficient
+            nsRange.fGetTextures(knownCards, true, poker.RIVER);
+        }
     }
 
-    if(legRecord.bFlop) {
-        nsRange.fGetTextures(knownCards, true, poker.FLOP);
-    }
-
-    if(legRecord.bTurn) {
-        nsRange.fGetTextures(knownCards, true, poker.TURN);
-    }
-
-    if(legRecord.bRiver) {
-        //TODO: here textures actually mirror the win rate, so this is inefficient
-        nsRange.fGetTextures(knownCards, true, poker.RIVER);
-    }
 }; 
 
 nsRange.getPairStats = function(knownCards) {
@@ -242,7 +243,6 @@ nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards, oFilterRecord,
     var startHandL = aoStartingHands.length;
     var handsPerWorker = Math.floor(startHandL / MAX_WORKERS) + 1;
 
-    nsUtil.fLog('start hand length ' + startHandL);
     for (var i = 0; i < MAX_WORKERS; i++) {
         var start = i === 0 ? 0 : i * handsPerWorker;
         var end = start + handsPerWorker;

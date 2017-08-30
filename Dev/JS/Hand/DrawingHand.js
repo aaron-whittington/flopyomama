@@ -52,6 +52,28 @@ nsDrawingHand.fHandToString = function(oDrawingHand) {
     return returnString;
 };
 
+nsDrawingHand.fHandToKey = function(oDrawingHand) {
+    var returnValue = 'H' + oDrawingHand.rank;
+    
+    if(oDrawingHand.drawingHands.length > 0) {
+        returnValue = returnValue + '-' + oDrawingHand.drawingHands.map(function(dh) {
+            return 'D' + dh.rank;
+        }).join('-');
+    }
+    return returnValue;
+}
+
+nsDrawingHand.fKeyToHandString = function(handKey) {
+    var hand;
+    var val = +(handKey[1]);
+    if(handKey[0] == 'H') {
+        hand = { rank: val, drawingHands: []}; 
+        return nsDrawingHand.fHandToString(hand);
+    } else if (handKey[0] == 'D') {
+        return nsDrawingHand.fDrawingHandToString({rank: val});
+    }
+}
+
 nsDrawingHand.fGetDrawingHands = function(aCards) {
     aCards.sort(nsHand.fCompareCard);
     var bestMadeHand = nsHand.fGetBestHand(aCards);

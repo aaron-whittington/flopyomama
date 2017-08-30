@@ -15,7 +15,6 @@ module.exports = function(self) {
         switch (data.cmd) {
             case 'start':
                 try {
-                    fPostConsole('STARTING TEXTURE WORKER');
                     nsWorkerTextures.fCalculateBoards(data.aoStartingHands, data.aKnownCards, data.aFixedBoardCards, data.oFilter);
                 } catch (error) {
                     fPostConsole('ERROR' + error.toString());
@@ -63,15 +62,18 @@ module.exports = function(self) {
                         continue;
                     }
                     oVillainHand = nsFilter.nsEvaluate.oCurrentHand;
-                } else
+                } else {
                     oVillainHand = nsDrawingHand.fGetDrawingHands(aVillainHand);
+                }
 
-                var sVillainHand = nsDrawingHand.fHandToString(oVillainHand);
+                var sVillainHand = nsDrawingHand.fHandToKey(oVillainHand);
 
                 var aSplit = sVillainHand.split("-");
 
                 for (j = 0; j < aSplit.length; j++) {
-                    aSplit[j] = aSplit[j].trim();
+                    if (aSplit[j].length < 2) {
+                        throw 'wtf' + JSON.stringify(aSplit[j]) + 'key ' + sVillainHand;
+                    }
                     nsWorkerTextures.fAddToRecordDic(oVillainStaticDic, aSplit[j], sPair);
                     numberDone++;
                 }
