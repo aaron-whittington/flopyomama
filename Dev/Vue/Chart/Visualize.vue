@@ -1,16 +1,16 @@
 <template>
  <section> 
      <h4>Visualize</h4>
-     <div v-show="selectedStreet == 0">
+     <div v-show="selectedStreet == -1">
          <select v-model="barOrLine">
              <option value="bar">Bar</option>
              <option value="line">Line</option>
          </select>    
         <div v-if="barOrLine == 'line' && streets.flop != null" >
-            <win-loss-draw-line :streets="streets" :colors="colors"/>
+            <win-loss-draw-line @click-street='clickStreet($event)' :streets="streets" :colors="colors"/>
         </div>
         <div v-else>
-            <win-loss-draw-bar :streets="streets" :colors="colors"/>
+            <win-loss-draw-bar  @click-street='clickStreet($event)' :streets="streets" :colors="colors"/>
         </div>
      </div> 
  </section>
@@ -37,7 +37,7 @@
             });
             return {
                 barOrLine: 'line',
-                selectedStreet: 0, //overview
+                selectedStreet: -1, //overview
                 colors: {
                     win:  processed[1],
                     winBorder: success,
@@ -46,6 +46,12 @@
                     draw: processed[3],
                     drawBorder: info
                 }
+            }
+        },
+        methods: {
+            clickStreet: function(val) {
+                alert(val);
+
             }
         }
     });

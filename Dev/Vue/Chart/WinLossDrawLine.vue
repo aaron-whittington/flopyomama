@@ -2,8 +2,8 @@
 import Vue from 'vue'
 import VueChart from 'vue-chartjs'
 
-export default Vue.component('win-loss-draw-bar', {
-  extends: VueChart.Bar,
+export default Vue.component('win-loss-draw-line', {
+  extends: VueChart.Line,
   mixins: [VueChart.mixins.reactiveData],
   props: ['streets', 'showColumns', 'stacked', 'colors'],
   data: function(){
@@ -61,6 +61,7 @@ export default Vue.component('win-loss-draw-bar', {
                 borderColor: this.colors.winBorder, 
                 borderWidth: 2,
                 data: wins,
+                fill: false
                // hidden: !this.showColumns.win,
             }, {
                 label: 'Loss',
@@ -68,6 +69,7 @@ export default Vue.component('win-loss-draw-bar', {
                 borderColor: this.colors.lossBorder, 
                 borderWidth: 2,  
                 data: losses,
+                fill: false
                 //hidden: !this.showColumns.loss,  
             },  {
                 label: 'Draw',
@@ -75,6 +77,7 @@ export default Vue.component('win-loss-draw-bar', {
                 borderColor: this.colors.drawBorder, 
                 borderWidth: 2,  
                 data: draws,
+                fill: false
                 //hidden: !this.showColumns.draw,
             }
          ];

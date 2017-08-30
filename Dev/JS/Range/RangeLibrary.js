@@ -82,7 +82,7 @@ nsRange.calculateDataForLegs = function(knownCards) {
     }
 
     if(legRecord.bRiver) {
-        //TODO: here textures actually contain win rate, so this is inefficient
+        //TODO: here textures actually mirror the win rate, so this is inefficient
         nsRange.fGetTextures(knownCards, true, poker.RIVER);
     }
 }; 
