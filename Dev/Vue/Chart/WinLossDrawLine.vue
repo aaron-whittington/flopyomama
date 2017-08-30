@@ -53,31 +53,40 @@ export default Vue.component('win-loss-draw-line', {
         var labels = streetArray.map(function(a) {
             return a.getLabel();
         }); 
-       
+      
+        var lineWidth = 5;
+        var pointRadius = 1;
+        var pointHitRadius = 10;
         var datasets = [
             {
                 label: 'Win',
                 backgroundColor: this.colors.win, 
-                borderColor: this.colors.winBorder, 
-                borderWidth: 2,
+                borderColor: this.colors.win, 
+                borderWidth: lineWidth,
+                pointRadius: pointRadius,
                 data: wins,
-                fill: false
+                fill: false,
+                pointHitRadius: pointHitRadius,
                // hidden: !this.showColumns.win,
             }, {
                 label: 'Loss',
                 backgroundColor: this.colors.loss, 
-                borderColor: this.colors.lossBorder, 
-                borderWidth: 2,  
+                borderColor: this.colors.loss, 
+                borderWidth: lineWidth,  
+                pointRadius: pointRadius,
                 data: losses,
-                fill: false
+                fill: false,
+                pointHitRadius: pointHitRadius,
                 //hidden: !this.showColumns.loss,  
             },  {
                 label: 'Draw',
                 backgroundColor: this.colors.draw, 
-                borderColor: this.colors.drawBorder, 
-                borderWidth: 2,  
+                borderColor: this.colors.draw, 
+                borderWidth: lineWidth,  
+                pointRadius: pointRadius,
                 data: draws,
-                fill: false
+                fill: false,
+                pointHitRadius: pointHitRadius,
                 //hidden: !this.showColumns.draw,
             }
          ];
@@ -96,7 +105,7 @@ export default Vue.component('win-loss-draw-line', {
     var chart = this;
     this.renderChart(this.chartData, {
         responsive: true, //why not, maybe true? 
-        maintainAspectRatio: false,
+        maintainAspectRatio: true,
         onClick: function(event, elements) {
             if(elements.length > 0) {
                 var element = elements[0];
@@ -108,6 +117,9 @@ export default Vue.component('win-loss-draw-line', {
                 categoryPercentage: 0.9,
                 barPercentage: 1.0,
                 stacked: this.stacked,
+                gridLines: {
+                    display: true
+                }
                 
             }], 
             yAxes: [{
@@ -125,6 +137,7 @@ export default Vue.component('win-loss-draw-line', {
         tooltips: {
           mode: 'index',
           intersect: true,
+          position: 'nearest',
           callbacks: {
             'label' : function(tooltip, data) {           
                 var dataset = data.datasets[tooltip.datasetIndex]

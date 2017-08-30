@@ -47,27 +47,14 @@ $(document).ready(function() {
 
 
     /*window resizing*/
-    var bResultsToggled = false,
-        bRandToggled = false,
+    var bRandToggled = false,
         bRangesToggled = false;
     var sResultsClass = $('#results_col').attr('class');
 
     $(window).resize(function(e) {
         return;
         var width = window.innerWidth,
-            ranges, rand, results;
-        if (innerWidth <= 992) { //result pop down
-            if (!bResultsToggled) {
-                results = $('#results_col').detach();
-                results.removeClass().addClass('row').appendTo('#content');
-                bResultsToggled = true;
-            }
-        } else if (bResultsToggled) {
-            results = $('#results_col').detach();
-            results.removeClass().addClass(sResultsClass).appendTo('#range_row');
-            bResultsToggled = false;
-        } else
-            return;
+            ranges, rand;
 
         if (innerWidth <= 768) {
             if (!bRandToggled) {

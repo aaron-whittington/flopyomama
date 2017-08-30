@@ -65,35 +65,37 @@
 	</div>
    <!--Range Table-->
 	<div id='range_row' class="row">
-		<div id="op_range_col" class="col-lg-6 col-md-6 col-sm-9">
+		<div id="op_range_col" class="col-lg-6 col-md-6 col-sm-12">
 			<div id="op_range">
 
 
 			</div>	
+			<div>
+				<div id="range_slider" title="Range slider"></div>
+				<span id="range_slider_val" class="label"></span>
+			</div>
 		</div>
-		<span class="vue_root">
-		<!--visualize-->
-		<div id="results_col" class="col-lg-4 col-md-4 col-sm-10"> 
-			<visualize :streets="streets"> <vizualize>
+		<div class="vue_root col-lg-6 col-md-6 col-sm-12">
+			<!--visualize-->
+		    <div style="padding: 5% 10% 10% 10%">	
+				<visualize :streets="streets"> <vizualize>
+			</div>
+			<!--round = hand-->
+			<!--<div id="round_col" class="col-lg-2 col-md-2 col-sm-10"> 
+				<round-hand :streets="streets"> <round-hand>
+			</div>-->
 		</div>
-		<!--round = hand-->
-		<div id="round_col" class="col-lg-2 col-md-2 col-sm-10"> 
-			<round-hand :streets="streets"> <round-hand>
-		</div>
-		</span>
 	</div>
 	<div id="bottom_row" class = "row">
-		<div class ="col-lg-6 col-md-6 col-sm-6">
-			<div id="range_slider" title="Range slider"></div>
-			<span id="range_slider_val" class="label"></span>
-		</div>	
-		<div class ="col-lg-4 col-md-4 col-sm-3">
+		<div class ="col-lg-12 col-md-12 col-sm-12">
 			<div id='range_buttons' class="btn-group">
 				<button id="clear_selection" title='Clear custom board selection' type = "button" class="btn btn-default">
+					Clear Board
 					<span class="glyphicon glyphicon-remove"></span>
 				</button>		
 				<div class="btn-group dropup">
 					<button id="range_config"  type = "button" title="Fixed Ranges" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						Fixed Ranges
 						<span class="glyphicon glyphicon-stats"></span>
 						<span class="caret"></span>
 					</button>	
@@ -106,6 +108,7 @@
 				</div>
 				<div class="btn-group dropup">
 					<button id="range_scale"  type = "button" title="Range Scale" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						Range Scale
 						<span class="glyphicon glyphicon-scale"></span>
 						<span class="caret"></span>
 					</button>	
@@ -120,6 +123,7 @@
 				</div>
 				<div class="btn-group dropup">
 					<button id="filter_config"  type = "button" title="Filter" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						Filter
 						<span class="glyphicon glyphicon-filter"></span>
 						<span class="caret"></span>
 					</button>	
@@ -135,6 +139,7 @@
 					<span class="glyphicon glyphicon-link"></span>
                     </button>-->
 				<button id="settings" data-toggle="modal" href="#settings_modal" title='Settings & Tools' type = "button" class="btn btn-default">
+					Settings
 					<span class="glyphicon glyphicon-wrench"></span>
 				</button>
 			</div> 

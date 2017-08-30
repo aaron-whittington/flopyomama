@@ -1,10 +1,9 @@
 <template>
  <section> 
-     <h4>Visualize</h4>
      <div v-show="selectedStreet == -1">
          <select v-model="barOrLine">
-             <option value="bar">Bar</option>
              <option value="line">Line</option>
+             <option value="bar">Bar</option>
          </select>    
         <div v-if="barOrLine == 'line' && streets.flop != null" >
             <win-loss-draw-line @click-street='clickStreet($event)' :streets="streets" :colors="colors"/>
