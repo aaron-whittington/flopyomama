@@ -52,13 +52,13 @@ nsDrawingHand.fHandToString = function(oDrawingHand) {
     return returnString;
 };
 
-nsDrawingHand.fHandToKey = function(oDrawingHand) {
-    var returnValue = 'H' + oDrawingHand.rank;
+nsDrawingHand.fHandToKeyArray = function(oDrawingHand) {
+    var returnValue = ['H' + oDrawingHand.rank];
     
     if(oDrawingHand.drawingHands.length > 0) {
-        returnValue = returnValue + '-' + oDrawingHand.drawingHands.map(function(dh) {
+        returnValue = returnValue.concat(oDrawingHand.drawingHands.map(function(dh) {
             return 'D' + dh.rank;
-        }).join('-');
+        }));
     }
     return returnValue;
 }

@@ -40,13 +40,13 @@
             var info = $('#palette .btn-info').css('background-color');
             var warning = $('#palette .btn-warning').css('background-color');
 
-            var processed = [primary, success, danger, info, warning].map(function(hex){
+            var processed = [success, info, primary, warning, danger].map(function(hex){
                 var color = tinycolor(hex);
                 color.setAlpha(0.5);
                 return color.toRgbString();
             });
 
-            var processedDark = [primary, success, danger, info, warning].map(function(hex){
+            var processedDark = [success, info, primary, warning, danger].map(function(hex){
                 var color = tinycolor(hex);
                 color.setAlpha(0.5);
                 color.darken(30);
@@ -57,11 +57,11 @@
                 barOrLine: 'line',
                 selectedStreet: "overview", //overview
                 colors: {
-                    win:  processed[1],
+                    win:  processed[0],
                     winBorder: success,
-                    loss: processed[2],
+                    loss: processed[4],
                     lossBorder: danger,
-                    draw: processed[3],
+                    draw: processed[1],
                     drawBorder: info
                 }, 
                 pieColors: {

@@ -17,10 +17,6 @@ module.exports = function(street, cards) {
         this.winLossDraw.win = win; 
         this.winLossDraw.loss = loss; 
         this.winLossDraw.draw = draw; 
-
-        //log preflop
-        if(this.street == 2)
-            console.log(this.street, this);
     };
 
     this.setTextures = function (textures) {

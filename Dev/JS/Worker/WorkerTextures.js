@@ -66,16 +66,15 @@ module.exports = function(self) {
                     oVillainHand = nsDrawingHand.fGetDrawingHands(aVillainHand);
                 }
 
-                var sVillainHand = nsDrawingHand.fHandToKey(oVillainHand);
+                var aVillainHand = nsDrawingHand.fHandToKeyArray(oVillainHand);
+                
+                //slice is just an experiment, only getting the made hands
+                nsWorkerTextures.fAddToRecordDic(oVillainStaticDic, aVillainHand[0], sPair);
 
-                var aSplit = sVillainHand.split("-");
-
-                for (j = 0; j < aSplit.length; j++) {
-                    if (aSplit[j].length < 2) {
-                        throw 'wtf' + JSON.stringify(aSplit[j]) + 'key ' + sVillainHand;
-                    }
-                    nsWorkerTextures.fAddToRecordDic(oVillainStaticDic, aSplit[j], sPair);
-                    numberDone++;
+                //add the best draw, we can go deeper, or make the setting method recursive,
+                //but i'm not sure we can present that data nicely
+                if(aVillainHand.length > 1) {
+                     nsWorkerTextures.fAddToRecordDic(oVillainStaticDic[aVillainHand[0]].drawingHands, aVillainHand[1], sPair);   
                 }
             }
 
@@ -89,11 +88,13 @@ module.exports = function(self) {
         });
     };
 
-    nsWorkerTextures.fAddToRecordDic = function(oVillainStatDic, sHandString, sPairString, iPairCount) {
+    nsWorkerTextures.fAddToRecordDic = function(oVillainStatDic, sHandString, sPairString) {
+
         if (typeof(oVillainStatDic[sHandString]) === 'undefined') {
             oVillainStatDic[sHandString] = {
                 oPairRecord: {},
-                count: 0
+                count: 0,
+                drawingHands : {} 
             };
         }
 
