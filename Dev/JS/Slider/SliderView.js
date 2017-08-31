@@ -30,7 +30,7 @@ var SliderView = Backbone.View.extend({
             });
         });        
 
-        slider.on('end', function(values) {
+        slider.on('set', function(values) {
             that.model.trigger('finalize', values[0]);
         });        
         this.slider = slider;
