@@ -5,6 +5,7 @@ globalUi = require('../Constants/Ui');
 Vue = require('vue');
 RoundHand = require('../../Vue/Round/Hand.vue');
 Visualize = require('../../Vue/Chart/Visualize.vue');
+nsUtil = require('../Core/Util');
 
 $(document).ready(function() {
     /**********************************************PROGRESS BARS***************************************************************/

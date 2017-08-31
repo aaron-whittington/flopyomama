@@ -2,7 +2,7 @@ var AWModel = require('../Core/AWModel');
 var nsConvert = require('../Core/Convert');
 var nsMath = require('../Core/Math');
 
-var Pair = AWModel.extend({
+Pair = AWModel.extend({
     className: 'Pair',
     _stringToPrm: function(aArgs) {
         //var prm = arguments;
