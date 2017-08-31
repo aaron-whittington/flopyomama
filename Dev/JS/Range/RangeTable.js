@@ -5,7 +5,7 @@ var nsUtil = require('../Core/Util');
 var RangeTable = RangeItemList.extend({
     className: 'RangeTable',
     initialize: function() {
-
+        var rank1, rank2;
         for (rank1 = 14; rank1 > 1; rank1--) {
             for (rank2 = 14; rank2 > 1; rank2--) {
                 var rangeItem = {
@@ -29,7 +29,7 @@ var RangeTable = RangeItemList.extend({
             this.amChanged = [];
         });
 
-        /*if (routerValues.custom) {
+        /*    if (routerValues.custom) {
             this.setCustom(routerValues.custom);
         }*/
 
@@ -73,11 +73,12 @@ var RangeTable = RangeItemList.extend({
                 rank2: rank2
             });
         else
-            return this.find({
+            return this.findWhere({
                 rank1: rank1
             });
     },
     tableLoop: function(fnRow, fnCol) {
+        var rank1, rank2;
         for (rank1 = 14; rank1 > 1; rank1--) {
             fnRow(this.rangeItemAt(rank1, rank2));
             for (rank2 = 14; rank2 > 1; rank2--) {

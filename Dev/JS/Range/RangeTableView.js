@@ -10,23 +10,23 @@ var RangeTableView = AWView.extend({
     currentRangeItemView: null,
     initialize: function() {
         var renderData = this.renderData;
-
+        var that = this;
         this.model.tableLoop(
             function(mod) {
                 renderData.row.push([]);
             },
             function(mod) {
-                if (!this.currentRangeItemView)
-                    this.currentRangeItemView = new RangeItemView({
+                if (!that.currentRangeItemView)
+                    that.currentRangeItemView = new RangeItemView({
                         model: mod
                     });
                 else
-                    this.currentRangeItemView.setModel(mod);
+                    that.currentRangeItemView.setModel(mod);
 
                 renderData.row[renderData.row.length - 1].push({
-                    innerHtml: this.currentRangeItemView.render(),
-                    id: this.currentRangeItemView.idPrefix() + this.currentRangeItemView.id(),
-                    sClass: this.currentRangeItemView.className()
+                    innerHtml:that.currentRangeItemView.render(),
+                    id:that.currentRangeItemView.idPrefix() +that.currentRangeItemView.id(),
+                    sClass:that.currentRangeItemView.className()
                 });
             }
         );
@@ -72,7 +72,7 @@ var RangeTableView = AWView.extend({
         var oView = this;
         var model = this.modelFromTD(td);
 
-        bNewVal = model.toggle('selected');
+        var bNewVal = model.toggle('selected');
         model.toggle('custom');
 
         this.bOriginalSelected = !bNewVal;
@@ -145,10 +145,10 @@ var RangeTableView = AWView.extend({
         this.el.innerHTML = output; //html(output);
         $(Mustache.render('#{{.}}', this.parent)).append(this.el);
     },
-    renderData: {
-        'class': _.isFunction(this.className) ? this.className() : this.className,
-        'id': this.id,
-        'row': []
+    renderData: { 
+            'class': 'range_table', 
+            'id': 'range_table', 
+            'row': []
     },
     template: "<table id='{{id}}' class='{{class}}'>\
 					<tbody>\

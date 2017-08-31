@@ -1,6 +1,6 @@
-AWModel = require('../../Core/AWModel');
-RangeItem = require('../RangeItem');
-FixedRange = AWModel.extend({
+var AWModel = require('../../Core/AWModel');
+var RangeItem = require('../RangeItem');
+var FixedRange = AWModel.extend({
     initialize: function() {
         //convert custom objects to custom BB models
         var newCust,

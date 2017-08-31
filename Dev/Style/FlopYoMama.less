@@ -68,16 +68,6 @@ a {
   font-size: 80%;
 }
 
-#content { 
-//breaks piechart legend
-	/*.animated_transition(1s ease,translate(0,0));
-	&.preload {
-		.transition(none);
-		//.transform(translate(0,-5000px) scale(0.0));
-		.transform(translateX(1000px) translateY(1000px) scaleX(0.0) scaleY(0.0)); //if we had a server we could choose random effects
-	}*/
-}
-
 body .card, .known span, .pair_string {
 	/*font-size: 120%;*/
 	.card_font;
@@ -509,6 +499,13 @@ body .popover {
 	padding: 8px;
 }
  
+#content {
+	 margin-top: 60px;
+}
+
+#graph_wrapper {
+	 padding: 0 32px 32px 32px; 
+}
  /******************************************************* COLLAPSE *****************************************************************/
 @media only screen and (max-width: @screen-lg) { /*bootstrap first collapse*/
                 #content  {
@@ -516,7 +513,7 @@ body .popover {
 				}
 				
 				#content .btn {
-					padding:7px;
+					padding: 12px;
 				}
 				#content .panel-body, #content .panel-heading{ /*15 default*/
 					padding: 10px;
@@ -531,7 +528,7 @@ body .popover {
 					padding: 8px;
 				}
 				#content .btn{
-					padding: 6px;
+					padding: 12px;
 				}
 				#content .panel-body, #content .panel-heading{ /*15 default*/
 					padding: 6px;
@@ -542,14 +539,19 @@ body .popover {
  }
  
 @media only screen and (max-width: @screen-sm) { /*second collapse*/
-                #content { font-size:0.9em;}
-				#content .row, #content .well {
-					padding: 8px;
-				}
-				#content .btn{
-					padding: 6px;
-				}
-				
+	#content { 
+		font-size: 0.9em;
+		margin-top: 84px;
+	}
+	#content .row, #content .well {
+		padding: 8px;
+	}
+	#content .btn{
+		padding: 12px;
+	}
+	#graph_wrapper {		
+	    padding: 24px 0 64px 0;
+	} 
  }
  
 @media only screen and (max-width: @screen-xs) { //was 500
@@ -559,7 +561,7 @@ body .popover {
 					padding: 2px;
 				}				
 				#content .btn {
-					 padding: 4px;
+					 padding: 12px;
 				}
  }
  
@@ -678,7 +680,4 @@ body .popover {
   
    #footer {
 	   display: none;
-   }
-   #content {
-	 margin-top: 60px;
    }

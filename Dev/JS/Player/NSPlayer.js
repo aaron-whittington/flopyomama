@@ -1,6 +1,6 @@
-Player = require('./Player');
+var Player = require('./Player');
 
-player = {
+var player = {
     getPositionList : function(playerCount) {
          var blinds = ['SB', 'BB']
           

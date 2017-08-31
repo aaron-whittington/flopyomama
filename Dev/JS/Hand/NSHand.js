@@ -151,8 +151,11 @@ nsHand.fCompareFlushes = function(flushA, flushB) {
 };
 
 nsHand.fFindBestStraight = function(aCards) {
-    var iFirst;
-    var aFoundStraights = [];
+    var iFirst,
+        aFoundStraights = [],
+        iLowRank,
+        memberInStraight;
+
     for (iLowRank = 10; iLowRank >= 1; iLowRank--) {
         var aStraightRecord = []; //can contain duplicates // forget aces low
         for (memberInStraight = 0; memberInStraight < 5; memberInStraight++) {
@@ -250,7 +253,8 @@ nsHand.fStraightFromAmbig = function(aCardListArray) {
 };
 
 nsHand.fFindAllCardsWithRank = function(aCards, rank) {
-    var returnCards = [];
+    var returnCards = [],
+        i;
 
     for (i = 0; i < aCards.length; i++) {
         if (aCards[i].rank === rank) {
@@ -262,11 +266,14 @@ nsHand.fFindAllCardsWithRank = function(aCards, rank) {
 
 nsHand.fFindBestSet = function(aCards) {
     var aSets = [],
-        oReturnHand, i, j;
+        oReturnHand, i, j,
+        timesFound,
+        foundRank,
+        notFoundRank;
     for (i = 14; i >= 2; i--) {
-        var timesFound = 0;
-        var foundRank = [];
-        var notFoundRank = [];
+        timesFound = 0;
+        foundRank = [];
+        notFoundRank = [];
         for (j = 0; j < aCards.length; j++) {
             if (aCards[j].rank === i) {
                 timesFound++;

@@ -1,7 +1,9 @@
 //TODO: move to fixed range folder, change document.ready to export
-FixedRangeList = require('./FixedRangeList');
-FixedRangeListView = require('./FixedRangeListView');
-FixedRangeEditorView = require('./FixedRangeEditorView');
+var FixedRangeList = require('./FixedRangeList');
+var FixedRangeListView = require('./FixedRangeListView');
+var FixedRangeEditorView = require('./FixedRangeEditorView');
+var FixedRange = require('./FixedRange');
+
 module.exports = function() {
     var def = new FixedRangeList();
     var view = new FixedRangeListView({

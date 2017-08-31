@@ -275,8 +275,8 @@ nsRange.fGetTextures = function(knownCards, getAllUnknown, leg) {
 
                 nsFilter.fClearFilter();
                 
-                //need to work on this
-                //nsFilter.fDrawFilterToBoard(oResult.oFilterRecord);
+                //TODO, draw filter to board only PER leg
+                //nsFilter.fDrawFilterToBoard(oResult.oFilterRecord, Pair);
 
                 var key = nsConvert.streetConstantToString(leg);
 

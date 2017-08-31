@@ -1,11 +1,11 @@
-﻿FlopYoMama = require('./FlopYoMamaModel');
-nsHtml = require('../Core/Html');
-nsUI = require('../Core/Ui');
-globalUi = require('../Constants/Ui');
-Vue = require('vue');
-RoundHand = require('../../Vue/Round/Hand.vue');
-Visualize = require('../../Vue/Chart/Visualize.vue');
-nsUtil = require('../Core/Util');
+﻿var FlopYoMama = require('./FlopYoMamaModel');
+var nsHtml = require('../Core/Html');
+var nsUI = require('../Core/Ui');
+var globalUi = require('../Constants/Ui');
+var Vue = require('vue');
+var RoundHand = require('../../Vue/Round/Hand.vue');
+var Visualize = require('../../Vue/Chart/Visualize.vue');
+var nsUtil = require('../Core/Util');
 
 $(document).ready(function() {
     /**********************************************PROGRESS BARS***************************************************************/
@@ -53,7 +53,6 @@ $(document).ready(function() {
     var sResultsClass = $('#results_col').attr('class');
 
     $(window).resize(function(e) {
-        return;
         var width = window.innerWidth,
             ranges, rand;
 

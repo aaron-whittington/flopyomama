@@ -28,6 +28,8 @@ nsMath.combine = function(aN, k) {
     };
     fAddFoundArray();
 
+    var j;
+
     while (aDisplace[0] !== max) {
 
         //find first column less than max

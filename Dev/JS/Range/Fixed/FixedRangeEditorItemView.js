@@ -1,6 +1,6 @@
 var AWView = require('../../Core/AWView');
 //item view for the fixed range editor
-FixedRangeEditorItemView = AWView.extend({
+var FixedRangeEditorItemView = AWView.extend({
     initialize: function() {
         this.compiledTemplate = Mustache.compile(this.template);
         //we have to render this when created, otherwise

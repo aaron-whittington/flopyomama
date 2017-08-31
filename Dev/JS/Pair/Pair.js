@@ -2,7 +2,7 @@ var AWModel = require('../Core/AWModel');
 var nsConvert = require('../Core/Convert');
 var nsMath = require('../Core/Math');
 
-Pair = AWModel.extend({
+var Pair = AWModel.extend({
     className: 'Pair',
     _stringToPrm: function(aArgs) {
         //var prm = arguments;
@@ -125,7 +125,8 @@ Pair = AWModel.extend({
 
 
         //filter out known cards
-        aKnownFiltered = [];
+        var aKnownFiltered = [],
+            j;
         if (typeof aFilter === "object") {
             //nsUtil.fLog("applying pair filter");
             aKnown = aFilter;
@@ -173,5 +174,4 @@ Pair = AWModel.extend({
         return returnArray;
     }
 });
-
 module.exports = Pair;

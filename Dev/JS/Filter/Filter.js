@@ -149,7 +149,7 @@ nsFilter.fGetActiveFilter = function() {
     return sName;
 };
 
-nsFilter.fDrawFilterToBoard = function(oFilterRecord) {
+nsFilter.fDrawFilterToBoard = function(oFilterRecord, Pair) {
     for (var sPairName in oFilterRecord) {
         var aPair = oFilterRecord[sPairName];
         if (aPair.length > 0) {

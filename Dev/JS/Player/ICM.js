@@ -1,7 +1,7 @@
 var nsMath = require('../Core/Math')
 
 
-ICM = function(chipCounts, prizeStructure) {
+var ICM = function(chipCounts, prizeStructure) {
     var that = this;
     this.chipCounts = chipCounts;
     this.prizeStructure = prizeStructure;
