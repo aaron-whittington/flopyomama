@@ -125,7 +125,8 @@ var Pair = AWModel.extend({
 
 
         //filter out known cards
-        aKnownFiltered = [];
+        var aKnownFiltered = [],
+            j;
         if (typeof aFilter === "object") {
             //nsUtil.fLog("applying pair filter");
             aKnown = aFilter;

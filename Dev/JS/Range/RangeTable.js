@@ -29,7 +29,7 @@ var RangeTable = RangeItemList.extend({
             this.amChanged = [];
         });
 
-        /*if (routerValues.custom) {
+        /*    if (routerValues.custom) {
             this.setCustom(routerValues.custom);
         }*/
 

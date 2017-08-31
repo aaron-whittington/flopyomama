@@ -175,8 +175,10 @@ nsDrawingHand.fFindBestFlushDraw = function(aCards) {
 
 
 nsDrawingHand.fFindBestStraightDraw = function(aCards) {
-    var iFirst;
-    var aFoundDrawingStraights = [];
+    var iFirst,
+        iLowRank,
+        memberInStraight,
+        aFoundDrawingStraights = [];
     for (iLowRank = 10; iLowRank >= 1; iLowRank--) {
         var aStraightRecord = []; //can contain duplicates // forget aces low
         for (memberInStraight = 0; memberInStraight < 5; memberInStraight++) {
@@ -209,7 +211,7 @@ nsDrawingHand.fFindBestStraightDraw = function(aCards) {
         var numberNonNull = 0;
         var iFirstNonNull = -1;
         var aGaps = [];
-        for (j = 0; j < aFoundDS.length; j++) {
+        for (var j = 0; j < aFoundDS.length; j++) {
             var cardsOfRank = aFoundDS[j];
             if (cardsOfRank !== null) {
                 numberNonNull++;
