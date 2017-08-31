@@ -2,6 +2,7 @@
 var FixedRangeList = require('./FixedRangeList');
 var FixedRangeListView = require('./FixedRangeListView');
 var FixedRangeEditorView = require('./FixedRangeEditorView');
+var FixedRange = require('./FixedRange');
 
 module.exports = function() {
     var def = new FixedRangeList();

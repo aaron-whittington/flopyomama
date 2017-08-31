@@ -53,7 +53,6 @@ $(document).ready(function() {
     var sResultsClass = $('#results_col').attr('class');
 
     $(window).resize(function(e) {
-        return;
         var width = window.innerWidth,
             ranges, rand;
 

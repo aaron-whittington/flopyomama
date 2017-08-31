@@ -46,7 +46,7 @@ nsDrawingHand.fDrawingHandToString = function(oDrawingHand) {
 nsDrawingHand.fHandToString = function(oDrawingHand) {
     var returnString = nsHand.fHandToString(oDrawingHand);
 
-    for (i = 0; i < oDrawingHand.drawingHands.length; i++) {
+    for (var i = 0; i < oDrawingHand.drawingHands.length; i++) {
         returnString = returnString + ' - ' + nsDrawingHand.fDrawingHandToString(oDrawingHand.drawingHands[i]);
     }
     return returnString;
@@ -68,7 +68,8 @@ nsDrawingHand.fKeyToHandString = function(handKey) {
         return handKey.split('-').map(nsDrawingHand.fKeyToHandString).join(' & ');
     }
     
-    var val = +(handKey[1]);
+    var val = +(handKey[1]),
+        hand;
     if(handKey[0] == 'H') {
         hand = { rank: val, drawingHands: []}; 
         return nsDrawingHand.fHandToString(hand);
