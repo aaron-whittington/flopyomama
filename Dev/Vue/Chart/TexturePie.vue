@@ -3,6 +3,8 @@ import Vue from 'vue'
 import VueChart from 'vue-chartjs'
 import nsDrawingHand from '../../JS/Hand/DrawingHand'
 import tinycolor from 'tinycolor2';
+import _ from 'underscore';
+import nsMath from '../../JS/Core/Math';
 
 export default Vue.component('texture-pie', {
   extends: VueChart.Pie,
@@ -25,29 +27,23 @@ export default Vue.component('texture-pie', {
   methods: {
      getChartDataFromStreets: function() {
 
-        var loss = this.data.winLossDraw.loss * 100;
-    
-        var win = this.data.winLossDraw.win * 100;
-
-        var draw = this.data.winLossDraw.draw * 100;
-        
+        if(this.data == null) {
+            return {
+                labels: "NO DATA",
+                datasets: {
+                    data: [100.00]
+                }
+            }; 
+        }
         var textures = this.data.textures.oVillainStat;
 
         var textureLabels = [],
             textureData = [];
 
-        var props = [];
-        for(var prop in textures) {
-            props.push(prop);
-        } 
+        var props = _.keys(textures);         
 
         //sort props, low rank first
-        props.sort(function(a, b) { 
-            if(a == 'H0') return - 1;
-            if(b == 'H0') return 1;
-            
-            else return a < b ? -1 : 1;
-        });
+        props.sort();
 
         //loop for the main data
         props.forEach(function(prop) {
@@ -72,16 +68,14 @@ export default Vue.component('texture-pie', {
         props.forEach(function(prop, i) {
             var labelString = nsDrawingHand.fKeyToHandString(prop);
 
-            var totalAdded = 0,
-                newColor,
-                toAdd;
+            var drawingHandDic = textures[prop].drawingHands;
+            var drawingHandProps = _.keys(drawingHandDic);
 
+            drawingHandProps.sort();
             //first round to find out how much to add
-            for(var drawingHandProp in textures[prop].drawingHands) {
-                
-                toAdd = textures[prop].drawingHands[drawingHandProp].count;
-                totalAdded += toAdd;
-            }
+            var totalAdded = drawingHandProps.reduce(function(sum, dhProp){
+                return sum + drawingHandDic[dhProp].count; 
+            }, 0);
 
             //add the normal data (high card with nothing, or flush with no draw)
             drawingHandData.push(textures[prop].count - totalAdded);
@@ -90,25 +84,30 @@ export default Vue.component('texture-pie', {
             textureLabels.push(labelString + ' (no drawing hand)');
 
             //now do the actual adding
-            var count = 1,
-                textureLabel;
+            var textureLabel, newColor;
 
             //todo, sort the damned props
-            for(var drawingHandProp in textures[prop].drawingHands) {
-                
-                toAdd = textures[prop].drawingHands[drawingHandProp].count;
-                drawingHandData.push(toAdd);
-
+            drawingHandProps.forEach(function(dhProp, index) {
+                drawingHandData.push(drawingHandDic[dhProp].count);
                 newColor = tinycolor(mainColors[i]);
-                newColor.darken(count * 9.0);
+                newColor.darken((index + 1)* 10.0);
                 newColor = newColor.toRgbString();
                 drawingHandColors.push(newColor);
-                textureLabel = labelString + ' & ' + nsDrawingHand.fKeyToHandString(drawingHandProp);
+                textureLabel = labelString + ' & ' + nsDrawingHand.fKeyToHandString(dhProp);
                 textureLabels.push(textureLabel);
-                count++;
-            }
+            });
 
         });
+
+        // convert both datasets to percentages
+        var textureDataSum = textureData.reduce(nsMath.sum, 0);
+        var drawingHandDataSum = drawingHandData.reduce(nsMath.sum, 0);
+        textureData = textureData.map(function(d) {
+            return ((d * 100.0)/textureDataSum);
+        })
+        drawingHandData = drawingHandData.map(function(d) {
+            return ((d * 100.0)/drawingHandDataSum);
+        })
 
         var datasets = [
             {
@@ -135,7 +134,18 @@ export default Vue.component('texture-pie', {
         cutoutPercentage: 50,
         onClick: function(event, elements) {
         },
+
         tooltips: {
+          callbacks: {
+            'label' : function(tooltip, data) {           
+                var dataset = data.datasets[tooltip.datasetIndex]
+                var value = dataset.data[tooltip.index];
+                var labelText = data.labels[tooltip.index];
+                var labelEnding = '%';
+                return labelText + ' ' + value.toFixed(2) + labelEnding;
+              
+            }
+          }
         },
         legend: {
             labels: {
@@ -149,9 +159,6 @@ export default Vue.component('texture-pie', {
                             fillStyle: mainSet.backgroundColor[i],
                         }
                     }); 
-
-                    console.log(returnValues);
-
 
                     return returnValues;
                 }

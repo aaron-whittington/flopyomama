@@ -1,9 +1,9 @@
 <template>
  <section> 
      <div v-if="selectedStreet == 'overview'">
-         <select v-model="barOrLine">
-             <option value="line">Line</option>
-             <option value="bar">Bar</option>
+         <select v-model="barOrLine" class="form-control">
+             <option value="line">Wins Losses &amp; Draws - Line</option>
+             <option value="bar">Wins Losses &amp; Draws - Bar</option>
          </select>    
         <div v-if="barOrLine == 'line' && streets.flop != null" >
             <win-loss-draw-line @click-street='clickStreet($event)' :streets="streets" :colors="colors"/>
@@ -17,7 +17,13 @@
                 <span class="glyphicon glyphicon-arrow-left"> 
                 </span>
                 Back to Overview
-            </span>    
+            </span>  
+
+         <select v-model="selectedStreet" class="form-control">
+             <option v-if="streets['flop']"  value="flop">Textures: Flop</option>
+             <option v-if="streets['turn']" value="turn">Textures: Turn</option>
+             <option v-if="streets['river']" value="river">Textures: River</option>
+         </select>    
             <texture-pie :data="streets[selectedStreet]" :colors="pieColors"/>
      </div>    
  </section>
