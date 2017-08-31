@@ -73,8 +73,10 @@ module.exports = function(self) {
 
                 //add the best draw, we can go deeper, or make the setting method recursive,
                 //but i'm not sure we can present that data nicely
+                var toAdd;
                 if(aVillainHand.length > 1) {
-                     nsWorkerTextures.fAddToRecordDic(oVillainStaticDic[aVillainHand[0]].drawingHands, aVillainHand[1], sPair);   
+                     toAdd = aVillainHand.slice(1).join('-');
+                     nsWorkerTextures.fAddToRecordDic(oVillainStaticDic[aVillainHand[0]].drawingHands, toAdd, sPair);   
                 }
             }
 

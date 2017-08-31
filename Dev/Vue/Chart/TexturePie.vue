@@ -93,7 +93,7 @@ export default Vue.component('texture-pie', {
                 newColor.darken((index + 1)* 10.0);
                 newColor = newColor.toRgbString();
                 drawingHandColors.push(newColor);
-                textureLabel = labelString + ' & ' + nsDrawingHand.fKeyToHandString(dhProp);
+                textureLabel = labelString + ' ' + nsDrawingHand.fKeyToHandString(dhProp);
                 textureLabels.push(textureLabel);
             });
 

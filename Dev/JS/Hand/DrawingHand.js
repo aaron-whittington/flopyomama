@@ -64,7 +64,10 @@ nsDrawingHand.fHandToKeyArray = function(oDrawingHand) {
 }
 
 nsDrawingHand.fKeyToHandString = function(handKey) {
-    var hand;
+    if (handKey.length > 2) {
+        return handKey.split('-').map(nsDrawingHand.fKeyToHandString).join(' ');
+    }
+    
     var val = +(handKey[1]);
     if(handKey[0] == 'H') {
         hand = { rank: val, drawingHands: []}; 
