@@ -9,7 +9,7 @@ var RangeTableView = AWView.extend({
     parent: 'op_range',
     currentRangeItemView: null,
     initialize: function() {
-        var renderData = this.renderData;
+        var renderData = this.renderData();
 
         this.model.tableLoop(
             function(mod) {

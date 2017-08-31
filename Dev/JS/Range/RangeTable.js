@@ -73,7 +73,7 @@ var RangeTable = RangeItemList.extend({
                 rank2: rank2
             });
         else
-            return this.find({
+            return this.findWhere({
                 rank1: rank1
             });
     },
