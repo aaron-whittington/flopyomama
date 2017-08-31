@@ -85,7 +85,10 @@ export default Vue.component('texture-pie', {
             drawingHandData.push(textures[prop].count - totalAdded);
             var blandColor = tinycolor(mainColors[i]).lighten(9.0).toRgbString();
             drawingHandColors.push(blandColor);
-            textureLabels.push(labelString + ' (no drawing hand)');
+            
+            var noDrawingLabelString = totalAdded == 0 ? labelString : labelString + ' (no draws)';   
+
+            textureLabels.push(noDrawingLabelString);
 
             //now do the actual adding
             var textureLabel, newColor;

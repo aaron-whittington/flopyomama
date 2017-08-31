@@ -274,7 +274,9 @@ nsRange.fGetTextures = function(knownCards, getAllUnknown, leg) {
                 var oResult = e.data.msg;
 
                 nsFilter.fClearFilter();
-                nsFilter.fDrawFilterToBoard(oResult.oFilterRecord);
+                
+                //need to work on this
+                //nsFilter.fDrawFilterToBoard(oResult.oFilterRecord);
 
                 var key = nsConvert.streetConstantToString(leg);
 
