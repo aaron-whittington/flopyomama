@@ -1,5 +1,5 @@
 /*standard filters*/
-nsStandardFilters = {};
+var nsStandardFilters = {};
 nsStandardFilters['filter_strong_hand'] = {
     "oValues": {
         "sub_filter_type": "class_group",

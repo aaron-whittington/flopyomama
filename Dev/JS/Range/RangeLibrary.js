@@ -1,16 +1,16 @@
-﻿$ = require('jquery');
-Pair = require('../Pair/Pair');
-sklanskyRanges = require('./RangeScaleSklansky');
-procentualRanges = require('./RangeScaleProcentual'); 
-poker = require('../Constants/Poker');
-nsFilter = require('../Filter/Filter');
-nsUtil = require('../Core/Util');
-work = require('webworkify');
-nsPrefs = require('../Settings/Preferences');
-nsConvert = require('../Core/Convert');
-Preflop = require('../Card/Preflop');
+﻿var $ = require('jquery');
+var Pair = require('../Pair/Pair');
+var sklanskyRanges = require('./RangeScaleSklansky');
+var procentualRanges = require('./RangeScaleProcentual'); 
+var poker = require('../Constants/Poker');
+var nsFilter = require('../Filter/Filter');
+var nsUtil = require('../Core/Util');
+var work = require('webworkify');
+var nsPrefs = require('../Settings/Preferences');
+var nsConvert = require('../Core/Convert');
+var Preflop = require('../Card/Preflop');
 
-nsRange = {};
+var nsRange = {};
 
 nsRange.getSlanskyFromPercent = function(fPercent) {
     var aReturn = [];

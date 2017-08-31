@@ -8,9 +8,6 @@ nsFilter.bEdited = false;
 nsFilter.sOriginalJSON = '';
 nsFilter.sEditedJSON = '';
 
-
-
-
 nsFilter.sFilterNamesKey = 'filters_saved';
 
 //Check if the local storage looks like it's empty. If it's not empty, 

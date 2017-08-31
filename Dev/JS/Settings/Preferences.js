@@ -1,4 +1,4 @@
-nsPrefs = {};
+var nsPrefs = {};
 
 nsPrefs.nsConst = {};
 

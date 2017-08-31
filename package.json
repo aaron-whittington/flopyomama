@@ -6,7 +6,7 @@
     "build": "grunt build-dev && npm run browserify",
     "test": "jasmine",
     "coverage": "istanbul cover --include-all-sources --print 'both' --root './Dev/JS'  jasmine",
-    "browserify": "browserify ./Dev/JS/Main/FlopYoMama.js -d -o ./Dev/Generated/browserified.js",
+    "browserify": "NODE_ENV=production browserify -g envify ./Dev/JS/Main/FlopYoMama.js -d -o ./Dev/Generated/browserified.js",
     "start": "http-server -p 8007"
   },
   "devDependencies": {
@@ -16,6 +16,7 @@
     "babelify": "^7.2.0",
     "browserify": "^14.4.0",
     "browserify-shim": "^3.8.14",
+    "envify": "^4.1.0",
     "grunt": "^0.4.5",
     "grunt-contrib-copy": "^0.8.0",
     "grunt-contrib-jshint": "^0.10.0",
@@ -33,7 +34,8 @@
     "transform": [
       "browserify-shim",
       "vueify",
-      "babelify"
+      ["babelify",
+        { "presets": [] }]
     ]
   },
   "browserify-shim": {

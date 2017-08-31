@@ -166,9 +166,7 @@ body .card.selected, .pair_string.selected{
 	}
 	
 	.btn.disabled {
-		
 		border: 1px solid @btn-default-border;
-		width: 62px;
 	}
 }
 
@@ -642,3 +640,45 @@ body .popover {
 #range_slider .noUi-marker-horizontal.noUi-marker-large {
     height: 7px;
 }
+
+/*experimental css*/
+#range_buttons {
+	margin-top: 12px;
+	position: fixed;
+	display: block;
+	bottom: 0;
+	left: 0;
+	z-index: 1000;
+	width: 100%;
+	background-color: rgba(200,200,200,0.8);
+   
+   }
+   
+   #known_cards .btn.disabled {
+	  color: black;
+	  font-style: bold;
+	  background-color:white;
+   }
+   
+   #range_buttons .btn {   
+	  background-color: rgba(200,200,200,0.0);
+	  border: 0px;
+   }
+   
+   #known_cards {
+	  position: fixed;
+	  top: 0;
+	  left: 0;
+	  right: 0;
+	  padding: 0 24px !important;
+	  z-index: 1000;
+	  background-color: rgba(200,200,200,0.8);
+   
+   }
+  
+   #footer {
+	   display: none;
+   }
+   #content {
+	 margin-top: 60px;
+   }

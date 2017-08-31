@@ -1,4 +1,4 @@
-meta = {};
+var meta = {};
 meta.group = {
     "sub_filter_type": "class_group",
     "group_log_op": "log_op_or"

@@ -1,4 +1,4 @@
-nsConvert = require('../Core/Convert');
+var nsConvert = require('../Core/Convert');
 
 module.exports = function(street, cards) {
     this.actions = [];

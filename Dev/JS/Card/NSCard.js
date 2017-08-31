@@ -1,5 +1,5 @@
 
-nsCard =  { 
+var nsCard =  { 
     compareCards: function(card1, card2) {
         if (card2.get('rank') !== card1.get('rank'))
             return card2.get('rank') - card1.get('rank');

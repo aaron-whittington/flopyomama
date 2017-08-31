@@ -1,7 +1,7 @@
-nsCard = require('./NSCard');
-CardList = require('./CardList');
+var nsCard = require('./NSCard');
+var CardList = require('./CardList');
 
-Preflop = function (a1, a2, b1, b2) {
+var Preflop = function (a1, a2, b1, b2) {
 
     //order the cards in each hand by rank
     var heroCards = new CardList([a1,a2]); 
@@ -120,5 +120,5 @@ Preflop = function (a1, a2, b1, b2) {
             }).join('-'); 
     }
 }
-module.exports = Preflop;
 
+module.exports = Preflop;
