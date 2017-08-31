@@ -27,14 +27,18 @@ export default Vue.component('texture-pie', {
   methods: {
      getChartDataFromStreets: function() {
 
-        if(this.data == null) {
+        /* Breaks chart
+         if(this.data == null) {
             return {
-                labels: "NO DATA",
-                datasets: {
+                labels: ["NO DATA"],
+                datasets: [{
                     data: [100.00]
-                }
+                },{
+                    data: [100.00]
+                }]
             }; 
-        }
+        }*/
+
         var textures = this.data.textures.oVillainStat;
 
         var textureLabels = [],
@@ -93,7 +97,7 @@ export default Vue.component('texture-pie', {
                 newColor.darken((index + 1)* 10.0);
                 newColor = newColor.toRgbString();
                 drawingHandColors.push(newColor);
-                textureLabel = labelString + ' ' + nsDrawingHand.fKeyToHandString(dhProp);
+                textureLabel = nsDrawingHand.fKeyToHandString(dhProp);
                 textureLabels.push(textureLabel);
             });
 
@@ -109,16 +113,14 @@ export default Vue.component('texture-pie', {
             return ((d * 100.0)/drawingHandDataSum);
         })
 
-        var datasets = [
-            {
+        var datasets = [{
+                data: drawingHandData, 
+                backgroundColor: drawingHandColors
+            }, {
                 data: textureData, 
                 backgroundColor: mainColors,               //borderColor: [this.colors.lossBorder, this.colors.winBorder, this.colors.drawBorder], 
                 label: 'Villain Textures'
-            }, {
-                data: drawingHandData, 
-                backgroundColor: drawingHandColors
-            } 
-        ];
+            }];
 
         return {
           labels: textureLabels,
@@ -150,7 +152,7 @@ export default Vue.component('texture-pie', {
         legend: {
             labels: {
                 generateLabels: function(chart) {
-                    var mainSet = chart.data.datasets[0];
+                    var mainSet = chart.data.datasets[1];
                     //console.log(mainSet);
                     var labels = chart.data.labels;
                     var returnValues = mainSet.data.map(function(set, i) {

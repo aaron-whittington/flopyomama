@@ -65,7 +65,7 @@ nsDrawingHand.fHandToKeyArray = function(oDrawingHand) {
 
 nsDrawingHand.fKeyToHandString = function(handKey) {
     if (handKey.length > 2) {
-        return handKey.split('-').map(nsDrawingHand.fKeyToHandString).join(' ');
+        return handKey.split('-').map(nsDrawingHand.fKeyToHandString).join(' & ');
     }
     
     var val = +(handKey[1]);

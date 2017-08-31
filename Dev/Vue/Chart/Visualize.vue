@@ -24,7 +24,7 @@
              <option v-if="streets['turn']" value="turn">Textures: Turn</option>
              <option v-if="streets['river']" value="river">Textures: River</option>
          </select>    
-            <texture-pie :data="streets[selectedStreet]" :colors="pieColors"/>
+            <texture-pie :data="streets[selectedStreetSafe]" :colors="pieColors"/>
      </div>    
  </section>
 </template>
@@ -75,6 +75,14 @@
                     dark: processedDark, 
                 }
             }
+        },
+        computed: {
+            selectedStreetSafe: function() {
+                if (this.streets[this.selectedStreet] == null) {
+                        this.selectedStreet = "overview";
+                }   
+                return this.selectedStreet;
+            }    
         },
         methods: {
             clickStreet: function(val) {
