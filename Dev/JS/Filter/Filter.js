@@ -156,6 +156,8 @@ nsFilter.fDrawFilterToBoard = function(oFilterRecord) {
             $('#op_range_' + sPairName).addClass('filtered');
 
             var oPair = new Pair(sPairName);
+
+            //this is broken, we need to parameterize by leg
             var aAllPairs = oPair.toArray(nsUI.fGetKnownCards());
 
             if (aAllPairs.length === aPair.length)

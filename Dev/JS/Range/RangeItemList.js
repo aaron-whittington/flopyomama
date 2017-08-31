@@ -6,9 +6,4 @@ var RangeItemList = AWCollection.extend({
     model: RangeItem
 });
 
-/*var RangeItemListModel = AWCollectionModel.extend({
-    className: 'RangeItemListModel',
-    collection: RangeItemList
-});*/
-
 module.exports = RangeItemList;
