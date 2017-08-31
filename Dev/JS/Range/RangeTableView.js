@@ -145,10 +145,12 @@ var RangeTableView = AWView.extend({
         this.el.innerHTML = output; //html(output);
         $(Mustache.render('#{{.}}', this.parent)).append(this.el);
     },
-    renderData: {
-        'class': _.isFunction(this.className) ? this.className() : this.className,
-        'id': this.id,
-        'row': []
+    renderData: function() { 
+         return {
+            'class': _.isFunction(this.className) ? this.className() : this.className,
+            'id': this.id,
+            'row': []
+         }
     },
     template: "<table id='{{id}}' class='{{class}}'>\
 					<tbody>\

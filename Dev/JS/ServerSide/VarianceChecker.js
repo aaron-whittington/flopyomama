@@ -1,4 +1,4 @@
-nsMath = require('../Core/Math.js');
+var nsMath = require('../Core/Math.js');
 
 
 

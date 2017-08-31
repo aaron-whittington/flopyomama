@@ -1,8 +1,8 @@
-AWView = require('../../Core/AWView');
+var AWView = require('../../Core/AWView');
 var FixedRangeList = require('./FixedRangeList');
 var FixedRangeView = require('./FixedRangeView');
 
-FixedRangeListView = AWView.extend({
+var FixedRangeListView = AWView.extend({
     model: FixedRangeView,
     initialize: function() {
         this.render();

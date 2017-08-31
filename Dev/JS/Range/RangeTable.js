@@ -5,7 +5,7 @@ var nsUtil = require('../Core/Util');
 var RangeTable = RangeItemList.extend({
     className: 'RangeTable',
     initialize: function() {
-
+        var rank1, rank2;
         for (rank1 = 14; rank1 > 1; rank1--) {
             for (rank2 = 14; rank2 > 1; rank2--) {
                 var rangeItem = {
@@ -78,6 +78,7 @@ var RangeTable = RangeItemList.extend({
             });
     },
     tableLoop: function(fnRow, fnCol) {
+        var rank1, rank2;
         for (rank1 = 14; rank1 > 1; rank1--) {
             fnRow(this.rangeItemAt(rank1, rank2));
             for (rank2 = 14; rank2 > 1; rank2--) {

@@ -1,19 +1,19 @@
-RangeTable = require('../Range/RangeTable');
-Deck = require('../Card/Deck');
-Card = require('../Card/Card');
-nsMath = require('../Core/Math');
-Preflop = require('../Card/Preflop');
-nsHand = require('../Hand/NSHand');
+var RangeTable = require('../Range/RangeTable');
+var Deck = require('../Card/Deck');
+var Card = require('../Card/Card');
+var nsMath = require('../Core/Math');
+var Preflop = require('../Card/Preflop');
+var nsHand = require('../Hand/NSHand');
 
-fs = require('fs');
-sleep = require('system-sleep');
+var fs = require('fs');
+var sleep = require('system-sleep');
 
 if (fs.existsSync('../Card/PreflopData.js'))
     o = require('../Card/PreflopData'); 
 else 
     o = {};
 
-ns = {};
+var ns = {};
 
 ns.keyInEnormousObjectExists = function(key) {
     var aKey = key.split('-');

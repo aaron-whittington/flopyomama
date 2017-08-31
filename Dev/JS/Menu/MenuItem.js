@@ -6,7 +6,7 @@ var MenuItem = AWModel.extend({
         selected: false,
         action: null,
         value: 1,
-        dispayValue: this.value,
+        dispayValue: "", //this.value,
         divider: false,
         group: null
     },

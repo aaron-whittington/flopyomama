@@ -1,7 +1,7 @@
-MenuItemGroup = require('./MenuItemGroup');
-MenuListModel = require('./MenuListModel');
-MenuView = require('./MenuView');
-nsConvert = require('../Core/Convert');
+var MenuItemGroup = require('./MenuItemGroup');
+var MenuListModel = require('./MenuListModel');
+var MenuView = require('./MenuView');
+var nsConvert = require('../Core/Convert');
 
 //TODO remove these extra document readies, rename the files to CreateInstance, 
 //and then instantiate from the flopYoMama class.

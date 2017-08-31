@@ -1,6 +1,7 @@
 var nsFilter = require('./Filter');
 var nsFilterHtml = require('./FilterHtml');
 var nsUtil = require('../Core/Util');
+var nsUI = require('../Core/Ui')
 
 module.exports = function() {
     nsFilter.fInit();

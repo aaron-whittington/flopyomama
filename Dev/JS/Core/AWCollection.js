@@ -76,10 +76,6 @@ var AWCollection = Backbone.Collection.extend({
         json = JSON.stringify(oJson);
         sInter = this.toString();
         sExter = this.toDisplayString();
-        nsUtil.fLog('TEST: ' + this.className + ' id: ' + this.id);
-        nsUtil.fLog('	JSON:	' + json);
-        nsUtil.fLog('	toString:	' + sInter);
-        nsUtil.fLog('	toDisplayString:	' + sExter);
     }
 });
 

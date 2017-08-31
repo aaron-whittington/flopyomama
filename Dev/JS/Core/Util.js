@@ -68,7 +68,7 @@ nsUtil.fExportLocalStorage = function(fTest) {
             return true;
         };
     }
-    var item, o = {};
+    var item, prop, o = {};
     for (prop in localStorage) {
         item = localStorage.getItem(prop);
         if (fTest(prop, item)) {

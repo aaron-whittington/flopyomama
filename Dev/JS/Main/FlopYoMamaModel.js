@@ -54,7 +54,7 @@ var FlopYoMama = AWModel.extend({
             pushState: false
         });
         
-        routerValues = this.router.getRouterValues();
+        var routerValues = this.router.getRouterValues();
 
         /* Menu */
         menuMain();        
@@ -76,7 +76,7 @@ var FlopYoMama = AWModel.extend({
         this.knownCardsView.render();
 
         /*slider*/
-        routerValueSlider = routerValues.slider;
+        var routerValueSlider = routerValues.slider;
 
         this.slider = new Slider({
             value: routerValueSlider
