@@ -1,5 +1,6 @@
 ﻿"use strict";
 var globalUi = require('../Constants/Ui');
+var nsUtil = require('./Util');
 var nsUI = {};
 
 //this can stay in the ui and not move to the known cards because 

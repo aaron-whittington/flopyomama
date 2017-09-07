@@ -80,7 +80,11 @@ var KnownCards = AWModel.extend({
         });
 
         if(handCards.length == 2) {
-            this.models.streets['preflop'] = new Street(poker.PREFLOP, handCards); 
+            if(this.models.streets['preflop']) {
+                this.models.streets['preflop'].cards = handCards;
+            } else {
+               this.models.streets['preflop'] = new Street(poker.PREFLOP, handCards); 
+            }
         } else {
             this.models.streets['preflop'] = null;
         }
@@ -90,22 +94,33 @@ var KnownCards = AWModel.extend({
         var toAdd;
         if (board.length > 2) {
             toAdd = board.slice(0, 3);
-            this.models.streets['flop'] = new Street(poker.FLOP, toAdd);
+            if(this.models.streets['flop']) {
+                this.models.streets['flop'].cards = toAdd;
+            } else {
+                this.models.streets['flop'] = new Street(poker.FLOP, toAdd);
+            }
         } else {
             this.models.streets['flop'] = null; 
         }
 
         if (board.length > 3) {
             toAdd = board.slice(3, 4);
-            this.models.streets['turn'] = new Street(poker.TURN, toAdd);
+            if(this.models.streets['turn']) {
+                this.models.streets['turn'].cards = toAdd;
+            } else {
+                this.models.streets['turn'] = new Street(poker.TURN, toAdd);
+            }
         } else {
             this.models.streets['turn'] = null; 
         }
 
-
         if (board.length > 4) {
             toAdd = board.slice(4);
-            this.models.streets['river'] = new Street(poker.RIVER, toAdd);
+            if(this.models.streets['river']) {
+                this.models.streets['river'].cards = toAdd;
+            } else {
+                this.models.streets['river'] = new Street(poker.RIVER, toAdd);
+            }
         } else {
             this.models.streets['river'] = null; 
         }

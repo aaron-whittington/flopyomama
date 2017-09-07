@@ -118,8 +118,7 @@ nsRange.getPairStats = function(knownCards) {
 nsRange.fGetAllUnknownCombinationsThreaded = function(knownCards, oFilterRecord, leg) {
 
     $('.no_results').remove();
-    //changed from 4, because we now have multiple workers anyway
-    var MAX_WORKERS = 1;
+    var MAX_WORKERS = 3;
     var workerDoneCount = 0;
     var lastUpdatePercent = 0;
     if (typeof(Worker) === "undefined") {

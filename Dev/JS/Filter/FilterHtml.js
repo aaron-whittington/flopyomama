@@ -1,10 +1,12 @@
 
 var nsStandardFilters = require('./Standard');
 var nsUtil = require('../Core/Util');
+var nsUI = require('../Core/Ui');
 var nsDrawingHand = require('../Hand/DrawingHand');
 var nsHand = require('../Hand/NSHand');
 var metaFilters = require('./Meta');
 var nsFilterHtml = {};
+
 
 nsFilterHtml.fGetFilterUI = function() {
     var sHtml = '<div class="row form-group">';
@@ -69,8 +71,7 @@ nsFilterHtml.fWrapSubFilterButtonGroup = function(sBtnGroup) {
         iIndent = 0;
     var colTag = 'col-lg-' + (12 - iIndent);
 
-    sHtml = '';
-    sHtml += '<div class="row filter_ctrl_row">';
+    var sHtml = '<div class="row filter_ctrl_row">';
     sHtml += '<div class="filter_ctrl_col ' + colTag + ' ' + colOffsetTag + '">';
     sHtml += sBtnGroup;
     sHtml += '</div>';
@@ -80,7 +81,7 @@ nsFilterHtml.fWrapSubFilterButtonGroup = function(sBtnGroup) {
 
 //fuer untergruppen damit wir einen baum struktur behalten
 nsFilterHtml.fWrapSubFilterGroup = function(sGroupGroup) {
-    sHtml = '<div class = "filter_group_subgroup"><img class="brace" src="Style/GullBraceLeft.svg">' + sGroupGroup + '</div>';
+    var sHtml = '<div class = "filter_group_subgroup"><img class="brace" src="Style/GullBraceLeft.svg">' + sGroupGroup + '</div>';
     return sHtml;
 };
 
@@ -169,7 +170,9 @@ nsFilterHtml.fTypeStringToClass = function(sPrefix, sType) {
 };
 
 nsFilterHtml.fSubFilterButtonGroup = function(oValues, bRemoveButton) {
-    var sType = nsUtil.fType(oValues);
+    var sType = nsUtil.fType(oValues),
+        sSelected;
+
     if (sType === "string")
         sSelected = oValues;
     else {
@@ -182,7 +185,7 @@ nsFilterHtml.fSubFilterButtonGroup = function(oValues, bRemoveButton) {
     if (typeof oValues === 'undefined')
         oValues = {};
 
-    sHtml = '';
+    var sHtml = '';
     //generate a class for this type
     var sClass = nsFilterHtml.fTypeStringToClass('filter_btns_', sSelected);
     sHtml += '<div class="btn-group ' + sClass + '  filter_ctrl_btn_group">';

@@ -137,7 +137,7 @@ module.exports = function() {
                 else
                     filterId = '';
 
-                sInnerHtml = nsFilterHtml.fFilterHtmlFromSelect(filterId, nsFilter);
+                var sInnerHtml = nsFilterHtml.fFilterHtmlFromSelect(filterId, nsFilter);
                 $('#filter_editor .modal-body').append(sInnerHtml);
 
                 var original = nsFilter.fCurrentToJSON();

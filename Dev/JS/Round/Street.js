@@ -1,6 +1,7 @@
 var nsConvert = require('../Core/Convert');
 
-module.exports = function(street, cards) {
+var Street = function(street, cards) {
+
     this.actions = [];
     this.street = street;
     this.cards = cards;
@@ -28,3 +29,5 @@ module.exports = function(street, cards) {
         //+ ' ' + cards.map(nsConvert.fConvertCardObjectToString).join(' ');
     }
 }
+
+module.exports = Street;
