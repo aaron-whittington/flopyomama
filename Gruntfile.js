@@ -51,7 +51,7 @@ module.exports = function(grunt) {
 					join_vars: true,
 					screw_ie8: true
 				},
-				banner: "/*Copyright (c) 2014-2016 Aaron J. Whittington. "+
+				banner: "/*Copyright (c) 2014-2018 Aaron J. Whittington. "+
 						"FlopYoMama and it's source code may not " +
 						"be installed on a computer, served from a "+ 
 						"web-server, or modified, without " + 

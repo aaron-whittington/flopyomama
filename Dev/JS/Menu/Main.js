@@ -29,13 +29,15 @@ module.exports = function() {
             id: "turn",
             value: "random_turn",
             displayValue: "Turn",
-            group: standardGroup
+            group: standardGroup,
+            active: true
         },
         {
             id: "river",
             value: "random_river",
             displayValue: "River",
-            group: standardGroup
+            group: standardGroup,
+            active: true
         },
         {
             divider: true
