@@ -25,7 +25,7 @@
             <option v-if="streets['river']" value="river">Textures: River</option>
         </select>    
         <div class='main-chart'>
-            <texture-pie :width='400' :height='372' :data="streets[selectedStreetSafe]" :colors="pieColors"/>
+            <texture-pie :width='400' :height='340' :data="streets[selectedStreetSafe]" :colors="pieColors"/>
         </div>
      </div>    
  </section>

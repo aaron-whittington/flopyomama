@@ -13,7 +13,7 @@ module.exports = function() {
             value: "random_hand",
             displayValue: "Hand",
             group: standardGroup,
-            active: true
+            active: false
         },
         {
             divider: true

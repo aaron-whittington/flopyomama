@@ -134,9 +134,13 @@ var KnownCards = AWModel.extend({
         if (routerValues.hand || routerValues.board) {
             this.set('hand', new CardList(routerValues.hand));
             this.set('board', new CardList(routerValues.board));
+        } else {
+            this.set('hand', new CardList(['TS','9S']));
+            this.set('board', new CardList(['QS','JS','4H','JH','2S']));
         }
     },
     loadFromLocalSotrage: function() {
+        throw 'this is never called';
         var boardArray = nsUtil.fGetLocalStorage("board_array"),
             i;
         if (boardArray) {

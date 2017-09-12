@@ -134,7 +134,7 @@ export default Vue.component('texture-pie', {
   mounted () {
     var chart = this;
     this.renderChart(this.chartData, {
-        responsive: true, //why not, maybe true? 
+        responsive: true, 
         maintainAspectRatio: true,
         cutoutPercentage: 50,
         onClick: function(event, elements) {
