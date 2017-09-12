@@ -1,30 +1,30 @@
 <template>
  <section> 
      <div v-if="selectedStreet == 'overview'">
-         <select v-model="barOrLine" class="form-control">
-             <option value="line">Wins Losses &amp; Draws - Line</option>
-             <option value="bar">Wins Losses &amp; Draws - Bar</option>
-         </select>    
+        <select v-model="barOrLine" class="form-control">
+            <option value="line">Wins Losses &amp; Draws - Line</option>
+            <option value="bar">Wins Losses &amp; Draws - Bar</option>
+        </select>    
         <div v-if="barOrLine == 'line' && streets.flop != null" >
             <win-loss-draw-line @click-street='clickStreet($event)' :streets="streets" :colors="colors"/>
         </div>
         <div v-else>
-            <win-loss-draw-bar  @click-street='clickStreet($event)' :streets="streets" :colors="colors"/>
+            <win-loss-draw-bar @click-street='clickStreet($event)' :streets="streets" :colors="colors"/>
         </div>
      </div> 
      <div v-if="selectedStreet!='overview'">
-            <span @click="selectedStreet ='overview'">
-                <span class="glyphicon glyphicon-arrow-left"> 
-                </span>
-                Back to Overview
-            </span>  
+        <span @click="selectedStreet ='overview'">
+            <span class="glyphicon glyphicon-arrow-left"> 
+            </span>
+            Back to Overview
+        </span>  
 
-         <select v-model="selectedStreet" class="form-control">
-             <option v-if="streets['flop']"  value="flop">Textures: Flop</option>
-             <option v-if="streets['turn']" value="turn">Textures: Turn</option>
-             <option v-if="streets['river']" value="river">Textures: River</option>
-         </select>    
-            <texture-pie :data="streets[selectedStreetSafe]" :colors="pieColors"/>
+        <select v-model="selectedStreet" class="form-control">
+            <option v-if="streets['flop']"  value="flop">Textures: Flop</option>
+            <option v-if="streets['turn']" value="turn">Textures: Turn</option>
+            <option v-if="streets['river']" value="river">Textures: River</option>
+        </select>    
+        <texture-pie :data="streets[selectedStreetSafe]" :colors="pieColors"/>
      </div>    
  </section>
 </template>

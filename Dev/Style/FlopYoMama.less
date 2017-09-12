@@ -12,7 +12,6 @@ body div.header {
 body h1{
 	font-family: 'Michroma' sans-serif;
 	font-size: 200%;
-	margin-top: 14px;
 	margin-left: 8px;
 }
 
@@ -501,11 +500,12 @@ body .popover {
 }
  
 #content {
-	 margin-top: 60px;
+	 margin-top: 48px;
 }
 
 #graph_wrapper {
-	 padding: 0 32px 32px 32px; 
+	 padding: 0 0 32px 32px; 
+	 width: 100%;
 }
  /******************************************************* COLLAPSE *****************************************************************/
 @media only screen and (max-width: @screen-lg) { /*bootstrap first collapse*/
@@ -536,6 +536,10 @@ body .popover {
 				}
 				
 				#op_range td div  { font-size:1.0em;}
+
+		#graph_wrapper {		
+			padding: 24px 0 64px 0;
+		} 
 				
  }
  
@@ -550,9 +554,6 @@ body .popover {
 	#content .btn{
 		padding: 12px;
 	}
-	#graph_wrapper {		
-	    padding: 24px 0 64px 0;
-	} 
  }
  
 @media only screen and (max-width: @screen-xs) { //was 500
@@ -657,11 +658,11 @@ body .popover {
    
    }
    
-   #known_cards .btn.disabled {
-	  color: black;
-	  font-style: bold;
-	  background-color:white;
-   }
+ #known_cards .btn.disabled {
+	color: black;
+	font-style: bold;
+	background-color:white;
+}
    
    #range_buttons .btn {   
 	  background-color: rgba(200,200,200,0.0);

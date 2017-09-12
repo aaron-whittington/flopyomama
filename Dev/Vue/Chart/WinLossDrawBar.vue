@@ -92,7 +92,7 @@ export default Vue.component('win-loss-draw-bar', {
   mounted () {
     var chart = this;
     this.renderChart(this.chartData, {
-        responsive: true, //why not, maybe true? 
+        responsive: true, 
         maintainAspectRatio: true,
         onClick: function(event, elements) {
             if(elements.length > 0) {
