@@ -5,11 +5,11 @@
             <option value="line">Wins Losses &amp; Draws - Line</option>
             <option value="bar">Wins Losses &amp; Draws - Bar</option>
         </select>    
-        <div v-if="barOrLine == 'line' && streets.flop != null" >
-            <win-loss-draw-line @click-street='clickStreet($event)' :streets="streets" :colors="colors"/>
+        <div v-if="barOrLine == 'line' && streets.flop != null">
+            <win-loss-draw-line :width='400' :height='372' @click-street='clickStreet($event)' :streets="streets" :colors="colors"/>
         </div>
         <div v-else>
-            <win-loss-draw-bar @click-street='clickStreet($event)' :streets="streets" :colors="colors"/>
+            <win-loss-draw-bar :width='400' :height='372' @click-street='clickStreet($event)' :streets="streets" :colors="colors"/>
         </div>
      </div> 
      <div v-if="selectedStreet!='overview'">
@@ -24,11 +24,12 @@
             <option v-if="streets['turn']" value="turn">Textures: Turn</option>
             <option v-if="streets['river']" value="river">Textures: River</option>
         </select>    
-        <texture-pie :data="streets[selectedStreetSafe]" :colors="pieColors"/>
+        <div class='main-chart'>
+            <texture-pie :width='400' :height='372' :data="streets[selectedStreetSafe]" :colors="pieColors"/>
+        </div>
      </div>    
  </section>
 </template>
-
 <script>
     import Vue from 'vue';
     import WinLossDrawBar from './WinLossDrawBar.vue';
